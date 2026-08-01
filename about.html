@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>About Kami: What It Is and Who Maintains It</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kami Resume is an open-source Agent-first resume generator maintained by JustinBao and adapted from Kami by Tw93.">
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="canonical" href="https://kami-resume-studio.vercel.app/about">
+  <link rel="alternate" type="text/markdown" href="https://kami-resume-studio.vercel.app/about.md">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="About Kami: What It Is and Who Maintains It">
+  <meta property="og:description" content="Kami Resume is an open-source Agent-first resume generator maintained by JustinBao and adapted from Kami by Tw93.">
+  <meta property="og:url" content="https://kami-resume-studio.vercel.app/about">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About Kami",
+    "url": "https://kami-resume-studio.vercel.app/about",
+    "inLanguage": "en",
+    "isPartOf": {"@type": "WebSite", "@id": "https://kami-resume-studio.vercel.app/#website"},
+    "about": {"@type": "Organization", "@id": "https://kami-resume-studio.vercel.app/#organization"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Kami", "item": "https://kami-resume-studio.vercel.app/"},
+      {"@type": "ListItem", "position": 2, "name": "About", "item": "https://kami-resume-studio.vercel.app/about"}
+    ]
+  }
+  </script>
+</head>
+<body>
+<main class="page">
+
+  <header class="hero doc">
+    <div class="eyebrow">
+      <span>Kami · About</span>
+      <span class="hero-links">
+        <a href="./">Home</a>
+        <a href="https://github.com/justinbao19/kami-resume-studio" target="_blank" rel="noopener">GitHub</a>
+      </span>
+    </div>
+    <h1>About</h1>
+    <p class="tagline">Kami is a constraint-based design system for documents that an AI agent writes and a person actually reads.</p>
+    <nav class="doc-nav" aria-label="Site sections">
+      <a href="./developers">Developers</a>
+      <a href="./about" aria-current="page">About</a>
+      <a href="./contact">Contact</a>
+      <a href="./privacy">Privacy</a>
+      <a href="./about.md">This page as Markdown</a>
+    </nav>
+  </header>
+
+  <section class="prose">
+    <div class="section-head">
+      <p class="section-num">01 · What it is</p>
+      <h2 class="section-title">A design system, not a template gallery</h2>
+    </div>
+    <p>Language models write well and lay out badly. Ask one for a resume and the text is usually fine while the page is not: mixed accent colors, synthetic bold, hard drop shadows, a heading that is three sizes away from its body. Kami exists to remove those decisions from the model. It ships a fixed constraint set, a warm parchment canvas at <code>#f5f4ed</code>, a single ink-blue accent at <code>#1B365D</code>, serif-led hierarchy, and editorial whitespace, and it holds that set across every document type it produces.</p>
+    <p>What comes out is HTML that exports to PDF, PNG, or an editable PPTX deck. Eight document templates cover the common cases: one-pager, letter, long document, portfolio, resume, slides, equity report, and changelog. Eighteen inline SVG diagram types cover the pictures those documents need, from architecture and flowchart to candlestick and Venn. A separate landing-page template applies the same restraint to a product page.</p>
+    <p>Because the constraints are fixed, the interesting work moves to content quality and verification. Kami ships nine JSON content schemas and a set of checks that look for the failures agents actually produce: unfilled placeholders, markdown syntax leaking into the render, a line orphaned at a page break, a page that ends a third empty, a deck where six slides in a row share one layout.</p>
+  </section>
+
+  <section class="prose">
+    <div class="section-head">
+      <p class="section-num">02 · What it is not</p>
+      <h2 class="section-title">Deliberate omissions</h2>
+    </div>
+    <p>Kami is not a hosted service. There is no Kami account, no API key, no server that receives your documents. The skill installs into your agent and runs on your machine; the only thing this domain serves is a static site and a set of public metadata files.</p>
+    <p>The original Kami document templates keep a deliberately narrow visual language. Resume templates add controlled light and dark themes, role-specific palettes, and different content structures, but every option remains recruiter-readable and ATS-conscious.</p>
+    <p>Finally, the Agent workflow will not invent what a resume should claim. It can consolidate sources, ask evidence questions, and sharpen wording for a target role, but metrics, ownership, and outcomes must come from a source or the user.</p>
+  </section>
+
+  <section class="prose">
+    <div class="section-head">
+      <p class="section-num">03 · Who maintains it</p>
+      <h2 class="section-title">One maintainer, MIT licensed</h2>
+    </div>
+    <p>Kami Resume is maintained by <a href="https://github.com/justinbao19" target="_blank" rel="noopener">JustinBao</a>. It is a resume-focused adaptation of <a href="https://github.com/tw93/Kami" target="_blank" rel="noopener">Kami by Tw93</a>, whose original document system, visual language, and MIT copyright notice remain credited in this repository. The source lives at <a href="https://github.com/justinbao19/kami-resume-studio" target="_blank" rel="noopener">github.com/justinbao19/kami-resume-studio</a> under the MIT license.</p>
+    <p>Releases are tagged in the repository and published as a <code>kami.zip</code> asset for Claude Desktop, alongside the Claude Code and Codex plugin marketplaces. The homepage carries the current version. Interface, template registry, and public facts are cross-checked in CI, so the version on the site, in the plugin manifests, and in the skill package cannot drift apart.</p>
+    <p>The site is published in English, Simplified Chinese, Traditional Chinese, Japanese, and Korean, each with its own serif and its own typographic tuning rather than one font stretched across five scripts.</p>
+  </section>
+
+  <footer class="footer">
+    <div class="mark">
+      <svg width="56" height="56" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-label="Kami mark">
+        <rect x="6" y="6" width="68" height="68" rx="10" fill="#faf9f5" stroke="#1B365D" stroke-width="1.25"/>
+        <line x1="16" y1="26" x2="64" y2="26" stroke="#1B365D" stroke-width="1.25"/>
+        <text x="40" y="56" font-family="TsangerJinKai02, Georgia, serif" font-size="34" font-weight="500" fill="#141413" text-anchor="middle">紙</text>
+      </svg>
+      <div>
+        <p class="wm-name">Kami · 紙</p>
+        <p class="wm-sub">Good content deserves good paper.</p>
+      </div>
+    </div>
+    <div class="colophon">
+      <div><a href="./" style="color:var(--brand); text-decoration:none; font-weight:500;">Home</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="./developers" style="color:var(--brand); text-decoration:none; font-weight:500;">Developers</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="./contact" style="color:var(--brand); text-decoration:none; font-weight:500;">Contact</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="./privacy" style="color:var(--brand); text-decoration:none; font-weight:500;">Privacy</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://github.com/justinbao19/kami-resume-studio" style="color:var(--brand); text-decoration:none; font-weight:500;">GitHub</a></div>
+      <div style="margin-top:8px; color: var(--olive); font-family: var(--serif);">
+        MIT licensed. Runs where you install it.
+      </div>
+    </div>
+  </footer>
+
+</main>
+</body>
+</html>

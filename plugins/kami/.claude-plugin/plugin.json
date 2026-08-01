@@ -1,0 +1,13 @@
+{
+  "name": "kami",
+  "version": "1.11.0",
+  "description": "Build evidence-backed, job-targeted resumes from authorized career sources, then typeset them with the Kami design system.",
+  "author": {
+    "name": "JustinBao",
+    "email": "97433668+justinbao19@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/justinbao19/kami-resume-studio",
+  "repository": "https://github.com/justinbao19/kami-resume-studio",
+  "license": "MIT",
+  "skills": "./skills/"
+}

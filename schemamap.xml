@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemamap xmlns="https://specification.website/schemas/schemamap/0.1">
+  <resource>
+    <loc>https://kami-resume-studio.vercel.app/developers</loc>
+    <jsonld>https://kami-resume-studio.vercel.app/feeds/catalog.jsonld</jsonld>
+    <type>ItemList</type>
+    <type>CreativeWork</type>
+  </resource>
+</schemamap>

@@ -1,0 +1,18 @@
+{
+  "name": "kami",
+  "description": "Agent-first resume intelligence and document typesetting skill for Claude Code.",
+  "owner": {
+    "name": "JustinBao",
+    "email": "97433668+justinbao19@users.noreply.github.com"
+  },
+  "plugins": [
+    {
+      "name": "kami",
+      "version": "1.11.0",
+      "description": "Build evidence-backed, job-targeted resumes from authorized career sources, then typeset them with the Kami design system.",
+      "category": "documents",
+      "source": "./plugins/kami",
+      "homepage": "https://github.com/justinbao19/kami-resume-studio"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "candidate": {
+    "name": "Avery Lin",
+    "headline": "Staff Machine Learning Engineer",
+    "email": "avery@example.com",
+    "location": "San Francisco, CA",
+    "preferences": {
+      "output_language": "en",
+      "target_market": "United States",
+      "target_roles": ["Staff ML Engineer"],
+      "theme_preference": "auto",
+      "page_target": 2
+    }
+  },
+  "sources": [
+    {"id": "old-pdf", "type": "resume_pdf", "captured_at": "2024-05-01", "label": "Old resume"},
+    {"id": "linkedin", "type": "platform_profile", "platform": "linkedin", "captured_at": "2026-07-25", "label": "LinkedIn"}
+  ],
+  "positions": [
+    {
+      "company": "Northstar Systems",
+      "title": "Machine Learning Engineer",
+      "period": "2022.01 - 2026.07",
+      "bullets": ["Built retrieval systems for enterprise search", "Improved model quality"],
+      "source_ids": ["linkedin"]
+    },
+    {
+      "company": "Northstar Systems",
+      "title": "Senior Machine Learning Engineer",
+      "period": "2023.01 - 2026.07",
+      "bullets": ["Led evaluation workstream"],
+      "source_ids": ["old-pdf"]
+    },
+    {
+      "company": "Cloudline Data",
+      "title": "Software Engineer",
+      "period": "2019.06 - 2021.12",
+      "bullets": ["Reduced p95 latency from 800ms to 120ms", "Owned a 6-person platform squad"],
+      "source_ids": ["old-pdf"]
+    }
+  ],
+  "education": [{"school": "Stanford University", "degree": "M.S. Computer Science", "period": "2017 - 2019"}],
+  "skills": ["Python", "PyTorch", "Kubernetes", "Evaluation"],
+  "target_jobs": [{
+    "title": "Staff Machine Learning Engineer",
+    "description": "Lead ML infrastructure, model evaluation, platform reliability, and technical strategy",
+    "requirements": ["ML infrastructure", "model evaluation", "platform reliability", "technical strategy"]
+  }]
+}

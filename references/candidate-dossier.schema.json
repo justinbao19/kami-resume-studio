@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Kami Resume Candidate Dossier",
+  "type": "object",
+  "required": ["schema_version", "candidate", "sources", "positions", "target_jobs"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "candidate": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "headline": {"type": "string"},
+        "email": {"type": "string"},
+        "phone": {"type": "string"},
+        "location": {"type": "string"},
+        "website": {"type": "string"},
+        "photo": {"type": "string", "$comment": "Optional local image data or authorized asset path; omit when the selected template or target market should not use a photo."},
+        "socials": {
+          "type": "object",
+          "properties": {
+            "linkedin": {"$ref": "#/$defs/social_link"},
+            "x": {"$ref": "#/$defs/social_link"},
+            "github": {"$ref": "#/$defs/social_link"}
+          }
+        },
+        "languages": {"type": "array", "items": {"type": "string"}},
+        "preferences": {
+          "type": "object",
+          "properties": {
+            "output_language": {"enum": ["zh", "en", "bilingual"]},
+            "target_market": {"type": "string"},
+            "target_roles": {"type": "array", "items": {"type": "string"}},
+            "personality": {"type": "array", "items": {"type": "string"}},
+            "theme_preference": {"enum": ["auto", "light", "dark"]},
+            "page_target": {"enum": [1, 2]}
+          }
+        }
+      }
+    },
+    "sources": {"type": "array", "items": {"type": "object"}},
+    "positions": {"type": "array", "items": {"type": "object"}},
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "role": {"type": "string"},
+          "period": {"type": "string"},
+          "link": {"type": "string", "format": "uri"},
+          "description": {"type": "string"},
+          "highlights": {"type": ["string", "array"]},
+          "source_ids": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "education": {"type": "array", "items": {"type": "object"}},
+    "skills": {"type": "array", "items": {"type": "string"}},
+    "target_jobs": {"type": "array", "items": {"type": "object"}},
+    "resume_content": {"type": "object"}
+  },
+  "$defs": {
+    "social_link": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "url": {"type": "string", "format": "uri"}
+      }
+    }
+  }
+}

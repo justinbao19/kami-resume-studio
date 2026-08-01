@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "candidate": {
+    "name": "林知遥",
+    "headline": "AI 产品经理",
+    "email": "zhiyao@example.com",
+    "location": "上海",
+    "preferences": {
+      "output_language": "zh",
+      "target_market": "中国互联网",
+      "target_roles": ["AI 产品经理"],
+      "theme_preference": "auto",
+      "page_target": 2
+    }
+  },
+  "sources": [
+    {"id": "old-pdf", "type": "resume_pdf", "captured_at": "2024-02-01", "label": "旧简历"},
+    {"id": "boss", "type": "platform_profile", "platform": "boss直聘", "captured_at": "2026-07-20", "label": "BOSS 直聘个人页"}
+  ],
+  "positions": [
+    {
+      "company": "远舟科技",
+      "title": "高级产品经理",
+      "period": "2023.04 - 2026.06",
+      "bullets": ["负责企业知识助手产品规划", "协调研发与销售推进上线"],
+      "source_ids": ["boss"]
+    },
+    {
+      "company": "木棉协作",
+      "title": "产品经理",
+      "period": "2020.07 - 2023.03",
+      "bullets": ["推动规则引擎上线，服务 1.8 万个团队", "使试用转化率提升 19%"],
+      "source_ids": ["old-pdf"]
+    }
+  ],
+  "education": [{"school": "同济大学", "degree": "管理科学与工程", "period": "2017 - 2020"}],
+  "skills": ["AI 产品设计", "用户研究", "SQL"],
+  "target_jobs": [{
+    "title": "AI 产品经理",
+    "description": "负责 AI 产品路线图、用户研究、评测机制和商业化落地",
+    "requirements": ["AI 产品路线图", "用户研究", "评测机制", "商业化落地"]
+  }]
+}

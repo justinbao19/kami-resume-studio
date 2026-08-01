@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "candidate": {
+    "name": "林知遥",
+    "headline": "AI 产品经理",
+    "email": "zhiyao@example.com",
+    "location": "上海",
+    "preferences": {"output_language": "zh", "target_market": "中国互联网", "target_roles": ["AI 产品经理"], "theme_preference": "auto", "page_target": 2}
+  },
+  "sources": [
+    {"id": "old-pdf", "type": "resume_pdf", "captured_at": "2024-02-01", "label": "旧简历"},
+    {"id": "boss", "type": "platform_profile", "platform": "boss直聘", "captured_at": "2026-07-20", "label": "BOSS 直聘个人页"}
+  ],
+  "positions": [
+    {
+      "company": "远舟科技",
+      "title": "高级产品经理",
+      "period": "2023.04 - 2026.06",
+      "bullets": [
+        "负责企业知识助手产品路线图，覆盖 12 万名月活用户并推动 3 条业务线落地",
+        "建立离线评测与线上反馈机制，使回答采纳率提升 24%、人工复核成本下降 31%",
+        "主导商业化方案，与销售协作签下 18 家企业客户，贡献年度合同额 420 万元",
+        "直接负责产品策略、优先级和跨研发/销售推进，协作团队 11 人"
+      ],
+      "ownership": "直接负责路线图、评测机制和商业化方案；研发、销售共同负责交付与客户成功。",
+      "methods": "用户研究、需求分层、离线/线上评测、反馈闭环、商业化试点和跨团队节奏管理。",
+      "source_ids": ["boss"]
+    },
+    {
+      "company": "木棉协作",
+      "title": "产品经理",
+      "period": "2020.07 - 2023.03",
+      "bullets": ["推动规则引擎上线，服务 1.8 万个团队", "使试用转化率提升 19%"],
+      "source_ids": ["old-pdf"]
+    }
+  ],
+  "education": [{"school": "同济大学", "degree": "管理科学与工程", "period": "2017 - 2020"}],
+  "skills": ["AI 产品设计", "用户研究", "SQL", "评测机制", "商业化落地"],
+  "target_jobs": [{
+    "title": "AI 产品经理",
+    "description": "负责 AI 产品路线图、用户研究、评测机制和商业化落地",
+    "requirements": ["AI 产品路线图", "用户研究", "评测机制", "商业化落地"]
+  }]
+}

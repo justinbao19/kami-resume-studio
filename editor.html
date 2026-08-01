@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kami Resume 是一个面向中英文求职场景的编辑感简历生成器。">
+  <title>Kami Resume - 把经历写成一份好简历</title>
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="./index.html" aria-label="Kami Resume 首页">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" role="img">
+          <path d="M7 3.5h12.5L25 9v19.5H7z" fill="currentColor" opacity=".14"/>
+          <path d="M7 3.5h12.5L25 9v19.5H7zM19.5 3.5V9H25M11 14h10M11 18h10M11 22h7" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </span>
+      <span class="brand-name">Kami <i>Resume</i></span>
+      <span class="brand-stage">MVP</span>
+    </a>
+
+    <div class="document-title" aria-label="当前文档">
+      <span class="document-state" aria-hidden="true"></span>
+      <input id="documentName" type="text" value="我的产品经理简历" aria-label="简历名称">
+      <span id="saveStatus">已保存到本机</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="button button-quiet" id="resetButton" type="button">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 6.5A6 6 0 1 1 4 12M4.5 6.5V2.8m0 3.7h3.7"/></svg>
+        重置示例
+      </button>
+      <button class="button button-primary" id="exportButton" type="button">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0 3-3m-3 3L7 9M4 14v2.5h12V14"/></svg>
+        导出 PDF
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-tabs" aria-label="移动端视图切换">
+    <button type="button" data-mobile-view="editor" class="active">内容</button>
+    <button type="button" data-mobile-view="preview">预览</button>
+    <button type="button" data-mobile-view="design">样式</button>
+  </nav>
+
+  <main class="workspace" data-current-view="editor">
+    <aside class="editor-rail" aria-label="简历内容编辑">
+      <div class="rail-heading">
+        <div>
+          <p class="kicker">内容结构</p>
+          <h1>把证据写清楚</h1>
+        </div>
+        <span id="completionBadge">82%</span>
+      </div>
+
+      <div class="completion-track" aria-label="简历完成度">
+        <span id="completionBar"></span>
+      </div>
+
+      <nav class="section-tabs" id="sectionTabs" aria-label="简历章节">
+        <button type="button" class="active" data-section="profile">
+          <span>01</span><b>基本信息</b><i data-section-status="profile"></i>
+        </button>
+        <button type="button" data-section="summary">
+          <span>02</span><b>职业摘要</b><i data-section-status="summary"></i>
+        </button>
+        <button type="button" data-section="experience">
+          <span>03</span><b>工作经历</b><i data-section-status="experience"></i>
+        </button>
+        <button type="button" data-section="projects">
+          <span>04</span><b>项目经历</b><i data-section-status="projects"></i>
+        </button>
+        <button type="button" data-section="education">
+          <span>05</span><b>教育背景</b><i data-section-status="education"></i>
+        </button>
+        <button type="button" data-section="skills">
+          <span>06</span><b>技能与工具</b><i data-section-status="skills"></i>
+        </button>
+      </nav>
+
+      <div class="editor-scroll">
+        <section class="editor-section active" data-editor-section="profile">
+          <div class="section-intro">
+            <p>基本信息</p>
+            <span>让招聘者在 5 秒内知道你是谁。</span>
+          </div>
+          <div class="form-grid form-grid-two">
+            <label class="field field-wide">
+              <span>姓名</span>
+              <input type="text" data-bind="profile.name" autocomplete="name">
+            </label>
+            <label class="field field-wide">
+              <span>职业定位</span>
+              <input type="text" data-bind="profile.title" placeholder="例如：AI 产品经理">
+            </label>
+            <label class="field">
+              <span>邮箱</span>
+              <input type="email" data-bind="profile.email" autocomplete="email">
+            </label>
+            <label class="field">
+              <span>电话</span>
+              <input type="tel" data-bind="profile.phone" autocomplete="tel">
+            </label>
+            <label class="field">
+              <span>所在城市</span>
+              <input type="text" data-bind="profile.location">
+            </label>
+            <label class="field">
+              <span>个人主页</span>
+              <input type="text" data-bind="profile.website">
+            </label>
+          </div>
+          <div class="profile-media-grid">
+            <div class="photo-editor-card" id="photoEditorCard">
+              <div class="photo-editor-preview" id="photoEditorPreview"><span>头像</span></div>
+              <div>
+                <div class="field-title-row"><b>个人照片</b><small id="photoCapability">当前模板支持</small></div>
+                <p id="photoHelp" class="field-help">用于支持头像位置的模板。图片只保存在当前浏览器。</p>
+                <div class="photo-actions">
+                  <label class="file-button" for="photoInput">上传照片</label>
+                  <button type="button" class="remove-button" id="removePhoto">移除</button>
+                  <input id="photoInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="social-editor-block">
+            <div class="section-intro compact-intro">
+              <p>社媒链接</p>
+              <span>选择要展示的平台。导出后的图标或文字会保留可点击链接。</span>
+            </div>
+            <div class="social-editor-list">
+              <label class="social-editor-row"><input type="checkbox" data-bind="profile.socials.linkedin.enabled"><span class="social-editor-logo linkedin-mark">in</span><b>LinkedIn</b><input type="url" data-bind="profile.socials.linkedin.url" placeholder="https://linkedin.com/in/username"></label>
+              <label class="social-editor-row"><input type="checkbox" data-bind="profile.socials.x.enabled"><span class="social-editor-logo x-mark">X</span><b>X</b><input type="url" data-bind="profile.socials.x.url" placeholder="https://x.com/username"></label>
+              <label class="social-editor-row"><input type="checkbox" data-bind="profile.socials.github.enabled"><span class="social-editor-logo github-mark">◉</span><b>GitHub</b><input type="url" data-bind="profile.socials.github.url" placeholder="https://github.com/username"></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="editor-section" data-editor-section="summary">
+          <div class="section-intro">
+            <p>职业摘要</p>
+            <span>用角色、年限、擅长领域和结果构成一句可信的定位。</span>
+          </div>
+          <label class="field">
+            <span>个人简介 <small id="summaryCount">0 / 160</small></span>
+            <textarea rows="8" maxlength="400" data-bind="profile.summary"></textarea>
+          </label>
+          <div class="writing-note">
+            <span>写作提示</span>
+            <p>避免“认真负责”等空泛形容词。优先说明做过什么、影响多大、为什么与你的目标岗位相关。</p>
+          </div>
+        </section>
+
+        <section class="editor-section" data-editor-section="experience">
+          <div class="section-intro section-intro-action">
+            <div>
+              <p>工作经历</p>
+              <span>每条经历都应包含动作、范围与可验证结果。</span>
+            </div>
+            <button id="addExperience" class="text-button" type="button">+ 添加经历</button>
+          </div>
+          <div id="experienceEditor" class="repeat-list"></div>
+        </section>
+
+        <section class="editor-section" data-editor-section="projects">
+          <div class="section-intro section-intro-action">
+            <div>
+              <p>项目经历</p>
+              <span>补充代表项目、产品落地、开源作品或与目标岗位最相关的实践。</span>
+            </div>
+            <button id="addProject" class="text-button" type="button">+ 添加项目</button>
+          </div>
+          <div id="projectEditor" class="repeat-list"></div>
+        </section>
+
+        <section class="editor-section" data-editor-section="education">
+          <div class="section-intro section-intro-action">
+            <div>
+              <p>教育背景</p>
+              <span>保留与目标岗位有关的信息。</span>
+            </div>
+            <button id="addEducation" class="text-button" type="button">+ 添加教育</button>
+          </div>
+          <div id="educationEditor" class="repeat-list"></div>
+        </section>
+
+        <section class="editor-section" data-editor-section="skills">
+          <div class="section-intro">
+            <p>技能与工具</p>
+            <span>分组比堆关键词更易读，也更便于 ATS 识别。</span>
+          </div>
+          <div class="form-grid">
+            <label class="field">
+              <span>核心能力</span>
+              <input type="text" data-bind="skills.core" placeholder="用逗号分隔">
+            </label>
+            <label class="field">
+              <span>方法与工具</span>
+              <input type="text" data-bind="skills.tools" placeholder="用逗号分隔">
+            </label>
+            <label class="field">
+              <span>语言</span>
+              <input type="text" data-bind="skills.languages" placeholder="用逗号分隔">
+            </label>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <section class="preview-stage" aria-label="简历实时预览">
+      <div class="preview-toolbar">
+        <div>
+          <span class="live-dot"></span>
+          实时排版
+          <i id="pageEstimate">A4 · 1 页</i>
+        </div>
+        <div class="zoom-control">
+          <button id="zoomOut" type="button" aria-label="缩小预览">−</button>
+          <span id="zoomLabel">78%</span>
+          <button id="zoomIn" type="button" aria-label="放大预览">+</button>
+        </div>
+      </div>
+      <div class="paper-viewport" id="paperViewport">
+        <div class="paper-scaler" id="paperScaler">
+          <article class="resume-page template-editorial" id="resumePreview" aria-label="生成的简历"></article>
+        </div>
+      </div>
+      <div class="preview-footnote">
+        <span>内容仅保存在当前浏览器</span>
+        <span>打印时自动隐藏编辑界面</span>
+      </div>
+    </section>
+
+    <aside class="design-rail" aria-label="简历样式设置">
+      <div class="design-scroll">
+        <section class="design-block">
+          <div class="design-heading">
+            <p class="kicker">模板</p>
+            <span>9 类 · 18 变体</span>
+          </div>
+          <div class="template-list" id="templateList">
+            <button type="button" class="template-card active" data-template="editorial">
+              <span class="template-thumb thumb-editorial" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>纸序</b><small>编辑感 · 平衡表达</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="ats-classic">
+              <span class="template-thumb thumb-classic" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>清衡</b><small>ATS · 稳健清晰</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="technical">
+              <span class="template-thumb thumb-technical" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>栈迹</b><small>软件 · 数据 · AI</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="executive">
+              <span class="template-thumb thumb-executive" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>领航</b><small>高管 · 战略领导力</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="creative">
+              <span class="template-thumb thumb-modern" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>锋面</b><small>设计 · 品牌 · 创意</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="sales-impact">
+              <span class="template-thumb thumb-sales" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>增长场</b><small>销售 · 增长 · BD</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="operations-practical">
+              <span class="template-thumb thumb-operations" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>实干线</b><small>运营 · 制造 · 项目</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="academic">
+              <span class="template-thumb thumb-academic" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>学研录</b><small>研究 · 教育 · 医疗</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="early-career">
+              <span class="template-thumb thumb-early" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>初航</b><small>校招 · 实习 · 转行</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+          </div>
+        </section>
+
+        <section class="design-block">
+          <div class="design-heading"><p class="kicker">明暗模式</p><span>每类模板均可切换</span></div>
+          <div class="segmented" id="themeControl" aria-label="简历明暗模式">
+            <button type="button" class="active" data-theme="light">浅色</button>
+            <button type="button" data-theme="dark">深色</button>
+          </div>
+        </section>
+
+        <section class="design-block">
+          <div class="design-heading"><p class="kicker">语言与内容</p></div>
+          <div class="segmented" id="localeControl" aria-label="简历语言">
+            <button type="button" class="active" data-locale="zh">中文</button>
+            <button type="button" data-locale="en">English</button>
+          </div>
+          <button class="sample-button" id="loadSample" type="button">载入当前语言示例</button>
+        </section>
+
+        <section class="design-block">
+          <div class="design-heading"><p class="kicker">强调色</p></div>
+          <div class="color-options" id="colorOptions">
+            <button type="button" class="active swatch-auto" data-accent="auto" aria-label="模板推荐色"></button>
+            <button type="button" data-accent="ink" style="--swatch:#1b365d" aria-label="墨蓝"></button>
+            <button type="button" data-accent="forest" style="--swatch:#285548" aria-label="松绿"></button>
+            <button type="button" data-accent="burgundy" style="--swatch:#713b3b" aria-label="勃艮第红"></button>
+            <button type="button" data-accent="graphite" style="--swatch:#353638" aria-label="石墨"></button>
+          </div>
+        </section>
+
+        <section class="design-block">
+          <div class="design-heading"><p class="kicker">排版密度</p></div>
+          <div class="segmented" id="densityControl" aria-label="排版密度">
+            <button type="button" data-density="compact">紧凑</button>
+            <button type="button" class="active" data-density="balanced">舒展</button>
+          </div>
+        </section>
+
+        <section class="design-block quality-block">
+          <div class="design-heading">
+            <p class="kicker">内容检查</p>
+            <span id="qualityScore">3 条建议</span>
+          </div>
+          <ul id="qualityList"></ul>
+        </section>
+      </div>
+
+      <div class="design-footer">
+        <p>基于 Kami 的纸张排版约束</p>
+        <span>本项目保留 MIT 开源许可</span>
+      </div>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
