@@ -98,9 +98,9 @@ python3 -m http.server 4173
 
 然后访问 `http://127.0.0.1:4173` 查看中文落地页，访问 `/index-en.html` 查看英文落地页，或访问 `/editor.html` 直接进入编辑器。项目当前没有 npm 依赖，也没有构建步骤。
 
-## 迁移中的已知验证项
+## 当前验证状态
 
-Kami 原仓库的维护测试仍假设根首页是多语言展示站点。当前改造后，`python3 scripts/tests/test_build.py` 的核心模板、脚本和打包检查仍可通过（195 项），但有 2 项旧站点断言会失败：公共站点事实检查，以及旧首页与 `index-zh|ja|ko|tw.html` 的 DOM 骨架一致性检查。它们反映的是站点迁移尚未完成，不是 Resume Studio 的编辑或打印功能失败。后续若保留旧站点入口，应把旧首页移到独立路径并更新这些断言。
+站点事实检查已区分新的中英文 Resume Studio 落地页、编辑器与保留的 Kami 多语言页面。当前仓库通过 `python3 scripts/build.py --check`、`python3 scripts/tests/test_build.py` 和 `python3 scripts/build_metadata.py --check`。后续修改落地页、编辑器、模板数量或安装方式时，需要同步更新站点事实、机器可读元数据和对应测试，不能恢复旧首页必须与 `index-zh|ja|ko|tw.html` 使用相同 DOM 骨架的假设。
 
 ## 下一阶段建议
 
