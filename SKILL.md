@@ -73,7 +73,7 @@ For one-pagers, long documents, letters, portfolios, slides, equity reports, cha
 - Never invent metrics, titles, ownership, dates, tools, employers, or outcomes.
 - Do not copy a job description verbatim. Use supported keywords in natural language.
 - Treat project experience as a first-class evidence section. Include selected projects, open-source work, product cases, or research only when the user confirms the scope, role, link, and outcomes.
-- Treat photos and LinkedIn, X, and GitHub links as opt-in fields. Validate every URL, preserve approved links in HTML/PDF, and omit photos from unsupported templates and ATS companions.
+- Treat photos and LinkedIn, X, and GitHub links as opt-in fields. Validate every URL, preserve approved links in HTML/PDF, and omit photos from unsupported templates and ATS companions. If a photo-capable layout needs an empty-state preview, use the neutral portrait icon rather than initials or the candidate name.
 - Draft cover and recommendation letters from the same evidence ledger. Never invent a relationship, endorsement, or recommender identity.
 - Keep salary, availability, reason for leaving, age, gender, marital status, and photo outside the resume unless explicitly required by the target market and confirmed by the user.
 - De-identify any fixture or demo data derived from a real person's private materials.
@@ -81,7 +81,7 @@ For one-pagers, long documents, letters, portfolios, slides, equity reports, cha
 
 ## Visual system
 
-Kami defaults to warm paper, restrained typography, and one deliberate accent. Resume families may use different colors and layouts, but must remain readable, printable, and recruiter-scannable. The catalog contains 13 families with 2 themes each: Editorial, ATS Classic, Technical, Executive, Creative, Sales Impact, Operations Practical, Academic, Early Career, Aqua Ledger, Atelier Serif, Cupertino, and Swiss Grid.
+Kami defaults to warm paper, restrained typography, and one deliberate accent. Resume families may use different colors and layouts, but must remain readable, printable, and recruiter-scannable. The catalog contains 13 families with 2 themes each: Editorial, ATS Classic, Technical, Executive, Creative, Sales Impact, Operations Practical, Academic, Early Career, Aqua Ledger, Atelier Serif, Cupertino, and McKinsey Grid. Light-mode output may keep the template paper or use pure white or ivory; dark mode keeps the template dark paper.
 
 ## Update and packaging
 

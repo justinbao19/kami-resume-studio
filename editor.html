@@ -120,7 +120,7 @@
           </div>
           <div class="profile-media-grid">
             <div class="photo-editor-card" id="photoEditorCard">
-              <div class="photo-editor-preview" id="photoEditorPreview"><span>头像</span></div>
+              <div class="photo-editor-preview" id="photoEditorPreview" aria-label="照片位置预览"></div>
               <div>
                 <div class="field-title-row"><b>个人照片</b><small id="photoCapability">当前模板支持</small></div>
                 <p id="photoHelp" class="field-help">用于支持头像位置的模板。图片只保存在当前浏览器。</p>
@@ -333,7 +333,7 @@
             </button>
             <button type="button" class="template-card" data-template="swiss-grid">
               <span class="template-thumb thumb-swiss" aria-hidden="true"><i></i><b></b><em></em></span>
-              <span><b>经纬网格</b><small>瑞士网格 · 多页叙事</small></span>
+              <span><b>麦肯锡网格</b><small>咨询策略 · 高管沟通</small></span>
               <i class="checkmark">✓</i>
             </button>
           </div>
@@ -344,6 +344,15 @@
           <div class="segmented" id="themeControl" aria-label="简历明暗模式">
             <button type="button" class="active" data-theme="light">浅色</button>
             <button type="button" data-theme="dark">深色</button>
+          </div>
+        </section>
+
+        <section class="design-block">
+          <div class="design-heading"><p class="kicker">纸张底色</p><span id="paperToneHelp">浅色模式可选</span></div>
+          <div class="segmented segmented-three" id="paperToneControl" aria-label="简历纸张底色">
+            <button type="button" class="active" data-paper-tone="auto">模板推荐</button>
+            <button type="button" data-paper-tone="white">纯白</button>
+            <button type="button" data-paper-tone="ivory">象牙白</button>
           </div>
         </section>
 

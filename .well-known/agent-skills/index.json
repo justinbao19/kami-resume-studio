@@ -6,7 +6,7 @@
       "type": "skill-md",
       "description": "Use when a user asks for a job-targeted resume, CV, career profile, or resume rewrite from an old PDF, LinkedIn, BOSS 直聘, 猎聘, 58 同城, portfolio, or target job description. Kami extracts authorized sources, asks evidence questions for missing recent work, chooses a suitable resume family/theme, and renders an ATS-safe companion when needed. Also use it when a user asks for a finished document whose appearance matters: a one-pager, letter, portfolio, long report, slide deck, equity report, changelog, or landing page. Skip it when the user only wants plain text.",
       "url": "/SKILL.md",
-      "digest": "sha256:9666520a24f85986a6ee8b26b37385ed59e3cc187ab01cfe03cdf028e133fe25",
+      "digest": "sha256:8134372507cd3c1966149e8f5b5d8d0a29a9a8c089bb7fdcaaec783bdb932cd6",
       "version": "1.11.0",
       "license": "MIT",
       "homepage": "https://kami-resume-studio.vercel.app",

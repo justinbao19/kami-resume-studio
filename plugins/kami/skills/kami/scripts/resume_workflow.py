@@ -57,8 +57,8 @@ ROLE_KEYWORDS: dict[str, set[str]] = {
 
 TEMPLATE_FAMILIES = {
     "product": "editorial",
-    "strategy": "aqua-ledger",
-    "consulting": "aqua-ledger",
+    "strategy": "swiss-grid",
+    "consulting": "swiss-grid",
     "generalist": "editorial",
     "software": "cupertino",
     "data": "technical",
@@ -69,7 +69,7 @@ TEMPLATE_FAMILIES = {
     "director": "executive",
     "founder": "executive",
     "management": "executive",
-    "design": "swiss-grid",
+    "design": "creative",
     "brand": "atelier-serif",
     "content": "creative",
     "creative": "creative",
@@ -105,6 +105,7 @@ SOCIAL_ICON_PATHS = {
     "github": "<path d='M10 3.2a6.8 6.8 0 0 0-2.2 13.2c.3.1.4-.1.4-.3v-1.2c-1.7.4-2.1-.8-2.1-.8-.3-.7-.7-.9-.7-.9-.6-.4 0-.4 0-.4.7.1 1.1.7 1.1.7.6 1.1 1.6.8 2 .6.1-.4.2-.8.4-1-1.4-.2-2.8-.7-2.8-3.1 0-.7.2-1.2.6-1.7-.1-.2-.3-.8.1-1.7 0 0 .5-.2 1.8.6.5-.1 1-.2 1.5-.2s1 0 1.5.2c1.3-.9 1.8-.6 1.8-.6.4.9.2 1.5.1 1.7.4.5.6 1 .6 1.7 0 2.4-1.4 2.9-2.8 3.1.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3A6.8 6.8 0 0 0 10 3.2Z'/>",
     "x": "<path d='M4 4h3.3l2.4 3.2L12.8 4H16l-4.8 5.4L16.2 16h-3.3l-2.8-3.7L6.6 16H3.4l5-5.9L4 4Zm2.2 1.3 6.9 9.4h.9L7.1 5.3h-.9Z'/>",
 }
+PAPER_TONES = {"white": "#FFFFFF", "ivory": "#FFFCF4"}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -480,6 +481,15 @@ def choose_theme(dossier: dict[str, Any], template: str) -> str:
     return "dark" if template in THEME_DARK_FAMILIES else "light"
 
 
+def choose_paper_tone(dossier: dict[str, Any], theme: str, *, ats: bool = False) -> str:
+    if ats:
+        return "white"
+    preference = dossier.get("candidate", {}).get("preferences", {}).get("paper_tone_preference", "auto")
+    if theme == "light" and preference in {"white", "ivory"}:
+        return preference
+    return "auto"
+
+
 def route(dossier: dict[str, Any], analysis: dict[str, Any]) -> dict[str, Any]:
     family = (analysis.get("top_role_families") or ["generalist"])[0]
     primary = TEMPLATE_FAMILIES.get(family, "editorial")
@@ -487,8 +497,8 @@ def route(dossier: dict[str, Any], analysis: dict[str, Any]) -> dict[str, Any]:
     target = target_job(dossier)
     return {
         "schema_version": 1,
-        "primary": {"template": primary, "theme": theme},
-        "ats_companion": None if primary == "ats-classic" and theme == "light" else {"template": "ats-classic", "theme": "light"},
+        "primary": {"template": primary, "theme": theme, "paper_tone": choose_paper_tone(dossier, theme)},
+        "ats_companion": None if primary == "ats-classic" and theme == "light" else {"template": "ats-classic", "theme": "light", "paper_tone": "white"},
         "role_family": family,
         "target_role": target.get("title", target.get("role", "")),
         "reasons": [
@@ -520,6 +530,7 @@ def render(
     }[locale]
     template = route_choice.get("template", "editorial")
     theme = route_choice.get("theme", "light")
+    paper_tone = route_choice.get("paper_tone", choose_paper_tone(dossier, theme, ats=ats))
     positions = dossier.get("positions", [])
     bullets = []
     for position in positions:
@@ -558,7 +569,9 @@ def render(
     spec = next((item for item in catalog["templates"] if item["id"] == template), None)
     if spec is None:
         spec = next(item for item in catalog["templates"] if item["id"] == "editorial")
-    palette = spec[theme]
+    palette = dict(spec[theme])
+    if theme == "light" and paper_tone in PAPER_TONES:
+        palette["paper"] = PAPER_TONES[paper_tone]
     accent_soft = hex_rgba(palette["accent"], 0.14)
     title = text_of(candidate.get("headline")) or text_of(target_job(dossier).get("title"))
     socials = candidate.get("socials", {}) if isinstance(candidate.get("socials"), dict) else {}
@@ -583,7 +596,13 @@ def render(
             )
     social_html = f"<span class='socials'>{''.join(social_links)}</span>" if social_links else ""
     photo_src = safe_photo_src(candidate.get("photo")) if template in PHOTO_TEMPLATES and not ats else ""
-    photo_html = f"<img class='avatar' src='{html.escape(photo_src)}' alt='{html.escape(text_of(candidate.get('name')))}'>" if photo_src else ""
+    photo_placeholder = "<span class='avatar photo-placeholder' role='img' aria-label='Photo placeholder'><svg viewBox='0 0 48 48' aria-hidden='true'><circle cx='24' cy='17' r='8'/><path d='M10 40c1.4-9 6.6-13.5 14-13.5S36.6 31 38 40'/></svg></span>"
+    if photo_src:
+        photo_html = f"<img class='avatar' src='{html.escape(photo_src)}' alt='{html.escape(text_of(candidate.get('name')))}'>"
+    elif template in PHOTO_TEMPLATES and not ats:
+        photo_html = photo_placeholder
+    else:
+        photo_html = ""
     if document_type in {"cover-letter", "recommendation"}:
         letter = dossier.get("cover_letter", {}) if isinstance(dossier.get("cover_letter"), dict) else {}
         target = target_job(dossier)
@@ -614,7 +633,7 @@ def render(
 * {{ box-sizing:border-box; }} body {{ margin:0; background:var(--paper); color:var(--ink); font-family:Charter,Georgia,serif; }}
 .page {{ min-height:297mm; padding:18mm; display:flex; flex-direction:column; }}
 header {{ display:flex; gap:6mm; align-items:center; padding-bottom:7mm; border-bottom:.4pt solid var(--line); }}
-.avatar {{ width:22mm; height:27mm; object-fit:cover; }} h1 {{ margin:0; font-size:25pt; }}
+.avatar {{ width:22mm; height:27mm; object-fit:cover; }} .photo-placeholder {{ display:grid; place-items:center; color:var(--accent); background:rgba(127,127,127,.08); }} .photo-placeholder svg {{ width:48%; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; }} h1 {{ margin:0; font-size:25pt; }}
 .eyebrow {{ margin:0 0 2mm; color:var(--accent); font:700 8pt Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; }}
 .meta {{ display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; padding:5mm 0; border-bottom:.4pt solid var(--line); color:var(--accent); font:8.5pt Arial,sans-serif; }}
 .letter-body {{ max-width:155mm; padding-top:12mm; font-size:11pt; line-height:1.75; }} .letter-body p {{ margin:0 0 6mm; }}
@@ -643,7 +662,7 @@ body.swiss-grid .page {{ background:linear-gradient(90deg,transparent 0 43mm,var
 * {{ box-sizing: border-box; }} body {{ margin:0; background:var(--paper); color:var(--ink); font-family: Charter, Georgia, serif; line-height:1.5; }}
 .page {{ max-width: 180mm; margin:auto; }} header {{ border-bottom:1px solid var(--accent); padding-bottom:8mm; margin-bottom:7mm; }}
 h1 {{ margin:0 0 2mm; font-size:28pt; }} .title {{ margin:0; color:var(--accent); font:600 10pt Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; }}
-.identity {{ display:flex; align-items:center; gap:5mm; }} .avatar {{ width:20mm; height:20mm; border-radius:50%; object-fit:cover; object-position:center 35%; }} .contact {{ margin-top:4mm; font:9pt Arial,sans-serif; opacity:.75; }} .socials {{ display:flex; flex-wrap:wrap; align-items:center; gap:2mm; margin-top:1.5mm; }} .socials a {{ color:var(--accent); text-decoration:none; }} .socials .icon-social {{ width:4.5mm; height:4.5mm; display:inline-flex; align-items:center; justify-content:center; border:.4pt solid var(--accent); }} .socials .icon-social svg {{ width:3.5mm; height:3.5mm; fill:currentColor; }} .socials .text-social + .text-social::before {{ content:'·'; margin-right:2mm; color:var(--ink); }} h2 {{ color:var(--accent); font:700 10pt Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; border-bottom:1px solid var(--accent); padding-bottom:2mm; margin:7mm 0 4mm; }}
+.identity {{ min-width:0; display:flex; align-items:center; gap:5mm; }} .identity > div {{ min-width:0; }} .avatar {{ width:20mm; height:20mm; flex:0 0 auto; border-radius:50%; object-fit:cover; object-position:center 35%; }} .photo-placeholder {{ display:grid; place-items:center; color:var(--accent); background:var(--accent-soft); }} .photo-placeholder svg {{ width:48%; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; }} h1 {{ overflow-wrap:anywhere; }} .contact {{ margin-top:4mm; font:9pt Arial,sans-serif; opacity:.75; }} .socials {{ display:flex; flex-wrap:wrap; align-items:center; gap:2mm; margin-top:1.5mm; }} .socials a {{ color:var(--accent); text-decoration:none; }} .socials .icon-social {{ width:4.5mm; height:4.5mm; display:inline-flex; align-items:center; justify-content:center; border:.4pt solid var(--accent); }} .socials .icon-social svg {{ width:3.5mm; height:3.5mm; fill:currentColor; }} .socials .text-social + .text-social::before {{ content:'·'; margin-right:2mm; color:var(--ink); }} h2 {{ color:var(--accent); font:700 10pt Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; border-bottom:1px solid var(--accent); padding-bottom:2mm; margin:7mm 0 4mm; }}
 .summary {{ font-size:11pt; }} .entry {{ break-inside:avoid; margin:0 0 5mm; }} .entry-head {{ display:flex; justify-content:space-between; gap:8mm; align-items:baseline; }} h3 {{ margin:0; font-size:12pt; }} h3 a {{ color:inherit; text-decoration:none; border-bottom:.4pt solid var(--accent); }} .entry-head span {{ font:9pt Arial,sans-serif; opacity:.7; white-space:nowrap; }} .role {{ margin:1mm 0 1mm; font:600 9.5pt Arial,sans-serif; color:var(--accent); opacity:.82; }} .project-description {{ margin:0 0 1mm; font-size:9.5pt; opacity:.8; }} ul {{ margin:1mm 0 0; padding-left:5mm; }} li {{ margin-bottom:1.2mm; font-size:10pt; }} .skills {{ font-size:10pt; }}
 .resume-template.technical .page {{ max-width: 178mm; border-left: 4mm solid var(--accent); padding-left: 8mm; }} .resume-template.technical h1 {{ font-family: 'Kami Mono', monospace; font-size: 22pt; letter-spacing: -.04em; }} .resume-template.technical h2 {{ letter-spacing: .05em; }}
 .resume-template.executive .page {{ max-width: 184mm; }} .resume-template.executive header {{ border-bottom-width: 2px; }} .resume-template.executive h1 {{ font-size: 31pt; }} .resume-template.executive .summary {{ font-size: 12pt; }} .resume-template.executive .entry-head h3 {{ font-size: 13pt; }}
@@ -656,7 +675,7 @@ h1 {{ margin:0 0 2mm; font-size:28pt; }} .title {{ margin:0; color:var(--accent)
 .resume-template.aqua-ledger {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.aqua-ledger .page {{ max-width:184mm; }} .resume-template.aqua-ledger header {{ margin:-14mm -14mm 7mm; padding:14mm; background:linear-gradient(125deg,var(--accent-soft),var(--paper)); border:0; }} .resume-template.aqua-ledger h1 {{ font-size:24pt; }} .resume-template.aqua-ledger .title {{ font-size:18pt; }} .resume-template.aqua-ledger section {{ display:grid; grid-template-columns:36mm 1fr; gap:7mm; padding:5mm 0; border-bottom:.4pt solid var(--accent); }} .resume-template.aqua-ledger section h2 {{ margin:0; border:0; }}
 .resume-template.atelier-serif .page {{ max-width:184mm; border-left:46mm solid var(--accent-soft); padding-left:10mm; }} .resume-template.atelier-serif header {{ border-bottom:0; }} .resume-template.atelier-serif h1 {{ font-family:"Bodoni 72",Didot,Georgia,serif; font-size:38pt; font-weight:400; letter-spacing:-.04em; }} .resume-template.atelier-serif h2 {{ color:var(--ink); border-bottom:.4pt solid var(--accent); }}
 .resume-template.cupertino {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.cupertino .page {{ max-width:176mm; }} .resume-template.cupertino header {{ border-bottom:.4pt solid var(--accent); }} .resume-template.cupertino h1 {{ font-size:29pt; letter-spacing:-.04em; }} .resume-template.cupertino h2 {{ color:var(--ink); font-size:13pt; letter-spacing:-.02em; text-transform:none; }}
-.resume-template.swiss-grid {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.swiss-grid .page {{ max-width:184mm; border-left:.4pt solid var(--accent); }} .resume-template.swiss-grid header {{ display:grid; grid-template-columns:36mm 1fr; padding-left:7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid h1 {{ font-size:36pt; line-height:.9; letter-spacing:-.07em; text-transform:uppercase; }} .resume-template.swiss-grid section {{ display:grid; grid-template-columns:36mm 1fr; gap:7mm; padding:5mm 0 5mm 7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid section h2 {{ margin:0; border:0; }}
+.resume-template.swiss-grid {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.swiss-grid .page {{ max-width:184mm; border-left:.4pt solid var(--accent); }} .resume-template.swiss-grid header {{ display:grid; grid-template-columns:36mm minmax(0,1fr); padding-left:7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid h1 {{ font-size:32pt; line-height:1.02; letter-spacing:-.045em; }} .resume-template.swiss-grid section {{ display:grid; grid-template-columns:36mm minmax(0,1fr); gap:7mm; padding:5mm 0 5mm 7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid section h2 {{ margin:0; border:0; }}
 @media print {{ body {{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }} }}
 </style></head><body class='resume-template {template} theme-{theme}'><main class='page'>
 <header><div class='identity'>{photo_html}<div><h1>{html.escape(text_of(candidate.get('name')))}</h1><p class='title'>{html.escape(title)}</p></div></div><p class='contact'>{html.escape(' · '.join(text_of(candidate.get(key)) for key in ('email','phone','location','website') if candidate.get(key)))}{social_html}</p></header>

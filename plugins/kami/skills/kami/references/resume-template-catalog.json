@@ -2,6 +2,7 @@
   "version": 1,
   "template_count": 13,
   "variant_count": 26,
+  "paper_tones": ["auto", "white", "ivory"],
   "templates": [
     {
       "id": "editorial",
@@ -176,10 +177,10 @@
     },
     {
       "id": "swiss-grid",
-      "name_zh": "经纬网格",
-      "name_en": "Swiss Grid",
-      "role_families": ["design", "creative", "product", "strategy"],
-      "personality": ["modernist", "structured", "distinctive"],
+      "name_zh": "麦肯锡网格",
+      "name_en": "McKinsey Grid",
+      "role_families": ["strategy", "consulting", "transformation", "operations", "executive-communication"],
+      "personality": ["analytical", "structured", "executive-ready"],
       "layout": "swiss-numbered-grid",
       "photo": true,
       "social_display": "text",

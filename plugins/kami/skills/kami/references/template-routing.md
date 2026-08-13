@@ -18,6 +18,13 @@ Photos are an explicit, market-sensitive option rather than a default resume fie
 - No-photo families: `ats-classic`, `executive`, `sales-impact`, `operations-practical`, and `academic`.
 - If a user supplies a photo while a no-photo family is selected, keep it in the dossier but show the editor control as unavailable and omit it from the render.
 - Keep the ATS companion photo-free unless the target market explicitly requires a photo and the user confirms that requirement.
+- When no image is supplied, preview a neutral portrait icon inside supported photo slots. Never derive the placeholder from the candidate name or initials.
+
+## Paper tone
+
+- Light themes accept `auto`, `white`, or `ivory`. `auto` keeps the family palette, `white` uses `#FFFFFF`, and `ivory` uses `#FFFCF4`.
+- Dark themes ignore the paper-tone override and retain the family dark paper.
+- The ATS companion defaults to white paper.
 
 ## Optional social links
 
@@ -32,11 +39,11 @@ LinkedIn, X, and GitHub are opt-in fields. Validate the URL, preserve it as a hy
 | Role family | Default | Alternatives |
 | --- | --- | --- |
 | Product and generalist roles | editorial | cupertino, ats-classic |
-| Strategy, consulting, polished operations | aqua-ledger | editorial, ats-classic |
+| Strategy, consulting, transformation, executive communication | swiss-grid | editorial, aqua-ledger, ats-classic |
 | Software product and human-centered technology | cupertino | technical, ats-classic |
 | Data, AI, security, infrastructure | technical | cupertino, ats-classic |
 | Director, head, VP, GM, founder | atelier-serif | executive, ats-classic |
-| UX, architecture, visual systems, creative technology | swiss-grid | creative, cupertino |
+| UX, architecture, visual systems, creative technology | creative | cupertino, editorial |
 | Brand, luxury, editorial content | atelier-serif | creative, editorial |
 | Sales, business development, growth, partnerships | sales-impact | executive, ats-classic |
 | Operations, supply chain, manufacturing, program management | aqua-ledger | operations-practical, ats-classic |
@@ -68,7 +75,7 @@ Dark defaults fit creative, technical, founder, gaming, media, developer-tool, a
 - `cool`, `precise`, `polished`: aqua-ledger.
 - `cultivated`, `narrative`, `luxury`: atelier-serif.
 - `minimal`, `human`, `product-led`: cupertino.
-- `modernist`, `structured`, `distinctive`: swiss-grid.
+- `analytical`, `structured`, `executive-ready`: swiss-grid.
 
 ## Content-shape modifiers
 
@@ -85,8 +92,8 @@ Always record:
 
 ```json
 {
-  "primary": {"template": "technical", "theme": "dark"},
-  "ats_companion": {"template": "ats-classic", "theme": "light"},
+  "primary": {"template": "technical", "theme": "dark", "paper_tone": "auto"},
+  "ats_companion": {"template": "ats-classic", "theme": "light", "paper_tone": "white"},
   "reasons": ["target role is staff engineer", "strong open-source evidence"],
   "rejected": [{"template": "creative", "reason": "visual work is not the primary hiring evidence"}]
 }

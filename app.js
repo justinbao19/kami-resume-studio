@@ -12,6 +12,11 @@ const themes = {
   dark: { paper: "#172338", ink: "#f1eee5", muted: "#bcc7d5", line: "#40516a" }
 };
 
+const paperTones = {
+  white: "#ffffff",
+  ivory: "#fffcf4"
+};
+
 const templateThemes = {
   editorial: {
     light: { accent: "#1b365d", paper: "#f7f5ee", ink: "#1e201d", muted: "#67675f", line: "#d8d3c6" },
@@ -265,6 +270,7 @@ const baseState = {
   documentType: "resume",
   template: "editorial",
   theme: "light",
+  paperTone: "auto",
   locale: "zh",
   accent: "auto",
   density: "balanced",
@@ -317,6 +323,7 @@ function loadState() {
     if (restored.template === "classic") restored.template = "ats-classic";
     if (restored.template === "modern") restored.template = "creative";
     if (!themes[restored.theme]) restored.theme = "light";
+    if (!["auto", "white", "ivory"].includes(restored.paperTone)) restored.paperTone = "auto";
     if (!["resume", "cover-letter", "recommendation"].includes(restored.documentType)) restored.documentType = "resume";
     return restored;
   } catch (error) {
@@ -374,11 +381,8 @@ function splitHighlights(value = "") {
     .filter(Boolean);
 }
 
-function initials(name = "") {
-  const clean = name.trim();
-  if (!clean) return "KR";
-  if (/^[\u3400-\u9fff]/.test(clean)) return clean.slice(-2);
-  return clean.split(/\s+/).map(part => part[0]).join("").slice(0, 2).toUpperCase();
+function photoPlaceholderMarkup() {
+  return `<span class="photo-placeholder" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="17" r="8"></circle><path d="M10 40c1.4-9 6.6-13.5 14-13.5S36.6 31 38 40"></path></svg></span>`;
 }
 
 function contactValues(profile) {
@@ -440,7 +444,7 @@ function avatarMarkup(profile, template, className = "resume-avatar") {
   const photo = String(profile.photo || "");
   const content = photo.startsWith("data:image/")
     ? `<img src="${escapeHtml(photo)}" alt="${escapeHtml(profile.name || "个人照片")}">`
-    : `<span>${escapeHtml(initials(profile.name))}</span>`;
+    : photoPlaceholderMarkup();
   return `<div class="${className}">${content}</div>`;
 }
 
@@ -738,8 +742,7 @@ function renderCupertino(data, labels) {
 }
 
 function renderSwissGrid(data, labels) {
-  const splitName = escapeHtml(data.profile.name).replace(/\s+/, "<br>");
-  return `<header class="swiss-header"><div class="swiss-number">00</div><div><p>CURRICULUM VITAE / SELECTED WORK</p><h1 class="resume-name">${splitName}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p></div>${avatarMarkup(data.profile, "swiss-grid", "swiss-photo")}</header><section class="swiss-row"><h2>01<br>${labels.summary}</h2><p class="resume-summary">${escapeHtml(data.profile.summary)}</p></section><section class="swiss-row"><h2>02<br>${labels.experience}</h2><div>${renderExperience(data.experience)}</div></section><section class="swiss-row"><h2>03<br>${labels.projects}</h2><div>${renderProjects(data.projects, labels, "swiss")}</div></section><section class="swiss-row"><h2>04<br>${labels.skills}</h2><div class="swiss-bottom"><div>${renderSkillGroups(data.skills, labels)}</div><div>${renderEducation(data.education)}</div><div class="swiss-contact">${contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("")}${renderSocialBlock(data.profile, "swiss-grid")}</div></div></section>`;
+  return `<header class="swiss-header"><div class="swiss-number">00</div><div><p>STRATEGY PROFILE / SELECTED IMPACT</p><h1 class="resume-name">${escapeHtml(data.profile.name)}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p></div>${avatarMarkup(data.profile, "swiss-grid", "swiss-photo")}</header><section class="swiss-row"><h2>01<br>${labels.summary}</h2><p class="resume-summary">${escapeHtml(data.profile.summary)}</p></section><section class="swiss-row"><h2>02<br>${labels.experience}</h2><div>${renderExperience(data.experience)}</div></section><section class="swiss-row"><h2>03<br>${labels.projects}</h2><div>${renderProjects(data.projects, labels, "swiss")}</div></section><section class="swiss-row"><h2>04<br>${labels.skills}</h2><div class="swiss-bottom"><div>${renderSkillGroups(data.skills, labels)}</div><div>${renderEducation(data.education)}</div><div class="swiss-contact">${contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("")}${renderSocialBlock(data.profile, "swiss-grid")}</div></div></section>`;
 }
 
 function renderLetter(data, template, kind) {
@@ -769,12 +772,13 @@ function templateClass(template) {
 function renderPreview() {
   state.template = canonicalTemplate(state.template);
   const templateTheme = templateThemes[state.template]?.[state.theme];
-  const theme = templateTheme || themes[state.theme] || themes.light;
+  const theme = { ...(templateTheme || themes[state.theme] || themes.light) };
+  if (state.theme === "light" && paperTones[state.paperTone]) theme.paper = paperTones[state.paperTone];
   const accent = state.accent === "auto"
     ? { color: theme.accent || templateThemes.editorial.light.accent, soft: hexToRgba(theme.accent || templateThemes.editorial.light.accent) }
     : (accents[state.accent] || accents.ink);
   const labels = copy[state.locale] || copy.zh;
-  preview.className = `resume-page template-${templateClass(state.template)} template-id-${state.template} theme-${state.theme} density-${state.density}`;
+  preview.className = `resume-page template-${templateClass(state.template)} template-id-${state.template} theme-${state.theme} paper-tone-${state.paperTone} density-${state.density}`;
   preview.style.setProperty("--accent", accent.color);
   preview.style.setProperty("--accent-soft", accent.soft);
   preview.style.setProperty("--paper", theme.paper);
@@ -892,7 +896,7 @@ function updatePhotoEditor() {
   const photo = String(state.data.profile.photo || "");
   preview.innerHTML = photo.startsWith("data:image/")
     ? `<img src="${escapeHtml(photo)}" alt="个人照片预览">`
-    : "<span>头像</span>";
+    : photoPlaceholderMarkup();
 }
 
 function sectionScore(section) {
@@ -1033,6 +1037,12 @@ function updateControls() {
   document.querySelectorAll("[data-theme]").forEach(button => {
     button.classList.toggle("active", button.dataset.theme === state.theme);
   });
+  document.querySelectorAll("[data-paper-tone]").forEach(button => {
+    button.classList.toggle("active", button.dataset.paperTone === state.paperTone);
+    button.disabled = state.theme === "dark";
+  });
+  const paperToneHelp = document.getElementById("paperToneHelp");
+  if (paperToneHelp) paperToneHelp.textContent = state.theme === "dark" ? "深色模式使用模板纸面" : "浅色模式可选";
   document.querySelectorAll("[data-document-type]").forEach(button => {
     button.classList.toggle("active", button.dataset.documentType === state.documentType);
   });
@@ -1231,6 +1241,15 @@ document.getElementById("themeControl").addEventListener("click", event => {
   state.theme = button.dataset.theme;
   rerender();
   showToast(state.theme === "dark" ? "已切换为深色简历" : "已切换为浅色简历");
+});
+
+document.getElementById("paperToneControl").addEventListener("click", event => {
+  const button = event.target.closest("[data-paper-tone]");
+  if (!button || button.disabled) return;
+  state.paperTone = button.dataset.paperTone;
+  rerender();
+  const labels = { auto: "模板推荐纸色", white: "纯白纸张", ivory: "象牙白纸张" };
+  showToast(`已切换为${labels[state.paperTone]}`);
 });
 
 document.getElementById("colorOptions").addEventListener("click", event => {

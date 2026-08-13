@@ -8,6 +8,8 @@ This reference is the visual contract for the four resume families added from th
 - Use system fonts and broad fallbacks. Do not bundle Apple or commercial font files.
 - Light and dark variants keep the same grid and hierarchy.
 - Photos are optional and local. Social links remain clickable in HTML and PDF.
+- Empty photo slots use a neutral portrait-outline icon, never initials or candidate text.
+- Light themes may keep their template paper or use pure white `#FFFFFF` or ivory `#FFFCF4`. Dark themes keep the documented dark paper.
 - Cover letters reuse the selected family masthead, typography, rules, and palette.
 - Recommendation letters are supported by Atelier Serif when recommender identity and relationship are confirmed.
 
@@ -51,12 +53,12 @@ This reference is the visual contract for the four resume families added from th
 - Socials: text labels and handles.
 - Letter: minimal header, ample margins, no decorative glow.
 
-## Swiss Grid
+## McKinsey Grid
 
 - Source group: screenshots 8 to 10.
-- Intent: architecture, design systems, creative technology, distinctive product work.
+- Intent: strategy consulting, transformation programs, operating-model work, and executive communication.
 - Grid: 27 percent numbered label column and 73 percent content column, with continuous rules.
-- Header: oversized split name, numbered cell, pale blue portrait field.
+- Header: prominent but unsplit name, numbered cell, pale blue portrait field, and strict consulting-style alignment.
 - Typography: Helvetica Neue, Avenir Next, PingFang SC, sans-serif with tight display tracking.
 - Light palette: paper `#F7F9FA`, ink `#15191C`, blue `#3579A8`, rule `#9DA8AE`.
 - Dark palette: paper `#171B1E`, ink `#F1F4F5`, blue `#80BDE4`, rule `#4E5960`.

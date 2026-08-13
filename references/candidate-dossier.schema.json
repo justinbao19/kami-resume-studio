@@ -33,6 +33,7 @@
             "target_roles": {"type": "array", "items": {"type": "string"}},
             "personality": {"type": "array", "items": {"type": "string"}},
             "theme_preference": {"enum": ["auto", "light", "dark"]},
+            "paper_tone_preference": {"enum": ["auto", "white", "ivory"], "$comment": "Applies to light-mode output only. Dark themes keep the template's dark paper color."},
             "page_target": {"enum": [1, 2]}
           }
         }

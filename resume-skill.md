@@ -11,17 +11,17 @@ Kami Resume is a local, Agent-first workflow for generating a role-matched Chine
 3. Mark every claim as `confirmed`, `sourced`, `inferred`, or `conflict`.
 4. Ask focused questions about the latest role that may be absent from the old resume: responsibilities, work focus, scope, methods, measurable outcomes, ownership, and timeline.
 5. Match confirmed evidence to the target job without inventing metrics or copying unsupported requirements.
-6. Choose the output language, one of 13 resume families, and a light or dark theme.
+6. Choose the output language, one of 13 resume families, a light or dark theme, and template, white, or ivory paper for light output.
 7. Generate the primary resume, a light `ats-classic` companion when the primary is dark, expressive, or multi-column, and a coordinated cover letter.
 8. Verify content, links, pagination, density, photo behavior, and print output before delivery.
 
 ## Template catalog
 
-The editor and Agent router expose 13 families and 26 light/dark variants. Every family supports project experience.
+The editor and Agent router expose 13 families and 26 light/dark variants. Light output supports template-default, white, and ivory paper. Every family supports project experience.
 
 | ID | Chinese / English | Primary fit | Photo | Social presentation |
 | --- | --- | --- | --- | --- |
-| `editorial` | 纸序 / Editorial | Product, strategy, consulting | yes | text |
+| `editorial` | 纸序 / Editorial | Product, generalist, narrative roles | yes | text |
 | `ats-classic` | 清衡 / ATS Classic | Finance, legal, government, ATS | no | text |
 | `technical` | 栈迹 / Technical | Software, data, AI, security | yes | icons |
 | `executive` | 领航 / Executive | Executives, heads, founders | no | text |
@@ -30,12 +30,12 @@ The editor and Agent router expose 13 families and 26 light/dark variants. Every
 | `operations-practical` | 实干线 / Operations Practical | Operations, supply chain, services | no | text |
 | `academic` | 学研录 / Academic | Research, education, policy, health | no | text |
 | `early-career` | 初航 / Early Career | Students, graduates, internships | yes | icons |
-| `aqua-ledger` | 冰川履历 / Aqua Ledger | Strategy, consulting, polished operations | yes | icons |
+| `aqua-ledger` | 冰川履历 / Aqua Ledger | Polished operations, program work, service | yes | icons |
 | `atelier-serif` | 灰廊雅集 / Atelier Serif | Executive, brand, luxury, narrative roles | yes | text |
 | `cupertino` | 库比蒂诺 / Cupertino | Product, software, AI, human-centered technology | yes | text |
-| `swiss-grid` | 经纬网格 / Swiss Grid | Design, architecture, creative technology | yes | text |
+| `swiss-grid` | 麦肯锡网格 / McKinsey Grid | Strategy, consulting, transformation, executive communication | yes | text |
 
-The four reference-led families, Aqua Ledger, Atelier Serif, Cupertino, and Swiss Grid, include coordinated cover-letter layouts. Atelier Serif also supports a recommendation-letter mode. Letter fields remain independent: recipient, target company, target role, subject, body, closing, signer, and optional recommender details.
+The four reference-led families, Aqua Ledger, Atelier Serif, Cupertino, and McKinsey Grid, include coordinated cover-letter layouts. Photo-capable templates use a neutral portrait icon when no image has been supplied. Atelier Serif also supports a recommendation-letter mode. Letter fields remain independent: recipient, target company, target role, subject, body, closing, signer, and optional recommender details.
 
 ## Install
 

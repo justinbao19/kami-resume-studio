@@ -2120,9 +2120,16 @@ def test_resume_workflow_new_families_and_letters() -> None:
     }
     catalog = json.loads((REPO_ROOT / "references" / "resume-template-catalog.json").read_text(encoding="utf-8"))
     ids = {item["id"] for item in catalog["templates"]}
+    mckinsey = next(item for item in catalog["templates"] if item["id"] == "swiss-grid")
     check("resume catalog exposes 13 families and 26 variants",
           catalog["template_count"] == 13 and catalog["variant_count"] == 26 and
           {"aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"} <= ids)
+    check("resume catalog exposes light paper tones",
+          catalog.get("paper_tones") == ["auto", "white", "ivory"])
+    check("legacy swiss-grid id presents the McKinsey consulting family",
+          mckinsey["name_zh"] == "麦肯锡网格" and
+          mckinsey["name_en"] == "McKinsey Grid" and
+          {"strategy", "consulting", "executive-communication"} <= set(mckinsey["role_families"]))
     with tempfile.TemporaryDirectory() as directory:
         output_dir = Path(directory)
         for template in ("aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"):
@@ -2140,6 +2147,42 @@ def test_resume_workflow_new_families_and_letters() -> None:
                   f"resume-template {template}" in resume_html and "<img class='avatar'" in resume_html)
             check(f"resume workflow renders matching {template} letter",
                   f"class='{template} theme-light'" in letter_html and "Application for AI Product Lead" in letter_html)
+
+
+def test_resume_workflow_routes_consulting_and_applies_paper_tones() -> None:
+    fixture = ROOT / "tests" / "fixtures" / "resume_case_1_resolved.json"
+    dossier = json.loads(fixture.read_text(encoding="utf-8"))
+    dossier["candidate"]["preferences"]["paper_tone_preference"] = "ivory"
+    consulting_analysis = {"top_role_families": ["consulting"]}
+    design_analysis = {"top_role_families": ["design"]}
+    consulting_route = resume_workflow_mod.route(dossier, consulting_analysis)
+    design_route = resume_workflow_mod.route(dossier, design_analysis)
+    check("consulting routes to McKinsey Grid",
+          consulting_route["primary"] == {"template": "swiss-grid", "theme": "light", "paper_tone": "ivory"})
+    check("design no longer routes to the consulting grid",
+          design_route["primary"]["template"] == "creative")
+    check("ATS companion uses white paper",
+          consulting_route["ats_companion"]["paper_tone"] == "white")
+
+    with tempfile.TemporaryDirectory() as directory:
+        output_dir = Path(directory)
+        light_path = output_dir / "light.html"
+        dark_path = output_dir / "dark.html"
+        empty_photo_path = output_dir / "empty-photo.html"
+        resume_workflow_mod.render(dossier, consulting_route, light_path)
+        dark_route = {"primary": {"template": "technical", "theme": "dark", "paper_tone": "ivory"}}
+        resume_workflow_mod.render(dossier, dark_route, dark_path)
+        empty_photo_dossier = json.loads(fixture.read_text(encoding="utf-8"))
+        empty_photo_route = {"primary": {"template": "swiss-grid", "theme": "light", "paper_tone": "white"}}
+        resume_workflow_mod.render(empty_photo_dossier, empty_photo_route, empty_photo_path)
+        light_html = light_path.read_text(encoding="utf-8")
+        dark_html = dark_path.read_text(encoding="utf-8")
+        empty_photo_html = empty_photo_path.read_text(encoding="utf-8")
+
+    check("ivory paper tone renders in light mode", "--paper: #FFFCF4" in light_html)
+    check("dark mode ignores a light paper override", "--paper: #10201D" in dark_html and "#FFFCF4" not in dark_html)
+    check("empty photo slot uses an icon without candidate initials",
+          "Photo placeholder" in empty_photo_html and "<circle cx='24' cy='17' r='8'/>" in empty_photo_html)
 
 
 def _test_functions():

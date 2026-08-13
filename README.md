@@ -88,11 +88,11 @@ The source intake workflow reads only files or visible pages the user has explic
 
 ## Resume template system
 
-The editor and Agent router expose 13 template families and 26 light or dark combinations:
+The editor and Agent router expose 13 template families and 26 light or dark combinations. Light resumes can keep the template paper or switch to pure white or ivory:
 
 | Family | Best suited for |
 | --- | --- |
-| Editorial | Product, strategy, consulting, generalist roles |
+| Editorial | Product, generalist, narrative roles |
 | ATS Classic | Finance, legal, government, conservative companies |
 | Technical | Software, data, AI, security, infrastructure |
 | Executive | Leadership, functional heads, founders |
@@ -101,12 +101,12 @@ The editor and Agent router expose 13 template families and 26 light or dark com
 | Operations Practical | Operations, supply chain, manufacturing, services |
 | Academic | Research, education, policy, medical, academic work |
 | Early Career | Students, internships, campus recruiting, career switches |
-| Aqua Ledger | Strategy, consulting, polished operations, hospitality |
+| Aqua Ledger | Polished operations, program work, hospitality |
 | Atelier Serif | Executive, brand, luxury, editorial storytelling |
 | Cupertino | Product, software, AI, human-centered technology |
-| Swiss Grid | Design, architecture, creative technology, modernist portfolios |
+| McKinsey Grid | Strategy, consulting, transformation, executive communication |
 
-All families support project experience. Aqua Ledger, Atelier Serif, Cupertino, and Swiss Grid add screenshot-led photo layouts and coordinated cover-letter treatments; Atelier Serif also supports recommendation letters. When the primary design is dark, expressive, or multi-column, the Agent also creates a light ATS Classic companion.
+All families support project experience. Aqua Ledger, Atelier Serif, Cupertino, and McKinsey Grid add screenshot-led photo layouts and coordinated cover-letter treatments; Atelier Serif also supports recommendation letters. Empty photo slots use a neutral portrait icon, never candidate initials. When the primary design is dark, expressive, or multi-column, the Agent also creates a white ATS Classic companion.
 
 The broader document engine still includes Eight document templates and 18 inline SVG diagram types inherited from Kami.
 
