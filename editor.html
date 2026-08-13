@@ -59,7 +59,13 @@
         <span id="completionBar"></span>
       </div>
 
-      <nav class="section-tabs" id="sectionTabs" aria-label="简历章节">
+      <div class="document-type-control segmented" id="documentTypeControl" aria-label="文档类型">
+        <button type="button" class="active" data-document-type="resume">简历</button>
+        <button type="button" data-document-type="cover-letter">求职信</button>
+        <button type="button" data-document-type="recommendation">推荐信</button>
+      </div>
+
+      <nav class="section-tabs" id="sectionTabs" data-document-only="resume" aria-label="简历章节">
         <button type="button" class="active" data-section="profile">
           <span>01</span><b>基本信息</b><i data-section-status="profile"></i>
         </button>
@@ -81,7 +87,7 @@
       </nav>
 
       <div class="editor-scroll">
-        <section class="editor-section active" data-editor-section="profile">
+        <section class="editor-section active" data-editor-section="profile" data-document-only="resume">
           <div class="section-intro">
             <p>基本信息</p>
             <span>让招聘者在 5 秒内知道你是谁。</span>
@@ -139,7 +145,7 @@
           </div>
         </section>
 
-        <section class="editor-section" data-editor-section="summary">
+        <section class="editor-section" data-editor-section="summary" data-document-only="resume">
           <div class="section-intro">
             <p>职业摘要</p>
             <span>用角色、年限、擅长领域和结果构成一句可信的定位。</span>
@@ -154,7 +160,7 @@
           </div>
         </section>
 
-        <section class="editor-section" data-editor-section="experience">
+        <section class="editor-section" data-editor-section="experience" data-document-only="resume">
           <div class="section-intro section-intro-action">
             <div>
               <p>工作经历</p>
@@ -165,7 +171,7 @@
           <div id="experienceEditor" class="repeat-list"></div>
         </section>
 
-        <section class="editor-section" data-editor-section="projects">
+        <section class="editor-section" data-editor-section="projects" data-document-only="resume">
           <div class="section-intro section-intro-action">
             <div>
               <p>项目经历</p>
@@ -176,7 +182,7 @@
           <div id="projectEditor" class="repeat-list"></div>
         </section>
 
-        <section class="editor-section" data-editor-section="education">
+        <section class="editor-section" data-editor-section="education" data-document-only="resume">
           <div class="section-intro section-intro-action">
             <div>
               <p>教育背景</p>
@@ -187,7 +193,7 @@
           <div id="educationEditor" class="repeat-list"></div>
         </section>
 
-        <section class="editor-section" data-editor-section="skills">
+        <section class="editor-section" data-editor-section="skills" data-document-only="resume">
           <div class="section-intro">
             <p>技能与工具</p>
             <span>分组比堆关键词更易读，也更便于 ATS 识别。</span>
@@ -205,6 +211,29 @@
               <span>语言</span>
               <input type="text" data-bind="skills.languages" placeholder="用逗号分隔">
             </label>
+          </div>
+        </section>
+
+        <section class="editor-section letter-editor-section" data-editor-section="letter" data-document-only="letter">
+          <div class="section-intro">
+            <p id="letterEditorTitle">求职信</p>
+            <span>与当前简历共享个人信息、模板、语言和明暗模式。</span>
+          </div>
+          <div class="form-grid form-grid-two">
+            <label class="field"><span>目标公司</span><input type="text" data-bind="coverLetter.company"></label>
+            <label class="field"><span>目标岗位</span><input type="text" data-bind="coverLetter.role"></label>
+            <label class="field"><span>收件人 / 称呼</span><input type="text" data-bind="coverLetter.recipient"></label>
+            <label class="field"><span>日期</span><input type="text" data-bind="coverLetter.date"></label>
+            <label class="field field-wide"><span>标题 / 主题</span><input type="text" data-bind="coverLetter.subject"></label>
+            <label class="field field-wide"><span>正文 <small>用空行分段</small></span><textarea rows="14" data-bind="coverLetter.body"></textarea></label>
+            <label class="field"><span>结语</span><input type="text" data-bind="coverLetter.closing"></label>
+            <label class="field"><span>签名</span><input type="text" data-bind="coverLetter.signer"></label>
+            <label class="field"><span>推荐人姓名</span><input type="text" data-bind="coverLetter.recommenderName"></label>
+            <label class="field"><span>推荐人身份</span><input type="text" data-bind="coverLetter.recommenderTitle"></label>
+          </div>
+          <div class="writing-note">
+            <span>Agent 写作规则</span>
+            <p>只使用档案中已确认或可追溯的事实。缺少目标岗位、最近经历或结果证据时，先通过问答补齐。</p>
           </div>
         </section>
       </div>
@@ -239,7 +268,7 @@
         <section class="design-block">
           <div class="design-heading">
             <p class="kicker">模板</p>
-            <span>9 类 · 18 变体</span>
+            <span>13 类 · 26 变体</span>
           </div>
           <div class="template-list" id="templateList">
             <button type="button" class="template-card active" data-template="editorial">
@@ -285,6 +314,26 @@
             <button type="button" class="template-card" data-template="early-career">
               <span class="template-thumb thumb-early" aria-hidden="true"><i></i><b></b><em></em></span>
               <span><b>初航</b><small>校招 · 实习 · 转行</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="aqua-ledger">
+              <span class="template-thumb thumb-aqua" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>冰川履历</b><small>高端运营 · 冷调秩序</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="atelier-serif">
+              <span class="template-thumb thumb-atelier" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>灰廊雅集</b><small>奢雅编辑 · 人物叙事</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="cupertino">
+              <span class="template-thumb thumb-cupertino" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>库比蒂诺</b><small>Apple 风 · 清透克制</small></span>
+              <i class="checkmark">✓</i>
+            </button>
+            <button type="button" class="template-card" data-template="swiss-grid">
+              <span class="template-thumb thumb-swiss" aria-hidden="true"><i></i><b></b><em></em></span>
+              <span><b>经纬网格</b><small>瑞士网格 · 多页叙事</small></span>
               <i class="checkmark">✓</i>
             </button>
           </div>

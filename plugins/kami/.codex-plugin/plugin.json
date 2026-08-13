@@ -1,7 +1,7 @@
 {
   "name": "kami",
   "version": "1.11.0",
-  "description": "Agent-first career intelligence and document typesetting skill for Codex: analyze authorized resumes and career profiles, interview for missing evidence, match target jobs, route 9 resume families with light/dark themes, and render ATS-safe polished resumes alongside Kami documents.",
+  "description": "Agent-first career intelligence and document typesetting skill for Codex: analyze authorized resumes and career profiles, interview for missing evidence, match target jobs, route 13 resume families with light/dark themes, and render ATS-safe polished resumes alongside Kami documents.",
   "author": {
     "name": "JustinBao",
     "email": "97433668+justinbao19@users.noreply.github.com",
@@ -28,7 +28,7 @@
   "interface": {
     "displayName": "Kami",
     "shortDescription": "Generate evidence-backed, job-targeted resumes",
-    "longDescription": "Kami helps an agent turn authorized old resumes, LinkedIn or Chinese career-platform profiles, and target job descriptions into a traceable candidate dossier. It interviews for missing latest-role evidence, matches the target role, chooses one of 9 resume families with light/dark themes, renders an expressive primary resume plus an ATS-safe companion when needed, and still supports Kami one-pagers, reports, letters, portfolios, slides, and landing pages.",
+    "longDescription": "Kami helps an agent turn authorized old resumes, LinkedIn or Chinese career-platform profiles, and target job descriptions into a traceable candidate dossier. It interviews for missing latest-role evidence, matches the target role, chooses one of 13 resume families with light/dark themes, renders an expressive primary resume plus an ATS-safe companion when needed, and still supports Kami one-pagers, reports, letters, portfolios, slides, and landing pages.",
     "developerName": "JustinBao",
     "category": "Productivity",
     "capabilities": [

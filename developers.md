@@ -43,6 +43,12 @@ The server speaks newline-delimited JSON-RPC 2.0 over stdio and has no third-par
 
 The server card, including protocol version and tool list, is published at </.well-known/mcp/server-card.json>.
 
+## Resume Skill
+
+The resume workflow is a specialized layer above the document engine. It collects authorized old resumes and career profiles, builds a source-linked candidate dossier, asks focused questions for missing latest-role evidence, matches the target job, and routes one of 13 resume families with light and dark themes.
+
+The default bundle includes a primary resume, a light ATS Classic companion when the main design is dark or expressive, and a coordinated cover letter. Atelier Serif also supports recommendation-letter mode. Read the [human guide](https://kami-resume-studio.vercel.app/resume-skill) or [Markdown guide](https://kami-resume-studio.vercel.app/resume-skill.md).
+
 ## Content schemas
 
 Nine schemas live under `references/schemas/`: changelog, equity-report, landing-page, letter, long-doc, one-pager, portfolio, resume, slides. Each states the structure and the quality bar for its type. Fill the schema first, lay out second.
@@ -71,6 +77,7 @@ The second form reports coverage: fields that exist in the content object but ne
 - [/llms.txt](https://kami-resume-studio.vercel.app/llms.txt) - product summary, install commands, and when an agent should reach for Kami.
 - [/index.md](https://kami-resume-studio.vercel.app/index.md) - the homepage as Markdown. A request to `/` carrying `Accept: text/markdown`, or `/?mode=agent`, redirects here.
 - [/developers.md](https://kami-resume-studio.vercel.app/developers.md) - this page as Markdown.
+- [/resume-skill.md](https://kami-resume-studio.vercel.app/resume-skill.md) - resume workflow, 13-family template catalog, installation, and direct orchestration.
 - [/developers/llms.txt](https://kami-resume-studio.vercel.app/developers/llms.txt) - the developer surface on its own.
 - [/.well-known/agent-skills/index.json](https://kami-resume-studio.vercel.app/.well-known/agent-skills/index.json) - Agent Skills discovery index, with a SHA-256 digest of the skill file it points to.
 - [/.well-known/mcp/server-card.json](https://kami-resume-studio.vercel.app/.well-known/mcp/server-card.json) - MCP server card.

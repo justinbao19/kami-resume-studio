@@ -2103,6 +2103,45 @@ def test_resume_workflow_renders_projects_socials_and_photo_safely() -> None:
           "<img class='avatar'" in primary and "<img class='avatar'" not in ats)
 
 
+def test_resume_workflow_new_families_and_letters() -> None:
+    fixture = ROOT / "tests" / "fixtures" / "resume_case_1_resolved.json"
+    dossier = json.loads(fixture.read_text(encoding="utf-8"))
+    dossier["candidate"]["photo"] = "data:image/png;base64,aGVsbG8="
+    dossier["cover_letter"] = {
+        "company": "Northstar",
+        "role": "AI Product Lead",
+        "recipient": "Dear Hiring Team,",
+        "date": "August 13, 2026",
+        "subject": "Application for AI Product Lead",
+        "body": ["I build evidence-led AI products.", "My latest role raised accuracy by 18%."],
+        "closing": "Sincerely,",
+        "signer": "Test Candidate",
+        "kind": "cover-letter",
+    }
+    catalog = json.loads((REPO_ROOT / "references" / "resume-template-catalog.json").read_text(encoding="utf-8"))
+    ids = {item["id"] for item in catalog["templates"]}
+    check("resume catalog exposes 13 families and 26 variants",
+          catalog["template_count"] == 13 and catalog["variant_count"] == 26 and
+          {"aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"} <= ids)
+    with tempfile.TemporaryDirectory() as directory:
+        output_dir = Path(directory)
+        for template in ("aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"):
+            route_data = {
+                "primary": {"template": template, "theme": "light"},
+                "ats_companion": {"template": "ats-classic", "theme": "light"},
+            }
+            resume_path = output_dir / f"{template}.html"
+            letter_path = output_dir / f"{template}-letter.html"
+            resume_workflow_mod.render(dossier, route_data, resume_path)
+            resume_workflow_mod.render(dossier, route_data, letter_path, document_type="cover-letter")
+            resume_html = resume_path.read_text(encoding="utf-8")
+            letter_html = letter_path.read_text(encoding="utf-8")
+            check(f"resume workflow renders {template}",
+                  f"resume-template {template}" in resume_html and "<img class='avatar'" in resume_html)
+            check(f"resume workflow renders matching {template} letter",
+                  f"class='{template} theme-light'" in letter_html and "Application for AI Product Lead" in letter_html)
+
+
 def _test_functions():
     tests = []
     for name, func in globals().items():

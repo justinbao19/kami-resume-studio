@@ -11,10 +11,17 @@
       "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
       "destination": "/index.md",
       "permanent": false
+    },
+    {
+      "source": "/resume-skill",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/resume-skill.md",
+      "permanent": false
     }
   ],
   "rewrites": [
     { "source": "/developers", "destination": "/developers.html" },
+    { "source": "/resume-skill", "destination": "/resume-skill.html" },
     { "source": "/about", "destination": "/about.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/privacy", "destination": "/privacy.html" }
@@ -37,6 +44,16 @@
         {
           "key": "Link",
           "value": "</developers.md>; rel=\"alternate\"; type=\"text/markdown\", </developers/llms.txt>; rel=\"service-doc\"; type=\"text/plain\", </.well-known/mcp/server-card.json>; rel=\"service-desc\"; type=\"application/json\", </feeds/catalog.jsonld>; rel=\"describedby\"; type=\"application/ld+json\""
+        }
+      ]
+    },
+    {
+      "source": "/resume-skill",
+      "headers": [
+        { "key": "Vary", "value": "Accept, Accept-Encoding" },
+        {
+          "key": "Link",
+          "value": "</resume-skill.md>; rel=\"alternate\"; type=\"text/markdown\", </SKILL.md>; rel=\"describedby\"; type=\"text/markdown\", </references/resume-template-catalog.json>; rel=\"describedby\"; type=\"application/json\""
         }
       ]
     },

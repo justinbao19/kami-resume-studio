@@ -10,6 +10,7 @@ Examples:
   python3 scripts/resume_workflow.py questions dossier.json analysis.json -o questions.json
   python3 scripts/resume_workflow.py route dossier.json analysis.json -o route.json
   python3 scripts/resume_workflow.py render dossier.json route.json -o resume.html
+  python3 scripts/resume_workflow.py render dossier.json route.json --document-type cover-letter -o cover-letter.html
   python3 scripts/resume_workflow.py all dossier.json -o output/resume
 """
 
@@ -56,20 +57,20 @@ ROLE_KEYWORDS: dict[str, set[str]] = {
 
 TEMPLATE_FAMILIES = {
     "product": "editorial",
-    "strategy": "editorial",
-    "consulting": "editorial",
+    "strategy": "aqua-ledger",
+    "consulting": "aqua-ledger",
     "generalist": "editorial",
-    "software": "technical",
+    "software": "cupertino",
     "data": "technical",
     "ai": "technical",
     "security": "technical",
     "infrastructure": "technical",
-    "executive": "executive",
+    "executive": "atelier-serif",
     "director": "executive",
     "founder": "executive",
     "management": "executive",
-    "design": "creative",
-    "brand": "creative",
+    "design": "swiss-grid",
+    "brand": "atelier-serif",
     "content": "creative",
     "creative": "creative",
     "media": "creative",
@@ -77,7 +78,7 @@ TEMPLATE_FAMILIES = {
     "growth": "sales-impact",
     "business-development": "sales-impact",
     "partnerships": "sales-impact",
-    "operations": "operations-practical",
+    "operations": "aqua-ledger",
     "supply-chain": "operations-practical",
     "manufacturing": "operations-practical",
     "program": "operations-practical",
@@ -97,8 +98,8 @@ TEMPLATE_FAMILIES = {
 
 THEME_DARK_FAMILIES = {"technical", "creative", "sales-impact", "early-career"}
 CONSERVATIVE_FAMILIES = {"ats-classic", "academic", "operations-practical", "executive"}
-PHOTO_TEMPLATES = {"editorial", "technical", "creative", "early-career"}
-ICON_SOCIAL_TEMPLATES = {"technical", "creative", "early-career"}
+PHOTO_TEMPLATES = {"editorial", "technical", "creative", "early-career", "aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"}
+ICON_SOCIAL_TEMPLATES = {"technical", "creative", "early-career", "aqua-ledger"}
 SOCIAL_ICON_PATHS = {
     "linkedin": "<path d='M5.2 7.3A1.7 1.7 0 1 0 5.2 4a1.7 1.7 0 0 0 0 3.3ZM3.8 9h2.8v8H3.8V9Zm4.5 0h2.7v1.1c.6-.8 1.5-1.4 2.8-1.4 2.8 0 3.4 1.8 3.4 4.2V17h-2.8v-3.7c0-.9 0-2.1-1.3-2.1s-1.5 1-1.5 2V17H8.3V9Z'/>",
     "github": "<path d='M10 3.2a6.8 6.8 0 0 0-2.2 13.2c.3.1.4-.1.4-.3v-1.2c-1.7.4-2.1-.8-2.1-.8-.3-.7-.7-.9-.7-.9-.6-.4 0-.4 0-.4.7.1 1.1.7 1.1.7.6 1.1 1.6.8 2 .6.1-.4.2-.8.4-1-1.4-.2-2.8-.7-2.8-3.1 0-.7.2-1.2.6-1.7-.1-.2-.3-.8.1-1.7 0 0 .5-.2 1.8.6.5-.1 1-.2 1.5-.2s1 0 1.5.2c1.3-.9 1.8-.6 1.8-.6.4.9.2 1.5.1 1.7.4.5.6 1 .6 1.7 0 2.4-1.4 2.9-2.8 3.1.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3A6.8 6.8 0 0 0 10 3.2Z'/>",
@@ -499,7 +500,14 @@ def route(dossier: dict[str, Any], analysis: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def render(dossier: dict[str, Any], route_data: dict[str, Any], output: Path, *, ats: bool = False) -> None:
+def render(
+    dossier: dict[str, Any],
+    route_data: dict[str, Any],
+    output: Path,
+    *,
+    ats: bool = False,
+    document_type: str = "resume",
+) -> None:
     route_choice = route_data.get("ats_companion") if ats else route_data.get("primary")
     route_choice = route_choice or route_data.get("primary") or {"template": "editorial", "theme": "light"}
     candidate = dossier.get("candidate", {})
@@ -576,6 +584,56 @@ def render(dossier: dict[str, Any], route_data: dict[str, Any], output: Path, *,
     social_html = f"<span class='socials'>{''.join(social_links)}</span>" if social_links else ""
     photo_src = safe_photo_src(candidate.get("photo")) if template in PHOTO_TEMPLATES and not ats else ""
     photo_html = f"<img class='avatar' src='{html.escape(photo_src)}' alt='{html.escape(text_of(candidate.get('name')))}'>" if photo_src else ""
+    if document_type in {"cover-letter", "recommendation"}:
+        letter = dossier.get("cover_letter", {}) if isinstance(dossier.get("cover_letter"), dict) else {}
+        target = target_job(dossier)
+        is_recommendation = document_type == "recommendation"
+        heading = (
+            ("推荐信" if locale == "zh" else "Letter of Recommendation")
+            if is_recommendation
+            else text_of(letter.get("subject") or ("求职信" if locale == "zh" else "Cover Letter"))
+        )
+        raw_body = letter.get("body", "")
+        paragraphs = (
+            [text_of(item).strip() for item in raw_body if text_of(item).strip()]
+            if isinstance(raw_body, list)
+            else [item.strip() for item in re.split(r"\n\s*\n", text_of(raw_body)) if item.strip()]
+        )
+        if not paragraphs:
+            summary = text_of(dossier.get("resume_content", {}).get("summary") or candidate.get("summary"))
+            paragraphs = [summary] if summary else []
+        signer = text_of(letter.get("recommender_name") if is_recommendation else letter.get("signer")) or text_of(candidate.get("name"))
+        signer_title = text_of(letter.get("recommender_title") if is_recommendation else candidate.get("headline"))
+        body_html = "".join(f"<p>{html.escape(item)}</p>" for item in paragraphs)
+        letter_html = f"""<!doctype html>
+<html lang='{locale}'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>{html.escape(heading)} - {html.escape(text_of(candidate.get('name')))}</title>
+<style>
+@page {{ size:A4; margin:0; }}
+:root {{ --paper:{palette['paper']}; --ink:{palette['ink']}; --accent:{palette['accent']}; --line:{hex_rgba(palette['accent'], .25)}; }}
+* {{ box-sizing:border-box; }} body {{ margin:0; background:var(--paper); color:var(--ink); font-family:Charter,Georgia,serif; }}
+.page {{ min-height:297mm; padding:18mm; display:flex; flex-direction:column; }}
+header {{ display:flex; gap:6mm; align-items:center; padding-bottom:7mm; border-bottom:.4pt solid var(--line); }}
+.avatar {{ width:22mm; height:27mm; object-fit:cover; }} h1 {{ margin:0; font-size:25pt; }}
+.eyebrow {{ margin:0 0 2mm; color:var(--accent); font:700 8pt Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; }}
+.meta {{ display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; padding:5mm 0; border-bottom:.4pt solid var(--line); color:var(--accent); font:8.5pt Arial,sans-serif; }}
+.letter-body {{ max-width:155mm; padding-top:12mm; font-size:11pt; line-height:1.75; }} .letter-body p {{ margin:0 0 6mm; }}
+.closing {{ padding-top:4mm; }} .closing span {{ font:8.5pt Arial,sans-serif; opacity:.75; }}
+footer {{ margin-top:auto; padding-top:5mm; border-top:.4pt solid var(--line); font:8pt Arial,sans-serif; opacity:.75; }}
+body.aqua-ledger .page {{ background:linear-gradient(145deg,var(--paper),{hex_rgba(palette['accent'], .12)}); }}
+body.atelier-serif .page {{ padding-left:65mm; background:linear-gradient(90deg,{hex_rgba(palette['ink'], .10)} 0 52mm,var(--paper) 52mm); }}
+body.cupertino {{ font-family:"Helvetica Neue",Arial,sans-serif; }}
+body.swiss-grid .page {{ background:linear-gradient(90deg,transparent 0 43mm,var(--line) 43mm 43.3mm,transparent 43.3mm); }}
+@media print {{ body {{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }} }}
+</style></head><body class='{template} theme-{theme}'><main class='page'>
+<header>{photo_html}<div><p class='eyebrow'>{html.escape(heading)}</p><h1>{html.escape(text_of(candidate.get('name')))}</h1><span>{html.escape(title)}</span></div></header>
+<div class='meta'><span>{html.escape(text_of(letter.get('date')))}</span><span>{html.escape(text_of(letter.get('company') or target.get('company')))}</span><span>{html.escape(text_of(letter.get('role') or target.get('title') or target.get('role')))}</span></div>
+<div class='letter-body'><p><strong>{html.escape(text_of(letter.get('recipient')))}</strong></p>{body_html}<p class='closing'>{html.escape(text_of(letter.get('closing')))}<br><strong>{html.escape(signer)}</strong><br><span>{html.escape(signer_title)}</span></p></div>
+<footer>{html.escape(' · '.join(text_of(candidate.get(key)) for key in ('email','phone','location','website') if candidate.get(key)))}</footer>
+</main></body></html>"""
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(letter_html, encoding="utf-8")
+        return
     html_doc = f"""<!doctype html>
 <html lang='{locale}'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>{html.escape(text_of(candidate.get('name')))} - {html.escape(title)}</title>
@@ -595,6 +653,10 @@ h1 {{ margin:0 0 2mm; font-size:28pt; }} .title {{ margin:0; color:var(--accent)
 .resume-template.academic .page {{ max-width: 182mm; }} .resume-template.academic header {{ text-align: center; }} .resume-template.academic .contact {{ text-align: center; }} .resume-template.academic h2 {{ letter-spacing: .05em; }}
 .resume-template.early-career .page {{ max-width: 178mm; }} .resume-template.early-career header {{ border-bottom: 0; padding-bottom: 3mm; }} .resume-template.early-career h1 {{ font-size: 32pt; }} .resume-template.early-career h2 {{ border-bottom: 0; }}
 .resume-template.ats-classic .page {{ max-width: 180mm; }} .resume-template.ats-classic header {{ text-align: center; }} .resume-template.ats-classic .contact {{ text-align: center; }}
+.resume-template.aqua-ledger {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.aqua-ledger .page {{ max-width:184mm; }} .resume-template.aqua-ledger header {{ margin:-14mm -14mm 7mm; padding:14mm; background:linear-gradient(125deg,var(--accent-soft),var(--paper)); border:0; }} .resume-template.aqua-ledger h1 {{ font-size:24pt; }} .resume-template.aqua-ledger .title {{ font-size:18pt; }} .resume-template.aqua-ledger section {{ display:grid; grid-template-columns:36mm 1fr; gap:7mm; padding:5mm 0; border-bottom:.4pt solid var(--accent); }} .resume-template.aqua-ledger section h2 {{ margin:0; border:0; }}
+.resume-template.atelier-serif .page {{ max-width:184mm; border-left:46mm solid var(--accent-soft); padding-left:10mm; }} .resume-template.atelier-serif header {{ border-bottom:0; }} .resume-template.atelier-serif h1 {{ font-family:"Bodoni 72",Didot,Georgia,serif; font-size:38pt; font-weight:400; letter-spacing:-.04em; }} .resume-template.atelier-serif h2 {{ color:var(--ink); border-bottom:.4pt solid var(--accent); }}
+.resume-template.cupertino {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.cupertino .page {{ max-width:176mm; }} .resume-template.cupertino header {{ border-bottom:.4pt solid var(--accent); }} .resume-template.cupertino h1 {{ font-size:29pt; letter-spacing:-.04em; }} .resume-template.cupertino h2 {{ color:var(--ink); font-size:13pt; letter-spacing:-.02em; text-transform:none; }}
+.resume-template.swiss-grid {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.swiss-grid .page {{ max-width:184mm; border-left:.4pt solid var(--accent); }} .resume-template.swiss-grid header {{ display:grid; grid-template-columns:36mm 1fr; padding-left:7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid h1 {{ font-size:36pt; line-height:.9; letter-spacing:-.07em; text-transform:uppercase; }} .resume-template.swiss-grid section {{ display:grid; grid-template-columns:36mm 1fr; gap:7mm; padding:5mm 0 5mm 7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid section h2 {{ margin:0; border:0; }}
 @media print {{ body {{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }} }}
 </style></head><body class='resume-template {template} theme-{theme}'><main class='page'>
 <header><div class='identity'>{photo_html}<div><h1>{html.escape(text_of(candidate.get('name')))}</h1><p class='title'>{html.escape(title)}</p></div></div><p class='contact'>{html.escape(' · '.join(text_of(candidate.get(key)) for key in ('email','phone','location','website') if candidate.get(key)))}{social_html}</p></header>
@@ -626,6 +688,9 @@ def run_all(dossier: dict[str, Any], output_dir: Path) -> None:
     render(dossier, route_data, output_dir / "resume-primary.html")
     if route_data.get("ats_companion"):
         render(dossier, route_data, output_dir / "resume-ats.html", ats=True)
+    render(dossier, route_data, output_dir / "cover-letter.html", document_type="cover-letter")
+    if dossier.get("cover_letter", {}).get("kind") == "recommendation":
+        render(dossier, route_data, output_dir / "recommendation-letter.html", document_type="recommendation")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -642,6 +707,7 @@ def main(argv: list[str] | None = None) -> int:
     render_parser.add_argument("route", type=Path)
     render_parser.add_argument("-o", "--output", type=Path, required=True)
     render_parser.add_argument("--ats", action="store_true")
+    render_parser.add_argument("--document-type", choices=("resume", "cover-letter", "recommendation"), default="resume")
     all_parser = sub.add_parser("all")
     all_parser.add_argument("dossier", type=Path)
     all_parser.add_argument("-o", "--output", type=Path, required=True)
@@ -654,7 +720,7 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "route":
         write_json(args.output, route(dossier, load_json(args.analysis)))
     elif args.command == "render":
-        render(dossier, load_json(args.route), args.output, ats=args.ats)
+        render(dossier, load_json(args.route), args.output, ats=args.ats, document_type=args.document_type)
     else:
         run_all(dossier, args.output)
     print(f"OK: {args.command} complete")

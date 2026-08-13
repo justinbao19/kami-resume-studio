@@ -1,6 +1,6 @@
 ---
 name: kami
-description: 'Agent-first resume intelligence and document generation. Use when the user wants a resume, CV, job-targeted application, career profile, resume rewrite, LinkedIn/BOSS 直聘/猎聘/58 同城 profile analysis, old PDF resume analysis, latest-role interview, ATS resume, project portfolio evidence, optional photo or LinkedIn/X/GitHub links, or a polished PDF resume. Collect authorized career sources, build a traceable candidate dossier, ask evidence-focused questions for missing work, match the target role, choose from 9 resume families and light/dark themes, and render a primary resume plus an ATS-safe companion when needed. Also supports Kami professional documents and landing pages.'
+description: 'Agent-first resume intelligence and document generation. Use when the user wants a resume, CV, cover letter, recommendation letter, job-targeted application, career profile, resume rewrite, LinkedIn/BOSS 直聘/猎聘/58 同城 profile analysis, old PDF resume analysis, latest-role interview, ATS resume, project portfolio evidence, optional photo or LinkedIn/X/GitHub links, or a polished PDF resume. Collect authorized career sources, build a traceable candidate dossier, ask evidence-focused questions for missing work, match the target role, choose from 13 resume families and light/dark themes, and render a primary resume, ATS-safe companion, and matching letter. Also supports Kami professional documents and landing pages.'
 ---
 
 # Kami Resume and Documents
@@ -16,8 +16,9 @@ Read these references progressively:
 - `references/resume-workflow.md`: state machine, evidence ledger, stop conditions, output bundle.
 - `references/source-intake.md`: PDF and career-platform collection, browser authorization, privacy boundaries.
 - `references/interview-playbook.md`: latest-role reconstruction, metric recovery, ownership calibration.
-- `references/template-routing.md`: 9 template families, light/dark routing, ATS companion rule.
-- `references/resume-template-catalog.json`: machine-readable 9 x 2 template catalog.
+- `references/template-routing.md`: 13 template families, light/dark routing, ATS companion and letter rules.
+- `references/resume-template-catalog.json`: machine-readable 13 x 2 template catalog.
+- `references/screenshot-resume-families.md`: precise visual contract for the four screenshot-derived families.
 - `references/candidate-dossier.schema.json`: dossier shape.
 - `references/resume-writing.md`: bullet quality, ownership, metrics, density, and recruiter pass.
 
@@ -44,14 +45,14 @@ Read these references progressively:
    python3 scripts/resume_workflow.py route candidate-dossier.json analysis.json -o route.json
    ```
 
-   Choose one primary template and theme automatically. Do not make the user manually compare all 18 variants unless requested. If the primary is dark, creative, split-column, or otherwise expressive, also produce `ats-classic/light`.
+   Choose one primary template and theme automatically. Do not make the user manually compare all 26 variants unless requested. If the primary is dark, creative, split-column, or otherwise expressive, also produce `ats-classic/light`.
 10. Render the output bundle:
 
    ```bash
    python3 scripts/resume_workflow.py all candidate-dossier.json -o output/resume/<candidate>/<target-role>
    ```
 
-   The bundle contains the dossier, analysis, interview questions, route, primary HTML, ATS HTML when required, and unresolved claims. Convert HTML to PDF with the Kami render path or the browser print path, then inspect every PDF page as an image.
+   The bundle contains the dossier, analysis, interview questions, route, primary HTML, ATS HTML when required, a matching cover letter, an optional recommendation letter, and unresolved claims. Convert HTML to PDF with the Kami render path or the browser print path, then inspect every PDF page as an image.
 11. For Kami-native templates, use `python3 scripts/build.py --check-content`, `--verify`, `--check-density`, `--check-orphans`, `--check-resume-balance`, and `--check-visual` as applicable. Fix content and page balance before reducing type size.
 12. Deliver: primary resume, ATS companion if applicable, the concise positioning summary, the matched target-role rationale, and unresolved facts that were intentionally excluded.
 
@@ -73,13 +74,14 @@ For one-pagers, long documents, letters, portfolios, slides, equity reports, cha
 - Do not copy a job description verbatim. Use supported keywords in natural language.
 - Treat project experience as a first-class evidence section. Include selected projects, open-source work, product cases, or research only when the user confirms the scope, role, link, and outcomes.
 - Treat photos and LinkedIn, X, and GitHub links as opt-in fields. Validate every URL, preserve approved links in HTML/PDF, and omit photos from unsupported templates and ATS companions.
+- Draft cover and recommendation letters from the same evidence ledger. Never invent a relationship, endorsement, or recommender identity.
 - Keep salary, availability, reason for leaving, age, gender, marital status, and photo outside the resume unless explicitly required by the target market and confirmed by the user.
 - De-identify any fixture or demo data derived from a real person's private materials.
 - Keep sensitive career data local. Do not write it to memory, upload it, or send it to a third party unless the user explicitly authorizes that exact action.
 
 ## Visual system
 
-Kami defaults to warm paper, restrained typography, and one deliberate accent. Resume families may use different colors and layouts, but must remain readable, printable, and recruiter-scannable. The catalog contains 9 families with 2 themes each: Editorial, ATS Classic, Technical, Executive, Creative, Sales Impact, Operations Practical, Academic, and Early Career.
+Kami defaults to warm paper, restrained typography, and one deliberate accent. Resume families may use different colors and layouts, but must remain readable, printable, and recruiter-scannable. The catalog contains 13 families with 2 themes each: Editorial, ATS Classic, Technical, Executive, Creative, Sales Impact, Operations Practical, Academic, Early Career, Aqua Ledger, Atelier Serif, Cupertino, and Swiss Grid.
 
 ## Update and packaging
 

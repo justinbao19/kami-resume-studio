@@ -2,7 +2,7 @@
 
 Agent-first bilingual resume generation, job matching, and visual editing.
 
-[Live demo](https://kami-resume-studio.vercel.app) · [Open the editor](https://kami-resume-studio.vercel.app/editor.html) · [Agent Skill](SKILL.md) · [Architecture](docs/resume-studio.md)
+[Live demo](https://kami-resume-studio.vercel.app) · [Open the editor](https://kami-resume-studio.vercel.app/editor.html) · [Skill guide](https://kami-resume-studio.vercel.app/resume-skill) · [Agent Skill](SKILL.md) · [Architecture](docs/resume-studio.md)
 
 Kami Resume helps job seekers turn an old CV, authorized career-platform pages, project evidence, and a target job description into a credible Chinese or English resume. You can work manually in the browser editor or let an Agent consolidate sources, recover missing recent work, match the target role, select a suitable template, and produce an ATS-safe companion.
 
@@ -11,7 +11,8 @@ Kami Resume helps job seekers turn an old CV, authorized career-platform pages, 
 - Agent workflow for old resumes, LinkedIn, BOSS 直聘, 猎聘, 58 同城, portfolios, GitHub, and target job descriptions.
 - Evidence-first interviewing for recent work that is missing from an old CV.
 - Role matching without inventing metrics, ownership, or unsupported experience.
-- Nine resume families with light and dark themes.
+- Thirteen resume families with light and dark themes, for 26 visual variants.
+- Matching cover letters for every family, plus recommendation-letter mode for Atelier Serif.
 - Chinese and English editing, samples, and output.
 - Optional photos for compatible templates.
 - Project experience as a first-class resume section.
@@ -87,7 +88,7 @@ The source intake workflow reads only files or visible pages the user has explic
 
 ## Resume template system
 
-The editor and Agent router expose 9 template families and 18 light or dark combinations:
+The editor and Agent router expose 13 template families and 26 light or dark combinations:
 
 | Family | Best suited for |
 | --- | --- |
@@ -100,6 +101,12 @@ The editor and Agent router expose 9 template families and 18 light or dark comb
 | Operations Practical | Operations, supply chain, manufacturing, services |
 | Academic | Research, education, policy, medical, academic work |
 | Early Career | Students, internships, campus recruiting, career switches |
+| Aqua Ledger | Strategy, consulting, polished operations, hospitality |
+| Atelier Serif | Executive, brand, luxury, editorial storytelling |
+| Cupertino | Product, software, AI, human-centered technology |
+| Swiss Grid | Design, architecture, creative technology, modernist portfolios |
+
+All families support project experience. Aqua Ledger, Atelier Serif, Cupertino, and Swiss Grid add screenshot-led photo layouts and coordinated cover-letter treatments; Atelier Serif also supports recommendation letters. When the primary design is dark, expressive, or multi-column, the Agent also creates a light ATS Classic companion.
 
 The broader document engine still includes Eight document templates and 18 inline SVG diagram types inherited from Kami.
 
@@ -125,7 +132,7 @@ python3 scripts/tests/test_build.py
 python3 scripts/build_metadata.py --check
 ```
 
-The project currently passes 203 repository tests, including Skill packaging, source evidence, social-link safety, project rendering, template registries, and ATS companion behavior.
+The repository test suite covers Skill packaging, source evidence, social-link safety, project and letter rendering, template registries, and ATS companion behavior.
 
 ## Open-source origin and thanks
 

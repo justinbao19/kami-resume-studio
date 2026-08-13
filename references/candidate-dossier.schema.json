@@ -58,7 +58,23 @@
     "education": {"type": "array", "items": {"type": "object"}},
     "skills": {"type": "array", "items": {"type": "string"}},
     "target_jobs": {"type": "array", "items": {"type": "object"}},
-    "resume_content": {"type": "object"}
+    "resume_content": {"type": "object"},
+    "cover_letter": {
+      "type": "object",
+      "properties": {
+        "company": {"type": "string"},
+        "role": {"type": "string"},
+        "recipient": {"type": "string"},
+        "date": {"type": "string"},
+        "subject": {"type": "string"},
+        "body": {"type": ["string", "array"], "$comment": "Every claim must be supported by the dossier evidence ledger; preserve paragraph boundaries."},
+        "closing": {"type": "string"},
+        "signer": {"type": "string"},
+        "recommender_name": {"type": "string"},
+        "recommender_title": {"type": "string"},
+        "kind": {"enum": ["cover-letter", "recommendation"]}
+      }
+    }
   },
   "$defs": {
     "social_link": {

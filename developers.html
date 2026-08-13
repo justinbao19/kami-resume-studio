@@ -53,6 +53,7 @@
     <p class="tagline">Everything an agent needs to drive Kami: one local MCP server, nine content schemas, and a set of deterministic checks that decide whether a document is finished.</p>
     <nav class="doc-nav" aria-label="Site sections">
       <a href="./developers" aria-current="page">Developers</a>
+      <a href="./resume-skill">Resume Skill</a>
       <a href="./about">About</a>
       <a href="./contact">Contact</a>
       <a href="./privacy">Privacy</a>
@@ -93,7 +94,16 @@ claude mcp add kami -- python3 &lt;checkout&gt;/scripts/mcp_server.py</pre>
 
   <section class="prose">
     <div class="section-head">
-      <p class="section-num">03 · MCP</p>
+      <p class="section-num">03 · Resume Skill</p>
+      <h2 class="section-title">Career evidence to a complete application bundle</h2>
+      <p class="section-lede">The resume workflow is a specialized layer above the document engine: 13 resume families, 26 light/dark variants, evidence questions, role routing, an ATS companion, and coordinated cover letters.</p>
+    </div>
+    <p>The Agent starts from an old resume, authorized visible career-platform pages, portfolio or GitHub evidence, and a target job description. It builds a source-linked dossier, asks for missing latest-role responsibilities and outcomes, then renders only confirmed or sourced claims. Read the <a href="./resume-skill">human guide</a> or the <a href="./resume-skill.md">Markdown guide</a>.</p>
+  </section>
+
+  <section class="prose">
+    <div class="section-head">
+      <p class="section-num">04 · MCP</p>
       <h2 class="section-title">Tools over stdio</h2>
       <p class="section-lede">Judgment stays in the skill prompt; execution lives in the server. An agent that already knows what it wants can render and verify without loading SKILL.md.</p>
     </div>
@@ -108,7 +118,7 @@ claude mcp add kami -- python3 &lt;checkout&gt;/scripts/mcp_server.py</pre>
 
   <section class="prose">
     <div class="section-head">
-      <p class="section-num">04 · Contracts</p>
+      <p class="section-num">05 · Contracts</p>
       <h2 class="section-title">Content schemas</h2>
       <p class="section-lede">Each document type has a JSON schema that states its structure and its quality bar. Fill the schema first, lay out second.</p>
     </div>
@@ -120,7 +130,7 @@ python3 scripts/build.py --check-content content.json filled.html</pre>
 
   <section class="prose">
     <div class="section-head">
-      <p class="section-num">05 · Verification</p>
+      <p class="section-num">06 · Verification</p>
       <h2 class="section-title">Checks that decide "done"</h2>
     </div>
     <ul>
@@ -137,7 +147,7 @@ python3 scripts/build.py --check-content content.json filled.html</pre>
 
   <section class="prose">
     <div class="section-head">
-      <p class="section-num">06 · Catalog</p>
+      <p class="section-num">07 · Catalog</p>
       <h2 class="section-title">Machine-readable files</h2>
       <p class="section-lede">Every file below is static, public, and generated from the template registry.</p>
     </div>
@@ -145,6 +155,7 @@ python3 scripts/build.py --check-content content.json filled.html</pre>
       <li><a href="./llms.txt">/llms.txt</a> - product summary, install commands, and when an agent should reach for Kami.</li>
       <li><a href="./index.md">/index.md</a> - the homepage as Markdown. A request to <code>/</code> carrying <code>Accept: text/markdown</code>, or <code>/?mode=agent</code>, redirects here.</li>
       <li><a href="./developers.md">/developers.md</a> - this page as Markdown.</li>
+      <li><a href="./resume-skill.md">/resume-skill.md</a> - resume workflow, template routing, installation, and output bundle.</li>
       <li><a href="./developers/llms.txt">/developers/llms.txt</a> - the developer surface on its own, for agents that only need the integration facts.</li>
       <li><a href="./.well-known/agent-skills/index.json">/.well-known/agent-skills/index.json</a> - Agent Skills discovery index, with a SHA-256 digest of the skill file it points to.</li>
       <li><a href="./.well-known/mcp/server-card.json">/.well-known/mcp/server-card.json</a> - MCP server card: version, protocol version, transport, and tool list.</li>

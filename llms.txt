@@ -32,9 +32,24 @@ Do not reach for Kami for chat answers, code files, or content where the user on
 
 How an agent should call Kami: install the skill, fill the matching content schema, fill the template HTML, then verify with `python3 scripts/build.py --check-content content.json filled.html` and `--check-visual`, or drive the same steps as tools through the local MCP server. Judgment lives in SKILL.md; execution lives in the scripts.
 
+## Resume Studio Workflow
+- Resume guide for people and agents: https://kami-resume-studio.vercel.app/resume-skill and https://kami-resume-studio.vercel.app/resume-skill.md
+- Sources: old PDF/DOCX resume, pasted career history, authorized visible LinkedIn/BOSS 直聘/猎聘/58 同城 pages, portfolio, GitHub, and target job descriptions
+- Process: build a source-linked candidate dossier, flag conflicts, ask about missing latest-role evidence, match confirmed strengths to the target job, route a template, render, verify, and deliver
+- Output: primary resume, light ATS companion when required, coordinated cover letter, optional recommendation letter, unresolved claims, and role-match notes
+- Evidence rule: final copy may use only confirmed or sourced facts; never invent a metric or inflate ownership
+- Privacy rule: keep career material local unless the user explicitly authorizes a specific external action; never request passwords, cookies, tokens, or one-time codes
+
+## Resume Templates
+- 13 resume families and 26 light/dark variants
+- Existing families: Editorial, ATS Classic, Technical, Executive, Creative, Sales Impact, Operations Practical, Academic, Early Career
+- Reference-led families: Aqua Ledger, Atelier Serif, Cupertino, Swiss Grid
+- All families support project experience. Aqua Ledger, Atelier Serif, Cupertino, and Swiss Grid support photos and coordinated cover-letter layouts. Atelier Serif also supports recommendation-letter mode.
+
 ## Key Pages
 - [English showcase](https://kami-resume-studio.vercel.app): Design system overview with live demos
 - [Developers](https://kami-resume-studio.vercel.app/developers): Agent and developer integration surface
+- [Resume Skill guide](https://kami-resume-studio.vercel.app/resume-skill): Resume workflow, template routing, installation, and direct orchestration
 - [About](https://kami-resume-studio.vercel.app/about): What Kami is and who maintains it
 - [Contact](https://kami-resume-studio.vercel.app/contact): Support and reporting channels
 - [Privacy](https://kami-resume-studio.vercel.app/privacy): What this site and the skill collect
@@ -65,6 +80,7 @@ How an agent should call Kami: install the skill, fill the matching content sche
 - Agent Skills index: https://kami-resume-studio.vercel.app/.well-known/agent-skills/index.json
 - Skill definition: https://kami-resume-studio.vercel.app/SKILL.md
 - Homepage as Markdown: https://kami-resume-studio.vercel.app/index.md (a request to `/` carrying `Accept: text/markdown`, or `/?mode=agent`, redirects here)
+- Resume Skill guide: https://kami-resume-studio.vercel.app/resume-skill.md
 - Developer surface: https://kami-resume-studio.vercel.app/developers.md and https://kami-resume-studio.vercel.app/developers/llms.txt
 - Template and diagram catalog: https://kami-resume-studio.vercel.app/feeds/catalog.jsonld (indexed by https://kami-resume-studio.vercel.app/schemamap.xml)
 

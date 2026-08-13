@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "template_count": 9,
-  "variant_count": 18,
+  "template_count": 13,
+  "variant_count": 26,
   "templates": [
     {
       "id": "editorial",
@@ -128,6 +128,66 @@
       "default_theme": "light",
       "light": {"accent": "#2D5874", "paper": "#F3F7F6", "ink": "#1B2326"},
       "dark": {"accent": "#8BC5E5", "paper": "#14232B", "ink": "#ECF4F6"}
+    },
+    {
+      "id": "aqua-ledger",
+      "name_zh": "冰川履历",
+      "name_en": "Aqua Ledger",
+      "role_families": ["operations", "program", "strategy", "consulting", "service"],
+      "personality": ["precise", "cool", "polished"],
+      "layout": "aqua-label-grid",
+      "photo": true,
+      "social_display": "icons",
+      "project_section": true,
+      "letter_types": ["cover-letter"],
+      "default_theme": "light",
+      "light": {"accent": "#31A9C8", "paper": "#F5FBFD", "ink": "#162A31"},
+      "dark": {"accent": "#7BD7ED", "paper": "#11272F", "ink": "#EEFBFE"}
+    },
+    {
+      "id": "atelier-serif",
+      "name_zh": "灰廊雅集",
+      "name_en": "Atelier Serif",
+      "role_families": ["executive", "brand", "creative", "consulting"],
+      "personality": ["editorial", "cultivated", "narrative"],
+      "layout": "atelier-portrait-rail",
+      "photo": true,
+      "social_display": "text",
+      "project_section": true,
+      "letter_types": ["cover-letter", "recommendation"],
+      "default_theme": "light",
+      "light": {"accent": "#5A5651", "paper": "#F5F3F0", "ink": "#262522"},
+      "dark": {"accent": "#D1C7B8", "paper": "#211F1D", "ink": "#F2EEE8"}
+    },
+    {
+      "id": "cupertino",
+      "name_zh": "库比蒂诺",
+      "name_en": "Cupertino",
+      "role_families": ["product", "software", "design", "ai", "management"],
+      "personality": ["minimal", "clear", "human"],
+      "layout": "cupertino-single-column",
+      "photo": true,
+      "social_display": "text",
+      "project_section": true,
+      "letter_types": ["cover-letter"],
+      "default_theme": "light",
+      "light": {"accent": "#147CE5", "paper": "#FBFCFE", "ink": "#1D1D1F"},
+      "dark": {"accent": "#64A8FF", "paper": "#1C1C1E", "ink": "#F5F5F7"}
+    },
+    {
+      "id": "swiss-grid",
+      "name_zh": "经纬网格",
+      "name_en": "Swiss Grid",
+      "role_families": ["design", "creative", "product", "strategy"],
+      "personality": ["modernist", "structured", "distinctive"],
+      "layout": "swiss-numbered-grid",
+      "photo": true,
+      "social_display": "text",
+      "project_section": true,
+      "letter_types": ["cover-letter"],
+      "default_theme": "light",
+      "light": {"accent": "#3579A8", "paper": "#F7F9FA", "ink": "#15191C"},
+      "dark": {"accent": "#80BDE4", "paper": "#171B1E", "ink": "#F1F4F5"}
     }
   ]
 }

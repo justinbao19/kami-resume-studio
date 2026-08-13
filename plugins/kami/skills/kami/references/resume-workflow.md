@@ -10,10 +10,10 @@ Use this reference for the end-to-end resume path. Detailed collection, intervie
 4. `GAPS`: run `python3 scripts/resume_workflow.py analyze ...`; inspect conflicts, missing latest-role evidence, and target-job gaps.
 5. `INTERVIEW`: ask generated questions in batches of 4-6. Update the dossier after each answer batch and rerun analysis. Stop when critical gaps are resolved or the user explicitly asks to proceed with marked gaps.
 6. `STRATEGY`: choose the primary positioning, evidence order, language, template, and theme. Always create a light ATS companion when the primary is dark or visually expressive. Treat photos as opt-in evidence: use them only when the target market and selected template support them, and keep a no-photo ATS version available.
-7. `DRAFT`: write `resume_content` in the dossier. Every claim must trace to source material or a user answer.
-8. `RENDER`: run the workflow renderer for primary and ATS HTML outputs, then render PDFs.
+7. `DRAFT`: write `resume_content` and the matching `cover_letter` in the dossier. Every claim must trace to source material or a user answer.
+8. `RENDER`: run the workflow renderer for primary resume, ATS resume, and matching letter HTML outputs, then render PDFs.
 9. `VERIFY`: check content coverage, page count, density, fonts, and page images. Rework content before shrinking typography.
-10. `DELIVER`: return primary resume, ATS resume when applicable, profile summary, unresolved facts, and role-match notes.
+10. `DELIVER`: return primary resume, ATS resume when applicable, cover letter, optional recommendation letter, profile summary, unresolved facts, and role-match notes.
 
 ## Minimum execution contract
 
@@ -92,7 +92,13 @@ output/resume/<candidate-slug>/<target-role-slug>/
   resume-primary.pdf
   resume-ats.html
   resume-ats.pdf
+  cover-letter.html
+  cover-letter.pdf
+  recommendation-letter.html
+  recommendation-letter.pdf
   unresolved-claims.json
 ```
 
 If the primary route is already `ats-classic/light`, do not duplicate it as a second file.
+
+Only include recommendation-letter files when the user requests them and the recommender identity and relationship are confirmed.

@@ -48,11 +48,27 @@ const templateThemes = {
   "early-career": {
     light: { accent: "#2d5874", paper: "#f3f7f6", ink: "#1b2326", muted: "#5d6d72", line: "#cad7d8" },
     dark: { accent: "#8bc5e5", paper: "#14232b", ink: "#ecf4f6", muted: "#b2c8d1", line: "#355260" }
+  },
+  "aqua-ledger": {
+    light: { accent: "#31a9c8", paper: "#f5fbfd", ink: "#162a31", muted: "#64777d", line: "#bfd8de" },
+    dark: { accent: "#7bd7ed", paper: "#11272f", ink: "#eefbfe", muted: "#a8c4cc", line: "#31515a" }
+  },
+  "atelier-serif": {
+    light: { accent: "#5a5651", paper: "#f5f3f0", ink: "#262522", muted: "#74706a", line: "#d0cbc4" },
+    dark: { accent: "#d1c7b8", paper: "#211f1d", ink: "#f2eee8", muted: "#bcb4aa", line: "#514c47" }
+  },
+  cupertino: {
+    light: { accent: "#147ce5", paper: "#fbfcfe", ink: "#1d1d1f", muted: "#6e6e73", line: "#d5d5d7" },
+    dark: { accent: "#64a8ff", paper: "#1c1c1e", ink: "#f5f5f7", muted: "#aeaeb2", line: "#48484a" }
+  },
+  "swiss-grid": {
+    light: { accent: "#3579a8", paper: "#f7f9fa", ink: "#15191c", muted: "#626b70", line: "#9da8ae" },
+    dark: { accent: "#80bde4", paper: "#171b1e", ink: "#f1f4f5", muted: "#b2babf", line: "#4e5960" }
   }
 };
 
-const photoSupportedTemplates = new Set(["editorial", "technical", "creative", "early-career"]);
-const iconSocialTemplates = new Set(["technical", "creative", "early-career"]);
+const photoSupportedTemplates = new Set(["editorial", "technical", "creative", "early-career", "aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"]);
+const iconSocialTemplates = new Set(["technical", "creative", "early-career", "aqua-ledger"]);
 const socialLabels = {
   linkedin: { zh: "LinkedIn", en: "LinkedIn" },
   x: { zh: "X", en: "X" },
@@ -217,15 +233,43 @@ const samples = {
   }
 };
 
+const letterSamples = {
+  zh: {
+    company: "星河智能",
+    role: "AI 产品负责人",
+    recipient: "招聘团队，您好：",
+    date: "2026 年 8 月 13 日",
+    subject: "申请 AI 产品负责人",
+    body: "我希望申请贵公司的 AI 产品负责人岗位。过去六年，我持续把复杂的企业知识工作拆解为可验证的产品机制，并推动产品从用户研究、方案定义走向规模化交付。\n\n在最近一段经历中，我牵头企业知识助手从零到一，覆盖检索、生成、引用校验与权限控制，并建立离线评测和线上反馈闭环。相关工作将高频问答准确率从 71% 提升至 89%，同时降低了人工复核量。\n\n我期待把这套以证据、评测和业务结果为核心的方法带入贵公司，与产品、工程和商业团队共同建立值得长期信赖的 AI 工作流。",
+    closing: "谨致问候",
+    signer: "林知遥",
+    recommenderName: "周明远",
+    recommenderTitle: "前直属主管 · 产品副总裁"
+  },
+  en: {
+    company: "Northstar Intelligence",
+    role: "Head of AI Product",
+    recipient: "Dear Hiring Team,",
+    date: "August 13, 2026",
+    subject: "Application for Head of AI Product",
+    body: "I am applying for the Head of AI Product role. Over six years, I have turned complex enterprise knowledge problems into testable product systems and guided them from customer research through scaled delivery.\n\nMost recently, I led a secure knowledge assistant from zero to launch across retrieval, generation, citation checks, and permissions. The evaluation and feedback system raised high-frequency answer accuracy from 71% to 89% while reducing manual review.\n\nI would welcome the opportunity to bring this evidence-led approach to your product, engineering, and commercial teams and help build AI workflows that users can trust over time.",
+    closing: "Sincerely,",
+    signer: "Avery Lin",
+    recommenderName: "Morgan Zhou",
+    recommenderTitle: "Former VP of Product"
+  }
+};
+
 const baseState = {
   documentName: "我的产品经理简历",
+  documentType: "resume",
   template: "editorial",
   theme: "light",
   locale: "zh",
   accent: "auto",
   density: "balanced",
   zoom: null,
-  data: samples.zh
+  data: { ...samples.zh, coverLetter: letterSamples.zh }
 };
 
 let state = loadState();
@@ -266,12 +310,14 @@ function loadState() {
           }
         },
         projects: Array.isArray(saved.data.projects) ? saved.data.projects : clone(samples.zh.projects),
-        skills: { ...clone(samples.zh.skills), ...saved.data.skills }
+        skills: { ...clone(samples.zh.skills), ...saved.data.skills },
+        coverLetter: { ...clone(letterSamples.zh), ...(saved.data.coverLetter || {}) }
       }
     };
     if (restored.template === "classic") restored.template = "ats-classic";
     if (restored.template === "modern") restored.template = "creative";
     if (!themes[restored.theme]) restored.theme = "light";
+    if (!["resume", "cover-letter", "recommendation"].includes(restored.documentType)) restored.documentType = "resume";
     return restored;
   } catch (error) {
     return clone(baseState);
@@ -672,6 +718,42 @@ function renderEarlyCareer(data, labels) {
     <div class="early-bottom"><section class="resume-section"><h2 class="resume-section-title">${labels.education}</h2>${renderEducation(data.education)}</section><section class="resume-section"><h2 class="resume-section-title">${labels.skills}</h2>${renderSkillGroups(data.skills, labels)}</section></div>`;
 }
 
+function renderAquaLedger(data, labels) {
+  const contacts = contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("");
+  return `<header class="aqua-header"><div><p class="aqua-kicker">CURRICULUM VITAE</p><h1 class="resume-name">${escapeHtml(data.profile.name)}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p></div>${avatarMarkup(data.profile, "aqua-ledger", "aqua-photo")}</header>
+    <div class="aqua-contact">${contacts}${renderSocialBlock(data.profile, "aqua-ledger")}</div>
+    <section class="aqua-row aqua-summary"><h2>01 / ${labels.summary}</h2><p>${escapeHtml(data.profile.summary)}</p></section>
+    <section class="aqua-row"><h2>02 / ${labels.experience}</h2><div>${renderExperience(data.experience)}</div></section>
+    <section class="aqua-row"><h2>03 / ${labels.projects}</h2><div>${renderProjects(data.projects, labels, "aqua")}</div></section>
+    <section class="aqua-row aqua-bottom"><h2>04 / PROFILE</h2><div class="aqua-mini-grid"><div>${renderSkillGroups(data.skills, labels)}</div><div>${renderEducation(data.education)}</div></div></section>`;
+}
+
+function renderAtelierSerif(data, labels) {
+  return `<aside class="atelier-rail">${avatarMarkup(data.profile, "atelier-serif", "atelier-photo")}<div class="atelier-contact">${contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("")}</div>${renderSocialBlock(data.profile, "atelier-serif")}<section><h2>${labels.skills}</h2>${renderSkillGroups(data.skills, labels)}</section><section><h2>${labels.education}</h2>${renderEducation(data.education)}</section></aside>
+    <main class="atelier-main"><header><p>SELECTED PROFILE / 2026</p><h1 class="resume-name">${escapeHtml(data.profile.name)}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p></header><p class="resume-summary">${escapeHtml(data.profile.summary)}</p><section><h2 class="resume-section-title">${labels.experience}</h2>${renderExperience(data.experience)}</section><section class="project-section"><h2 class="resume-section-title">${labels.projects}</h2>${renderProjects(data.projects, labels, "atelier")}</section></main>`;
+}
+
+function renderCupertino(data, labels) {
+  return `<header class="cupertino-header">${avatarMarkup(data.profile, "cupertino", "cupertino-photo")}<div><h1 class="resume-name">${escapeHtml(data.profile.name)}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p><div class="cupertino-contact">${contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("")}${renderSocialBlock(data.profile, "cupertino")}</div></div></header><p class="resume-summary">${escapeHtml(data.profile.summary)}</p><section><h2 class="resume-section-title">${labels.experience}</h2>${renderExperience(data.experience)}</section><section class="project-section"><h2 class="resume-section-title">${labels.projects}</h2>${renderProjects(data.projects, labels, "cupertino")}</section><div class="cupertino-bottom"><section><h2 class="resume-section-title">${labels.skills}</h2>${renderSkillGroups(data.skills, labels)}</section><section><h2 class="resume-section-title">${labels.education}</h2>${renderEducation(data.education)}</section></div>`;
+}
+
+function renderSwissGrid(data, labels) {
+  const splitName = escapeHtml(data.profile.name).replace(/\s+/, "<br>");
+  return `<header class="swiss-header"><div class="swiss-number">00</div><div><p>CURRICULUM VITAE / SELECTED WORK</p><h1 class="resume-name">${splitName}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p></div>${avatarMarkup(data.profile, "swiss-grid", "swiss-photo")}</header><section class="swiss-row"><h2>01<br>${labels.summary}</h2><p class="resume-summary">${escapeHtml(data.profile.summary)}</p></section><section class="swiss-row"><h2>02<br>${labels.experience}</h2><div>${renderExperience(data.experience)}</div></section><section class="swiss-row"><h2>03<br>${labels.projects}</h2><div>${renderProjects(data.projects, labels, "swiss")}</div></section><section class="swiss-row"><h2>04<br>${labels.skills}</h2><div class="swiss-bottom"><div>${renderSkillGroups(data.skills, labels)}</div><div>${renderEducation(data.education)}</div><div class="swiss-contact">${contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("")}${renderSocialBlock(data.profile, "swiss-grid")}</div></div></section>`;
+}
+
+function renderLetter(data, template, kind) {
+  const letter = data.coverLetter || letterSamples[state.locale] || letterSamples.zh;
+  const isRecommendation = kind === "recommendation";
+  const heading = isRecommendation
+    ? (state.locale === "zh" ? "推荐信" : "Letter of Recommendation")
+    : (letter.subject || (state.locale === "zh" ? "求职信" : "Cover Letter"));
+  const signer = isRecommendation ? letter.recommenderName : (letter.signer || data.profile.name);
+  const signerTitle = isRecommendation ? letter.recommenderTitle : data.profile.title;
+  const body = String(letter.body || "").split(/\n\s*\n/).filter(Boolean).map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("");
+  return `<div class="letter-shell letter-${template}"><header class="letter-header">${avatarMarkup(data.profile, template, "letter-photo")}<div><p class="letter-eyebrow">${escapeHtml(heading)}</p><h1>${escapeHtml(data.profile.name)}</h1><span>${escapeHtml(data.profile.title)}</span></div></header><div class="letter-meta"><span>${escapeHtml(letter.date)}</span><span>${escapeHtml(letter.company)}</span><span>${escapeHtml(letter.role)}</span></div><main><p class="letter-recipient">${escapeHtml(letter.recipient)}</p>${body}<p class="letter-closing">${escapeHtml(letter.closing)}<br><strong>${escapeHtml(signer)}</strong><br><span>${escapeHtml(signerTitle)}</span></p></main><footer>${contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("")}${renderSocialBlock(data.profile, template)}</footer></div>`;
+}
+
 function canonicalTemplate(template) {
   if (template === "classic") return "ats-classic";
   if (template === "modern") return "creative";
@@ -710,9 +792,15 @@ function renderPreview() {
     "sales-impact": renderSalesImpact,
     "operations-practical": renderOperations,
     academic: renderAcademic,
-    "early-career": renderEarlyCareer
+    "early-career": renderEarlyCareer,
+    "aqua-ledger": renderAquaLedger,
+    "atelier-serif": renderAtelierSerif,
+    cupertino: renderCupertino,
+    "swiss-grid": renderSwissGrid
   };
-  preview.innerHTML = (renderers[state.template] || renderEditorial)(state.data, labels);
+  preview.innerHTML = state.documentType === "resume"
+    ? (renderers[state.template] || renderEditorial)(state.data, labels)
+    : renderLetter(state.data, state.template, state.documentType);
 
   updateCompletion();
   updateQuality();
@@ -833,6 +921,14 @@ function sectionScore(section) {
 }
 
 function updateCompletion() {
+  if (state.documentType !== "resume") {
+    const letter = state.data.coverLetter || {};
+    const required = [letter.company, letter.role, letter.recipient, letter.body, letter.closing];
+    const score = Math.round(required.filter(value => String(value || "").trim()).length / required.length * 100);
+    completionBadge.textContent = `${score}%`;
+    completionBar.style.width = `${score}%`;
+    return;
+  }
   const sections = ["profile", "summary", "experience", "projects", "education", "skills"];
   const weights = [18, 12, 27, 16, 12, 15];
   const score = Math.round(sections.reduce((total, section, index) => total + sectionScore(section) * weights[index], 0));
@@ -847,6 +943,16 @@ function updateCompletion() {
 }
 
 function updateQuality() {
+  if (state.documentType !== "resume") {
+    const letter = state.data.coverLetter || {};
+    const issues = [];
+    if (!letter.company || !letter.role) issues.push("补充目标公司和岗位，才能让信件与投递对象对齐。");
+    if (String(letter.body || "").split(/\n\s*\n/).filter(Boolean).length < 2) issues.push("正文建议分成至少两段：岗位动机与证据匹配。");
+    if (state.documentType === "recommendation" && (!letter.recommenderName || !letter.recommenderTitle)) issues.push("推荐信必须确认推荐人姓名、身份和关系，不能由 Agent 虚构。");
+    qualityList.innerHTML = (issues.length ? issues : ["目标、正文和签署信息已完整。"]).map(item => `<li class="${issues.length ? "" : "good"}">${escapeHtml(item)}</li>`).join("");
+    qualityScore.textContent = issues.length ? `${issues.length} 条建议` : "状态良好";
+    return;
+  }
   const issues = [];
   const summaryLength = state.data.profile.summary.trim().length;
   const summaryWords = state.data.profile.summary.trim().split(/\s+/).filter(Boolean).length;
@@ -890,6 +996,7 @@ function updateQuality() {
 }
 
 function updateSummaryCount() {
+  if (state.documentType !== "resume") return;
   const value = state.data.profile.summary.trim();
   const count = state.locale === "en"
     ? value.split(/\s+/).filter(Boolean).length
@@ -926,6 +1033,14 @@ function updateControls() {
   document.querySelectorAll("[data-theme]").forEach(button => {
     button.classList.toggle("active", button.dataset.theme === state.theme);
   });
+  document.querySelectorAll("[data-document-type]").forEach(button => {
+    button.classList.toggle("active", button.dataset.documentType === state.documentType);
+  });
+  const resumeMode = state.documentType === "resume";
+  document.querySelectorAll('[data-document-only="resume"]').forEach(item => item.hidden = !resumeMode);
+  document.querySelectorAll('[data-document-only="letter"]').forEach(item => item.hidden = resumeMode);
+  document.querySelector('[data-editor-section="letter"]')?.classList.toggle("active", !resumeMode);
+  document.getElementById("letterEditorTitle").textContent = state.documentType === "recommendation" ? "推荐信" : "求职信";
   document.getElementById("loadSample").textContent = state.locale === "zh" ? "载入中文示例" : "Load English sample";
 }
 
@@ -973,6 +1088,14 @@ document.getElementById("sectionTabs").addEventListener("click", event => {
   document.querySelectorAll("[data-editor-section]").forEach(section => {
     section.classList.toggle("active", section.dataset.editorSection === button.dataset.section);
   });
+});
+
+document.getElementById("documentTypeControl").addEventListener("click", event => {
+  const button = event.target.closest("[data-document-type]");
+  if (!button) return;
+  state.documentType = button.dataset.documentType;
+  rerender();
+  showToast(button.textContent.trim() + "预览已启用");
 });
 
 document.querySelector(".editor-rail").addEventListener("input", event => {
@@ -1134,7 +1257,7 @@ document.getElementById("loadSample").addEventListener("click", event => {
     }, 15000);
     return;
   }
-  state.data = clone(samples[state.locale]);
+  state.data = { ...clone(samples[state.locale]), coverLetter: clone(letterSamples[state.locale]) };
   state.documentName = state.locale === "zh" ? "我的产品经理简历" : "AI Product Manager Resume";
   sampleArmed = false;
   rerender({ editor: true });
@@ -1161,7 +1284,7 @@ document.getElementById("resetButton").addEventListener("click", event => {
   state = clone(baseState);
   state.template = preservedTemplate;
   state.locale = preservedLocale;
-  state.data = clone(samples[preservedLocale]);
+  state.data = { ...clone(samples[preservedLocale]), coverLetter: clone(letterSamples[preservedLocale]) };
   state.documentName = preservedLocale === "zh" ? "我的产品经理简历" : "AI Product Manager Resume";
   resetArmed = false;
   rerender({ editor: true });
