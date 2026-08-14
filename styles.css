@@ -1930,11 +1930,8 @@ textarea:focus-visible {
 .aqua-card { background: linear-gradient(145deg, #f3fbfd 55%, #d9f3f8); border-top: 4px solid #31a9c8; }
 .aqua-card > span:first-of-type { background: #31a9c8; }
 .atelier-card { background: linear-gradient(90deg, #d8d5d0 0 29%, #f5f3f0 29%); border-color: #aaa59d; }
-.atelier-card h3 { font-family: "Bodoni 72", Didot, var(--serif); font-weight: 400; }
 .cupertino-card { background: #fbfcfe; border-top: 4px solid #147ce5; box-shadow: 4px 6px 0 rgba(20,124,229,.11); }
-.cupertino-card h3 { font-family: "Helvetica Neue", "Avenir Next", sans-serif; font-weight: 650; letter-spacing: -.04em; }
 .swiss-card { background: linear-gradient(145deg, #f7f9fa 64%, #dbeaf3); border-left: 4px solid #15191c; }
-.swiss-card h3 { font-family: "Helvetica Neue", "Avenir Next", sans-serif; font-weight: 800; letter-spacing: -.06em; text-transform: uppercase; }
 .swiss-card > span:first-of-type { background: #3579a8; }
 .landing-image-band { width: min(1180px, calc(100% - 56px)); margin: 0 auto; padding: 5px 0 clamp(105px, 12vw, 175px); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, .62fr); align-items: center; gap: clamp(50px, 9vw, 135px); }.landing-image-band-reverse { grid-template-columns: minmax(300px, .62fr) minmax(0, 1.25fr); }.image-story-copy { max-width: 420px; position: relative; z-index: 3; }.landing-image-band .image-story-copy > span { display: block; color: var(--brand); font-family: "Kami Mono", monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }.landing-image-band h2 { margin: 17px 0 0; color: var(--brand); font-family: var(--serif); font-size: clamp(32px, 3.8vw, 52px); font-weight: 500; line-height: 1.06; letter-spacing: -.045em; }.landing-image-band p { margin: 20px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }.story-rule { display: flex; align-items: center; gap: 12px; margin-top: 28px; }.story-rule i { width: 52px; height: 1px; background: var(--brand); }.story-rule small { color: var(--muted); font-family: var(--serif); font-size: 11px; letter-spacing: .04em; }
 .editorial-media { --media-scale: 1.06; --media-scale-hover: 1.035; --detail-rotation: 0deg; --tilt-x: 0px; --tilt-y: 0px; min-width: 0; min-height: 475px; position: relative; isolation: isolate; margin: 0; }
