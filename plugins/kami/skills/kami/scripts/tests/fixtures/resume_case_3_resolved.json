@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "candidate": {
+    "name": "Jordan Chen",
+    "headline": "AI Product and Global Growth Lead",
+    "email": "candidate@example.com",
+    "location": "Shanghai",
+    "website": "",
+    "preferences": {
+      "output_language": "en",
+      "target_market": "Global technology startups",
+      "target_roles": ["AI Product Lead", "Head of Growth"],
+      "theme_preference": "light",
+      "paper_tone_preference": "ivory",
+      "page_target": 2
+    }
+  },
+  "sources": [
+    {"id": "old-pdf", "type": "resume_pdf", "captured_at": "2026-08-14", "label": "De-identified resume PDF"},
+    {"id": "profile-page", "type": "platform_profile", "platform": "authorized profile page", "captured_at": "2026-08-14", "label": "De-identified career profile"}
+  ],
+  "positions": [
+    {
+      "company": "Education AI Studio",
+      "title": "Co-founder / AI Product Manager",
+      "period": "2024.06 - Present",
+      "bullets": [
+        "Defined prompt standards, agent boundaries, interaction logic, and product prototypes for an AI education product.",
+        "Combined user research with C-end product iteration and B-end partnerships with language-learning institutions.",
+        "Improved generated-content accuracy and professionalism through prompt optimization and backend knowledge-data iteration."
+      ],
+      "ownership": "Owned product framing, prompt quality, agent workflow design, user research, and partner discovery.",
+      "methods": "Prompt evaluation, agent workflow design, user interviews, prototype testing, knowledge-data iteration, and market research.",
+      "source_ids": ["profile-page"]
+    },
+    {
+      "company": "Protocol Growth Lab",
+      "title": "Head of Overseas Operations",
+      "period": "2022.01 - 2024.05",
+      "bullets": [
+        "Built three ecosystem brands from zero across DeFi, infrastructure, and ZKP hardware acceleration, then led go-to-market, SEO, and SEM programs that supported more than 20 million USD in annual revenue.",
+        "Activated X, Discord, and Telegram communities through ambassador programs and growth experiments, doubling monthly attention.",
+        "Represented projects at global blockchain conferences, led English roundtables and demos, and developed partner relationships.",
+        "Led a multimodal AI research group, evaluated leading models, tuned prompts, and built custom agents and AI workflows for team productivity."
+      ],
+      "ownership": "Owned overseas growth, marketing operations, community systems, conference partnerships, and an internal AI enablement workstream.",
+      "methods": "Go-to-market planning, SEO and SEM, Google Analytics, community operations, ambassador programs, event strategy, and prompt engineering.",
+      "source_ids": ["profile-page"]
+    },
+    {
+      "company": "International Education Advisory",
+      "title": "North America Business Lead",
+      "period": "2020.01 - 2021.12",
+      "bullets": [
+        "Advised international-school and North America admissions clients with individualized education plans.",
+        "Built trust and conversion through phone, WeChat, events, referral programs, and multi-channel follow-up.",
+        "Planned online and offline activities, brand content, media promotion, and audience research for the North America business."
+      ],
+      "ownership": "Owned client consulting, channel development, event programs, and business-facing brand operations.",
+      "methods": "Needs discovery, consultative sales, event marketing, referral growth, audience profiling, and content planning.",
+      "source_ids": ["old-pdf"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Language AI Evaluation",
+      "role": "Product Manager",
+      "period": "2024.06 - Present",
+      "description": "Designed an AI writing-scoring report with constrained generation and a concise feedback flow.",
+      "highlights": [
+        "Interviewed learners and teachers, then iterated on report accuracy and user experience.",
+        "Coordinated frontend, backend, design, motion, and testing feedback."
+      ],
+      "source_ids": ["profile-page"]
+    },
+    {
+      "name": "Anonymous DeFi Protocol",
+      "role": "Head of Marketing / Co-founder",
+      "period": "2024.04 - Present",
+      "description": "Co-founded a bootstrapped anonymous decentralized exchange and built its initial community and governance motion.",
+      "highlights": [
+        "Reached more than 500,000 USD TVL within ten days of launch.",
+        "Created the milestone plan, documentation, X and Discord presence, partner motion, and multisig-holder election.",
+        "Elected six international governance representatives from a community spanning the United States, Mexico, Poland, and Japan."
+      ],
+      "source_ids": ["profile-page"]
+    },
+    {
+      "name": "Privacy Bridge Growth",
+      "role": "Head of Growth",
+      "period": "2023.05 - 2024.03",
+      "description": "Built growth and ecosystem positioning for a privacy-focused cross-chain bridge.",
+      "highlights": [
+        "Grew organic X followers by more than 20,000 in one month, exceeded 420,000 test-period wallet addresses, and supported more than 30,000 Discord members.",
+        "Won a first-place ecosystem incentive, secured a development grant, and won an infrastructure track at a major Ethereum hackathon."
+      ],
+      "source_ids": ["profile-page"]
+    },
+    {
+      "name": "ZK Acceleration Platform",
+      "role": "Product Operations Lead",
+      "period": "2022.08 - 2024.05",
+      "description": "Built market-facing operations for a ZKP algorithm and hardware acceleration platform.",
+      "highlights": [
+        "Created a bilingual technical content channel and overseas customer community.",
+        "Established technical collaboration with global ZKP semiconductor partners and helped move market share toward 18%."
+      ],
+      "source_ids": ["profile-page"]
+    },
+    {
+      "name": "Global Developer Community",
+      "role": "Overseas Community Lead",
+      "period": "2022.01 - 2023.05",
+      "description": "Developed community, content, event, and media partnerships for an open-source protocol ecosystem.",
+      "highlights": [
+        "Used Google Analytics to guide product and content improvements; quarterly X attention doubled.",
+        "Hosted English community sessions with an average of more than 1,500 listeners and coordinated a two-day conference with more than 4,000 attendees."
+      ],
+      "source_ids": ["profile-page"]
+    }
+  ],
+  "education": [
+    {"school": "European Graduate School", "degree": "MSc Language Education, Merit", "period": "2018.09 - 2019.11"},
+    {"school": "West Coast Business School", "degree": "Marketing Exchange Program", "period": "2017.01 - 2017.08"},
+    {"school": "East China Language Institute", "degree": "BA English-Chinese Interpreting, GPA 3.72", "period": "2014.09 - 2018.06"}
+  ],
+  "skills": [
+    "AI product strategy",
+    "Prompt engineering",
+    "Agent workflows",
+    "Overseas operations",
+    "Growth marketing",
+    "Business development",
+    "Community operations",
+    "Visual communication",
+    "English-Chinese interpreting",
+    "X, Discord, Telegram, Slack",
+    "Google Analytics",
+    "SEO / SEM"
+  ],
+  "target_jobs": [
+    {
+      "title": "AI Product and Global Growth Lead",
+      "description": "Lead AI product strategy, agent workflow quality, global growth, ecosystem partnerships, and community programs.",
+      "requirements": [
+        "AI product strategy",
+        "prompt engineering",
+        "agent workflows",
+        "global growth",
+        "ecosystem partnerships",
+        "community operations"
+      ]
+    }
+  ]
+}

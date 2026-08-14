@@ -74,6 +74,8 @@ python3 scripts/resume_workflow.py all candidate-dossier.json -o output/resume
 
 The complete bundle includes the dossier, analysis, interview questions, route, primary HTML, ATS HTML when required, cover letter, optional recommendation letter, unresolved claims, and matching notes.
 
+For repeatable local smoke tests, `scripts/tests/fixtures/resume_case_3_resolved.json` is a de-identified profile fixture modeled on an AI product, agent workflow, Web3 growth, and global community career arc. It contains no real contact details, portrait, social URLs, or employer and school names from the source resume.
+
 ## Privacy and access limits
 
 - Read only files and pages the user supplied or explicitly authorized.

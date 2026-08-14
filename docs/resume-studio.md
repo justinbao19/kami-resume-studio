@@ -108,6 +108,8 @@ python3 -m http.server 4173
 
 然后访问 `http://127.0.0.1:4173` 查看中文落地页，访问 `/index-en.html` 查看英文落地页，或访问 `/editor.html` 直接进入编辑器。项目当前没有 npm 依赖，也没有构建步骤。
 
+快速回归 Agent 填写流程可以使用 `scripts/tests/fixtures/resume_case_3_resolved.json`。该 fixture 根据一份真实简历的经历结构制作，但已替换姓名、联系方式、学校、雇主、项目名和社媒信息，不包含原始 PDF 或照片。
+
 ## 当前验证状态
 
 站点事实检查已区分新的中英文 Resume Studio 落地页、编辑器与保留的 Kami 多语言页面。当前仓库通过 `python3 scripts/build.py --check`、`python3 scripts/tests/test_build.py` 和 `python3 scripts/build_metadata.py --check`。后续修改落地页、编辑器、模板数量或安装方式时，需要同步更新站点事实、机器可读元数据和对应测试，不能恢复旧首页必须与 `index-zh|ja|ko|tw.html` 使用相同 DOM 骨架的假设。

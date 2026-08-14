@@ -2185,6 +2185,22 @@ def test_resume_workflow_routes_consulting_and_applies_paper_tones() -> None:
           "Photo placeholder" in empty_photo_html and "<circle cx='24' cy='17' r='8'/>" in empty_photo_html)
 
 
+def test_resume_workflow_deidentified_profile_fixture() -> None:
+    fixture = ROOT / "tests" / "fixtures" / "resume_case_3_resolved.json"
+    dossier = json.loads(fixture.read_text(encoding="utf-8"))
+    analysis = resume_workflow_mod.analyze(dossier)
+    route_data = resume_workflow_mod.route(dossier, analysis)
+    check("de-identified profile fixture keeps current-role evidence",
+          dossier["candidate"]["name"] == "Jordan Chen"
+          and len(dossier["positions"]) == 3
+          and len(dossier["projects"]) == 5
+          and analysis["latest_position"]["title"] == "Co-founder / AI Product Manager")
+    check("de-identified profile fixture routes to a light paper-aware output",
+          route_data["primary"]["theme"] == "light"
+          and route_data["primary"]["paper_tone"] == "ivory"
+          and route_data["ats_companion"]["paper_tone"] == "white")
+
+
 def _test_functions():
     tests = []
     for name, func in globals().items():
