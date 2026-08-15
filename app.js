@@ -405,8 +405,8 @@ function setDesignRailOpen(open, { returnFocus = false } = {}) {
   designRailOpen = Boolean(open);
   workspace.classList.toggle("is-design-open", designRailOpen);
   designRailToggle.setAttribute("aria-expanded", String(designRailOpen));
-  designRailToggle.setAttribute("aria-label", designRailOpen ? "收起样式设置" : "展开样式设置");
-  designRailToggle.title = designRailOpen ? "收起样式设置" : "展开样式设置";
+  designRailToggle.setAttribute("aria-label", designRailOpen ? "收起模板设置" : "展开模板设置");
+  designRailToggle.title = designRailOpen ? "收起模板设置" : "展开模板设置";
   setEditorRailWidth(editorRailWidth);
   syncWorkspaceAccessibility();
   if (returnFocus) designRailToggle.focus();
