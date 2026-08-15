@@ -2128,6 +2128,7 @@ def test_resume_workflow_new_families_and_letters() -> None:
     catalog = json.loads((REPO_ROOT / "references" / "resume-template-catalog.json").read_text(encoding="utf-8"))
     ids = {item["id"] for item in catalog["templates"]}
     mckinsey = next(item for item in catalog["templates"] if item["id"] == "swiss-grid")
+    slate = next(item for item in catalog["templates"] if item["id"] == "slate-sidebar")
     check("resume catalog exposes 14 families and 28 variants",
           catalog["template_count"] == 14 and catalog["variant_count"] == 28 and
           {"aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"} <= ids)
@@ -2137,6 +2138,11 @@ def test_resume_workflow_new_families_and_letters() -> None:
           mckinsey["name_zh"] == "麦肯锡网格" and
           mckinsey["name_en"] == "McKinsey Grid" and
           {"strategy", "consulting", "executive-communication"} <= set(mckinsey["role_families"]))
+    check("Slate Sidebar catalog keeps its dedicated light palette",
+          slate["light"] == {
+              "accent": "#232935", "paper": "#F6F3F2", "ink": "#232935",
+              "sidebar": "#EBEDF0", "surface": "#EFF1F0",
+          })
     with tempfile.TemporaryDirectory() as directory:
         output_dir = Path(directory)
         for template in ("aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"):
@@ -2155,6 +2161,9 @@ def test_resume_workflow_new_families_and_letters() -> None:
             if template == "slate-sidebar":
                 check("resume workflow renders Slate Sidebar social icons",
                       "class='icon-social'" in resume_html and ">LinkedIn @" not in resume_html)
+                check("resume workflow renders Slate Sidebar dedicated palette",
+                      all(color in resume_html for color in ("#EBEDF0", "#F6F3F2", "#EFF1F0", "#232935")) and
+                      all(color in letter_html for color in ("#EBEDF0", "#F6F3F2", "#EFF1F0", "#232935")))
             check(f"resume workflow renders matching {template} letter",
                   f"class='{template} theme-light'" in letter_html and "Application for AI Product Lead" in letter_html)
 

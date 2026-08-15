@@ -62,8 +62,8 @@ const templateThemes = {
     dark: { accent: "#d6d6d4", paper: "#1a1b1c", ink: "#f3f3f1", muted: "#a8a8a6", line: "#3a3b3c" }
   },
   "slate-sidebar": {
-    light: { accent: "#252b34", paper: "#ffffff", ink: "#252b34", muted: "#737983", line: "#d9dde2" },
-    dark: { accent: "#eef0f3", paper: "#171a1f", ink: "#f1f3f5", muted: "#aeb4bd", line: "#3b414a" }
+    light: { accent: "#232935", paper: "#f6f3f2", ink: "#232935", muted: "#676d77", line: "#ebedf0", sidebar: "#ebedf0", surface: "#eff1f0" },
+    dark: { accent: "#eff1f0", paper: "#232935", ink: "#f6f3f2", muted: "#c7c9cd", line: "#4c5360", sidebar: "#1c222c", surface: "#303744" }
   },
   "atelier-serif": {
     light: { accent: "#5a5651", paper: "#f5f3f0", ink: "#262522", muted: "#74706a", line: "#d0cbc4" },
@@ -1163,8 +1163,12 @@ function renderPreview() {
   state.template = canonicalTemplate(state.template);
   const templateTheme = templateThemes[state.template]?.[state.theme];
   const theme = { ...(templateTheme || themes[state.theme] || themes.light) };
-  if (state.theme === "light" && paperTones[state.paperTone]) theme.paper = paperTones[state.paperTone];
-  const accent = state.accent === "auto"
+  if (state.template !== "slate-sidebar" && state.theme === "light" && paperTones[state.paperTone]) {
+    theme.paper = paperTones[state.paperTone];
+  }
+  const accent = state.template === "slate-sidebar"
+    ? { color: theme.accent, soft: theme.surface || hexToRgba(theme.accent) }
+    : state.accent === "auto"
     ? { color: theme.accent || templateThemes.editorial.light.accent, soft: hexToRgba(theme.accent || templateThemes.editorial.light.accent) }
     : (accents[state.accent] || accents.ink);
   const labels = copy[state.locale] || copy.zh;
@@ -1175,6 +1179,8 @@ function renderPreview() {
   preview.style.setProperty("--resume-ink", theme.ink);
   preview.style.setProperty("--resume-muted", theme.muted);
   preview.style.setProperty("--resume-line", theme.line);
+  preview.style.setProperty("--slate-sidebar-bg", theme.sidebar || "#ebedf0");
+  preview.style.setProperty("--slate-surface", theme.surface || theme.line);
   updatePhotoEditor();
 
   const renderers = {
@@ -1470,6 +1476,10 @@ function moveResumeSection(section, target, placeAfter = false) {
 
 function updateControls() {
   syncSectionTabs();
+  const slatePaletteActive = canonicalTemplate(state.template) === "slate-sidebar";
+  document.getElementById("colorOptions").hidden = slatePaletteActive;
+  document.getElementById("slatePalette").hidden = !slatePaletteActive;
+  document.getElementById("accentPaletteHelp").textContent = slatePaletteActive ? "侧写专属" : "";
   const sectionReorderEnabled = state.documentType === "resume" && sectionReorderTemplates.has(canonicalTemplate(state.template));
   document.querySelectorAll('#sectionTabs [data-section]:not([data-section="profile"])').forEach(button => {
     button.draggable = sectionReorderEnabled;
@@ -1491,11 +1501,18 @@ function updateControls() {
     button.classList.toggle("active", button.dataset.theme === state.theme);
   });
   document.querySelectorAll("[data-paper-tone]").forEach(button => {
-    button.classList.toggle("active", button.dataset.paperTone === state.paperTone);
-    button.disabled = state.theme === "dark";
+    const activePaperTone = slatePaletteActive ? "auto" : state.paperTone;
+    button.classList.toggle("active", button.dataset.paperTone === activePaperTone);
+    button.disabled = state.theme === "dark" || slatePaletteActive;
   });
   const paperToneHelp = document.getElementById("paperToneHelp");
-  if (paperToneHelp) paperToneHelp.textContent = state.theme === "dark" ? "深色模式使用模板纸面" : "浅色模式可选";
+  if (paperToneHelp) {
+    paperToneHelp.textContent = slatePaletteActive
+      ? "侧写使用专属纸色"
+      : state.theme === "dark"
+      ? "深色模式使用模板纸面"
+      : "浅色模式可选";
+  }
   document.querySelectorAll("[data-document-type]").forEach(button => {
     button.classList.toggle("active", button.dataset.documentType === state.documentType);
   });
@@ -1777,7 +1794,7 @@ document.getElementById("paperToneControl").addEventListener("click", event => {
 
 document.getElementById("colorOptions").addEventListener("click", event => {
   const button = event.target.closest("[data-accent]");
-  if (!button) return;
+  if (!button || canonicalTemplate(state.template) === "slate-sidebar") return;
   state.accent = button.dataset.accent;
   rerender();
 });

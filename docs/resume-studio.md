@@ -44,6 +44,8 @@ python3 scripts/resume_workflow.py all candidate-dossier.json -o output/resume
 
 深色、创意或分栏主版本不会作为唯一交付物；系统会同时生成 `ats-classic/light` companion，适合招聘网站、企业 ATS 和打印归档。
 
+侧写使用独立固定色板：侧栏 `#EBEDF0`、纸面 `#F6F3F2`、浅层表面 `#EFF1F0`、主文字与图标 `#232935`。该模板不继承全局纸色或强调色，确保编辑预览、打印和 Agent 输出一致。
+
 配套求职信复用主简历的个人信息、照片、模板、主题和语言，收件人、目标公司、岗位、标题、正文、落款与签名保持独立。灰廊雅集还支持推荐信模式。
 
 ## 从 Kami 继承的能力

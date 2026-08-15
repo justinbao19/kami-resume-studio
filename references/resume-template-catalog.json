@@ -157,8 +157,8 @@
       "project_section": true,
       "letter_types": ["cover-letter"],
       "default_theme": "light",
-      "light": {"accent": "#252B34", "paper": "#FFFFFF", "ink": "#252B34"},
-      "dark": {"accent": "#EEF0F3", "paper": "#171A1F", "ink": "#F1F3F5"}
+      "light": {"accent": "#232935", "paper": "#F6F3F2", "ink": "#232935", "sidebar": "#EBEDF0", "surface": "#EFF1F0"},
+      "dark": {"accent": "#EFF1F0", "paper": "#232935", "ink": "#F6F3F2", "sidebar": "#1C222C", "surface": "#303744"}
     },
     {
       "id": "atelier-serif",
