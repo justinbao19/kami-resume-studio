@@ -55,8 +55,8 @@ const templateThemes = {
     dark: { accent: "#8bc5e5", paper: "#14232b", ink: "#ecf4f6", muted: "#b2c8d1", line: "#355260" }
   },
   "aqua-ledger": {
-    light: { accent: "#31a9c8", paper: "#f5fbfd", ink: "#162a31", muted: "#64777d", line: "#bfd8de" },
-    dark: { accent: "#7bd7ed", paper: "#11272f", ink: "#eefbfe", muted: "#a8c4cc", line: "#31515a" }
+    light: { accent: "#2f3336", paper: "#ffffff", ink: "#1c1c1c", muted: "#666666", line: "#e5e5e3" },
+    dark: { accent: "#d6d6d4", paper: "#1a1b1c", ink: "#f3f3f1", muted: "#a8a8a6", line: "#3a3b3c" }
   },
   "atelier-serif": {
     light: { accent: "#5a5651", paper: "#f5f3f0", ink: "#262522", muted: "#74706a", line: "#d0cbc4" },
@@ -73,7 +73,7 @@ const templateThemes = {
 };
 
 const photoSupportedTemplates = new Set(["editorial", "technical", "creative", "early-career", "aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"]);
-const iconSocialTemplates = new Set(["technical", "creative", "early-career", "aqua-ledger"]);
+const iconSocialTemplates = new Set(["technical", "creative", "early-career"]);
 const socialLabels = {
   linkedin: { zh: "LinkedIn", en: "LinkedIn" },
   x: { zh: "X", en: "X" },
@@ -723,13 +723,142 @@ function renderEarlyCareer(data, labels) {
 }
 
 function renderAquaLedger(data, labels) {
-  const contacts = contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("");
-  return `<header class="aqua-header"><div><p class="aqua-kicker">CURRICULUM VITAE</p><h1 class="resume-name">${escapeHtml(data.profile.name)}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p></div>${avatarMarkup(data.profile, "aqua-ledger", "aqua-photo")}</header>
-    <div class="aqua-contact">${contacts}${renderSocialBlock(data.profile, "aqua-ledger")}</div>
-    <section class="aqua-row aqua-summary"><h2>01 / ${labels.summary}</h2><p>${escapeHtml(data.profile.summary)}</p></section>
-    <section class="aqua-row"><h2>02 / ${labels.experience}</h2><div>${renderExperience(data.experience)}</div></section>
-    <section class="aqua-row"><h2>03 / ${labels.projects}</h2><div>${renderProjects(data.projects, labels, "aqua")}</div></section>
-    <section class="aqua-row aqua-bottom"><h2>04 / PROFILE</h2><div class="aqua-mini-grid"><div>${renderSkillGroups(data.skills, labels)}</div><div>${renderEducation(data.education)}</div></div></section>`;
+  const summaryLabel = state.locale === "zh" ? "个人简介" : "SUMMARY";
+  const experienceLabel = state.locale === "zh" ? "工作经历" : "EXPERIENCE";
+  const projectsLabel = state.locale === "zh" ? "项目经历" : "PROJECTS";
+  const profileLabel = state.locale === "zh" ? "教育背景" : "EDUCATION";
+  const contacts = [
+    data.profile.location ? `<span class="aqua-meta aqua-meta-location">${escapeHtml(data.profile.location)}</span>` : "",
+    data.profile.phone ? `<span class="aqua-meta aqua-meta-phone">${escapeHtml(data.profile.phone)}</span>` : "",
+    data.profile.email ? `<span class="aqua-meta aqua-meta-email">${escapeHtml(data.profile.email)}</span>` : "",
+    data.profile.website ? `<span class="aqua-meta aqua-meta-web">${escapeHtml(data.profile.website)}</span>` : ""
+  ].filter(Boolean).join("");
+  const experience = (data.experience || []).map((item, index) => {
+    const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
+    return `<div class="resume-entry aqua-entry">
+      <div class="aqua-entry-meta">
+        ${index === 0 ? `<h2>${experienceLabel}</h2>` : ""}
+        <h3><span class="aqua-company">${escapeHtml(item.company)}</span><span class="aqua-sep">|</span><span class="aqua-role">${escapeHtml(item.role)}</span></h3>
+        <p class="resume-period">${escapeHtml(item.period)}</p>
+      </div>
+      ${bullets ? `<ul>${bullets}</ul>` : `<div></div>`}
+    </div>`;
+  }).join("");
+  const projects = (data.projects || []).map((item, index) => {
+    const href = projectHref(item);
+    const title = href
+      ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>`
+      : escapeHtml(item.name);
+    const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
+    return `<div class="project-entry project-entry-aqua">
+      <div class="aqua-entry-meta">
+        ${index === 0 ? `<h2>${projectsLabel}</h2>` : ""}
+        <h3>${title}</h3>
+        <p class="resume-period">${escapeHtml(item.period)}</p>
+      </div>
+      <div class="aqua-project-copy">
+        ${item.role ? `<p class="entry-subtitle">${escapeHtml(item.role)}</p>` : ""}
+        ${item.description ? `<p class="project-description">${escapeHtml(item.description)}</p>` : ""}
+        ${bullets ? `<ul>${bullets}</ul>` : ""}
+      </div>
+    </div>`;
+  }).join("") || `<div class="project-entry project-entry-aqua"><div class="aqua-entry-meta"><h2>${projectsLabel}</h2></div><p class="empty-projects">${state.locale === "zh" ? "暂无项目经历" : "No selected projects yet."}</p></div>`;
+  return `<div class="aqua-page aqua-page-one" aria-label="${state.locale === "zh" ? "简历第 1 页" : "Resume page 1"}">
+      ${avatarMarkup(data.profile, "aqua-ledger", "aqua-photo")}<header class="aqua-header"><div class="aqua-identity"><h1 class="resume-title">${escapeHtml(data.profile.title)}</h1><p class="resume-name">${escapeHtml(data.profile.name)}</p><div class="aqua-contact">${contacts}${renderSocialBlock(data.profile, "aqua-ledger")}</div></div></header>
+      <section class="aqua-row aqua-summary"><h2>${summaryLabel}</h2><div><p>${escapeHtml(data.profile.summary)}</p></div></section>
+      <section class="aqua-ledger-section aqua-experience"><div class="aqua-section-list">${experience}</div></section>
+    </div>
+    <div class="aqua-page aqua-page-two" aria-label="${state.locale === "zh" ? "简历第 2 页" : "Resume page 2"}">
+      <section class="aqua-ledger-section aqua-projects"><div class="aqua-section-list">${projects}</div></section>
+      <section class="aqua-row aqua-bottom"><h2>${profileLabel}</h2><div class="aqua-mini-grid"><div>${renderSkillGroups(data.skills, labels)}</div><div>${renderEducation(data.education)}</div></div></section>
+    </div>`;
+}
+
+function paginateAquaLedger() {
+  const firstPage = preview.querySelector(".aqua-page-one");
+  const renderedSecondPage = preview.querySelector(".aqua-page-two");
+  if (!firstPage || !renderedSecondPage) return;
+
+  const experienceEntries = [...firstPage.querySelectorAll(".aqua-entry")];
+  const projectEntries = [...renderedSecondPage.querySelectorAll(".project-entry-aqua")];
+  const profileBlock = renderedSecondPage.querySelector(".aqua-bottom");
+  const experienceLabel = state.locale === "zh" ? "工作经历" : "EXPERIENCE";
+  const projectsLabel = state.locale === "zh" ? "项目经历" : "PROJECTS";
+  const firstExperienceSection = firstPage.querySelector(".aqua-experience");
+
+  firstExperienceSection.querySelector(".aqua-section-list").replaceChildren();
+  renderedSecondPage.remove();
+
+  const createPage = () => {
+    const page = document.createElement("div");
+    page.className = "aqua-page aqua-page-continuation";
+    preview.append(page);
+    return page;
+  };
+
+  const createSection = (page, sectionClass) => {
+    const section = document.createElement("section");
+    section.className = `aqua-ledger-section ${sectionClass}`;
+    const list = document.createElement("div");
+    list.className = "aqua-section-list";
+    section.append(list);
+    page.append(section);
+    return list;
+  };
+
+  const setEntryHeading = (entry, label, show) => {
+    const meta = entry.querySelector(".aqua-entry-meta");
+    meta.querySelector(":scope > h2")?.remove();
+    if (!show) return;
+    const heading = document.createElement("h2");
+    heading.textContent = label;
+    meta.prepend(heading);
+  };
+
+  const packEntries = (entries, page, list, sectionClass, label) => {
+    let currentPage = page;
+    let currentList = list;
+    for (const entry of entries) {
+      const startsPage = currentList.children.length === 0;
+      setEntryHeading(entry, label, startsPage);
+      currentList.append(entry);
+      if (currentPage.scrollHeight <= currentPage.clientHeight + 1 || (startsPage && currentPage !== firstPage)) continue;
+
+      entry.remove();
+      currentPage = createPage();
+      currentList = createSection(currentPage, sectionClass);
+      setEntryHeading(entry, label, true);
+      currentList.append(entry);
+    }
+    return currentPage;
+  };
+
+  let currentPage = packEntries(
+    experienceEntries,
+    firstPage,
+    firstExperienceSection.querySelector(".aqua-section-list"),
+    "aqua-experience",
+    experienceLabel
+  );
+
+  currentPage = createPage();
+  let projectList = createSection(currentPage, "aqua-projects");
+  currentPage = packEntries(projectEntries, currentPage, projectList, "aqua-projects", projectsLabel);
+
+  if (profileBlock) {
+    profileBlock.classList.toggle("is-page-start", currentPage.children.length === 0);
+    currentPage.append(profileBlock);
+    if (currentPage.scrollHeight > currentPage.clientHeight + 1 && currentPage.children.length > 1) {
+      profileBlock.remove();
+      currentPage = createPage();
+      profileBlock.classList.add("is-page-start");
+      currentPage.append(profileBlock);
+    }
+  }
+
+  [...preview.querySelectorAll(":scope > .aqua-page")].forEach((page, index) => {
+    page.setAttribute("aria-label", state.locale === "zh" ? `简历第 ${index + 1} 页` : `Resume page ${index + 1}`);
+  });
 }
 
 function renderAtelierSerif(data, labels) {
@@ -805,6 +934,7 @@ function renderPreview() {
   preview.innerHTML = state.documentType === "resume"
     ? (renderers[state.template] || renderEditorial)(state.data, labels)
     : renderLetter(state.data, state.template, state.documentType);
+  if (state.documentType === "resume" && state.template === "aqua-ledger") paginateAquaLedger();
 
   updateCompletion();
   updateQuality();
@@ -1013,12 +1143,16 @@ function updateSummaryCount() {
 function updatePageEstimate() {
   const pageEstimate = document.getElementById("pageEstimate");
   const contentHeight = Math.max(preview.scrollHeight, preview.offsetHeight, 1123);
-  const pages = Math.max(1, Math.ceil(contentHeight / 1123));
-  const overflow = contentHeight > 1123;
-  pageEstimate.textContent = overflow ? `A4 · 约 ${pages} 页` : `A4 · ${pages} 页`;
+  const fixedPages = preview.querySelectorAll(":scope > .aqua-page").length;
+  const pages = fixedPages || Math.max(1, Math.ceil(contentHeight / 1123));
+  const overflow = pages > 1 || contentHeight > 1123;
+  pageEstimate.textContent = fixedPages ? `A4 · ${pages} 页` : (overflow ? `A4 · 约 ${pages} 页` : `A4 · ${pages} 页`);
   preview.classList.toggle("is-overflowing", overflow);
   const scale = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--preview-scale")) || 1;
-  document.getElementById("paperScaler").style.minHeight = `${contentHeight * scale}px`;
+  const scaler = document.getElementById("paperScaler");
+  const scaledHeight = contentHeight * scale;
+  scaler.style.minHeight = `${scaledHeight}px`;
+  scaler.style.height = `${scaledHeight}px`;
 }
 
 function updateControls() {
@@ -1290,11 +1424,13 @@ documentNameInput.addEventListener("input", event => {
 
 document.getElementById("resetButton").addEventListener("click", event => {
   if (!resetArmed) {
+    const resetButton = event.currentTarget;
     resetArmed = true;
-    event.currentTarget.lastChild.textContent = " 再次点击确认";
+    resetButton.lastChild.textContent = " 再次点击确认";
     setTimeout(() => {
       resetArmed = false;
-      event.currentTarget.lastChild.textContent = " 重置示例";
+      const currentResetButton = document.getElementById("resetButton");
+      if (currentResetButton?.lastChild) currentResetButton.lastChild.textContent = " 重置示例";
     }, 15000);
     return;
   }

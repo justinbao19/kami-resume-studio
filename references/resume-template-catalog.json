@@ -136,14 +136,14 @@
       "name_en": "Aqua Ledger",
       "role_families": ["operations", "program", "strategy", "consulting", "service"],
       "personality": ["precise", "cool", "polished"],
-      "layout": "aqua-label-grid",
+      "layout": "aqua-ops-ledger",
       "photo": true,
-      "social_display": "icons",
+      "social_display": "text",
       "project_section": true,
       "letter_types": ["cover-letter"],
       "default_theme": "light",
-      "light": {"accent": "#31A9C8", "paper": "#F5FBFD", "ink": "#162A31"},
-      "dark": {"accent": "#7BD7ED", "paper": "#11272F", "ink": "#EEFBFE"}
+      "light": {"accent": "#2F3336", "paper": "#FFFFFF", "ink": "#1C1C1C"},
+      "dark": {"accent": "#D6D6D4", "paper": "#1A1B1C", "ink": "#F3F3F1"}
     },
     {
       "id": "atelier-serif",

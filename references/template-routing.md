@@ -30,8 +30,8 @@ Photos are an explicit, market-sensitive option rather than a default resume fie
 
 LinkedIn, X, and GitHub are opt-in fields. Validate the URL, preserve it as a hyperlink in HTML/PDF, and choose the presentation by family:
 
-- Technical, creative, early-career, and aqua-ledger: compact platform icons with accessible labels.
-- Other families: text labels and handles, with no decorative icon row.
+- Technical, creative, and early-career: compact platform icons with accessible labels.
+- Aqua Ledger and other families: text labels and handles, with no decorative icon row.
 - Never display a social link that is not enabled and confirmed by the user.
 
 ## Role-to-template defaults
