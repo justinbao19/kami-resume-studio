@@ -11,7 +11,7 @@ Kami Resume helps job seekers turn an old CV, authorized career-platform pages, 
 - Agent workflow for old resumes, LinkedIn, BOSS 直聘, 猎聘, 58 同城, portfolios, GitHub, and target job descriptions.
 - Evidence-first interviewing for recent work that is missing from an old CV.
 - Role matching without inventing metrics, ownership, or unsupported experience.
-- Thirteen resume families with light and dark themes, for 26 visual variants.
+- Fourteen resume families with light and dark themes, for 28 visual variants.
 - Matching cover letters for every family, plus recommendation-letter mode for Atelier Serif.
 - Chinese and English editing, samples, and output.
 - Optional photos for compatible templates.
@@ -88,7 +88,7 @@ The source intake workflow reads only files or visible pages the user has explic
 
 ## Resume template system
 
-The editor and Agent router expose 13 template families and 26 light or dark combinations. Light resumes can keep the template paper or switch to pure white or ivory:
+The editor and Agent router expose 14 template families and 28 light or dark combinations. Light resumes can keep the template paper or switch to pure white or ivory:
 
 | Family | Best suited for |
 | --- | --- |
@@ -102,11 +102,12 @@ The editor and Agent router expose 13 template families and 26 light or dark com
 | Academic | Research, education, policy, medical, academic work |
 | Early Career | Students, internships, campus recruiting, career switches |
 | Aqua Ledger | Polished operations, program work, hospitality |
+| Slate Sidebar | International operations, community, market expansion |
 | Atelier Serif | Executive, brand, luxury, editorial storytelling |
 | Cupertino | Product, software, AI, human-centered technology |
 | McKinsey Grid | Strategy, consulting, transformation, executive communication |
 
-All families support project experience. Aqua Ledger, Atelier Serif, Cupertino, and McKinsey Grid add screenshot-led photo layouts and coordinated cover-letter treatments; Atelier Serif also supports recommendation letters. Empty photo slots use a neutral portrait icon, never candidate initials. When the primary design is dark, expressive, or multi-column, the Agent also creates a white ATS Classic companion.
+All families support project experience. Aqua Ledger, Slate Sidebar, Atelier Serif, Cupertino, and McKinsey Grid add reference-led photo layouts and coordinated cover-letter treatments; Atelier Serif also supports recommendation letters. Empty photo slots use a neutral portrait icon, never candidate initials. When the primary design is dark, expressive, or multi-column, the Agent also creates a white ATS Classic companion.
 
 The broader document engine still includes Eight document templates and 18 inline SVG diagram types inherited from Kami.
 

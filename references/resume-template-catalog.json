@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "template_count": 13,
-  "variant_count": 26,
+  "template_count": 14,
+  "variant_count": 28,
   "paper_tones": ["auto", "white", "ivory"],
   "templates": [
     {
@@ -144,6 +144,21 @@
       "default_theme": "light",
       "light": {"accent": "#2F3336", "paper": "#FFFFFF", "ink": "#1C1C1C"},
       "dark": {"accent": "#D6D6D4", "paper": "#1A1B1C", "ink": "#F3F3F1"}
+    },
+    {
+      "id": "slate-sidebar",
+      "name_zh": "侧写",
+      "name_en": "Slate Sidebar",
+      "role_families": ["growth", "marketing", "operations", "international", "community", "service"],
+      "personality": ["polished", "direct", "international"],
+      "layout": "portrait-sidebar",
+      "photo": true,
+      "social_display": "text",
+      "project_section": true,
+      "letter_types": ["cover-letter"],
+      "default_theme": "light",
+      "light": {"accent": "#252B34", "paper": "#FFFFFF", "ink": "#252B34"},
+      "dark": {"accent": "#EEF0F3", "paper": "#171A1F", "ink": "#F1F3F5"}
     },
     {
       "id": "atelier-serif",

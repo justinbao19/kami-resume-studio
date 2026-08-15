@@ -1,4 +1,7 @@
 const STORAGE_KEY = "kami-resume-studio-v1";
+const LAYOUT_STORAGE_KEY = "kami-resume-studio-layout-v1";
+const EDITOR_RAIL_MIN = 280;
+const EDITOR_RAIL_MAX = 480;
 
 const accents = {
   ink: { color: "#1b365d", soft: "#e8edf3" },
@@ -58,6 +61,10 @@ const templateThemes = {
     light: { accent: "#2f3336", paper: "#ffffff", ink: "#1c1c1c", muted: "#666666", line: "#e5e5e3" },
     dark: { accent: "#d6d6d4", paper: "#1a1b1c", ink: "#f3f3f1", muted: "#a8a8a6", line: "#3a3b3c" }
   },
+  "slate-sidebar": {
+    light: { accent: "#252b34", paper: "#ffffff", ink: "#252b34", muted: "#737983", line: "#d9dde2" },
+    dark: { accent: "#eef0f3", paper: "#171a1f", ink: "#f1f3f5", muted: "#aeb4bd", line: "#3b414a" }
+  },
   "atelier-serif": {
     light: { accent: "#5a5651", paper: "#f5f3f0", ink: "#262522", muted: "#74706a", line: "#d0cbc4" },
     dark: { accent: "#d1c7b8", paper: "#211f1d", ink: "#f2eee8", muted: "#bcb4aa", line: "#514c47" }
@@ -72,7 +79,7 @@ const templateThemes = {
   }
 };
 
-const photoSupportedTemplates = new Set(["editorial", "technical", "creative", "early-career", "aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"]);
+const photoSupportedTemplates = new Set(["editorial", "technical", "creative", "early-career", "aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"]);
 const iconSocialTemplates = new Set(["technical", "creative", "early-career"]);
 const socialLabels = {
   linkedin: { zh: "LinkedIn", en: "LinkedIn" },
@@ -292,6 +299,15 @@ const qualityList = document.getElementById("qualityList");
 const qualityScore = document.getElementById("qualityScore");
 const saveStatus = document.getElementById("saveStatus");
 const documentNameInput = document.getElementById("documentName");
+const workspace = document.querySelector(".workspace");
+const editorRailResizer = document.getElementById("editorRailResizer");
+const designRail = document.getElementById("designRail");
+const designRailToggle = document.getElementById("designRailToggle");
+const designRailClose = document.getElementById("designRailClose");
+let editorRailWidth = loadEditorRailWidth();
+let designRailOpen = false;
+let layoutRaf = null;
+let activeResizePointerId = null;
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -338,6 +354,62 @@ function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     saveStatus.textContent = "已保存到本机";
   }, 260);
+}
+
+function loadEditorRailWidth() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LAYOUT_STORAGE_KEY));
+    return Number.isFinite(saved?.editorRailWidth) ? saved.editorRailWidth : 330;
+  } catch (error) {
+    return 330;
+  }
+}
+
+function isDesktopWorkspace() {
+  return window.matchMedia("(min-width: 961px)").matches;
+}
+
+function editorRailMaximum() {
+  if (!isDesktopWorkspace()) return EDITOR_RAIL_MAX;
+  const designWidth = designRailOpen ? (window.innerWidth <= 1180 ? 250 : 278) : 0;
+  const previewMinimum = designRailOpen && window.innerWidth <= 1180 ? 380 : 480;
+  return Math.max(EDITOR_RAIL_MIN, Math.min(EDITOR_RAIL_MAX, window.innerWidth - designWidth - previewMinimum - 8));
+}
+
+function scheduleWorkspaceRefresh() {
+  if (layoutRaf) return;
+  layoutRaf = requestAnimationFrame(() => {
+    layoutRaf = null;
+    if (!state.zoom) fitPreview(true);
+    else updatePageEstimate();
+  });
+}
+
+function setEditorRailWidth(value, { persist = false } = {}) {
+  const maximum = editorRailMaximum();
+  editorRailWidth = Math.max(EDITOR_RAIL_MIN, Math.min(maximum, Math.round(value)));
+  document.documentElement.style.setProperty("--editor-rail-width", `${editorRailWidth}px`);
+  editorRailResizer.setAttribute("aria-valuemax", String(maximum));
+  editorRailResizer.setAttribute("aria-valuenow", String(editorRailWidth));
+  if (persist) localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify({ editorRailWidth }));
+  scheduleWorkspaceRefresh();
+}
+
+function syncWorkspaceAccessibility() {
+  const designVisible = isDesktopWorkspace() ? designRailOpen : workspace.dataset.currentView === "design";
+  designRail.setAttribute("aria-hidden", String(!designVisible));
+  designRail.inert = !designVisible;
+}
+
+function setDesignRailOpen(open, { returnFocus = false } = {}) {
+  designRailOpen = Boolean(open);
+  workspace.classList.toggle("is-design-open", designRailOpen);
+  designRailToggle.setAttribute("aria-expanded", String(designRailOpen));
+  designRailToggle.setAttribute("aria-label", designRailOpen ? "收起样式设置" : "展开样式设置");
+  designRailToggle.title = designRailOpen ? "收起样式设置" : "展开样式设置";
+  setEditorRailWidth(editorRailWidth);
+  syncWorkspaceAccessibility();
+  if (returnFocus) designRailToggle.focus();
 }
 
 function getPath(root, path) {
@@ -421,6 +493,22 @@ function socialIcon(platform) {
     x: '<path d="M4 4h3.3l2.4 3.2L12.8 4H16l-4.8 5.4L16.2 16h-3.3l-2.8-3.7L6.6 16H3.4l5-5.9L4 4Zm2.2 1.3 6.9 9.4h.9L7.1 5.3h-.9Z"/>'
   };
   return `<svg viewBox="0 0 20 20" aria-hidden="true">${paths[platform] || ""}</svg>`;
+}
+
+function slateIcon(name) {
+  const paths = {
+    profile: '<circle cx="12" cy="8" r="3"></circle><path d="M6 20c.8-4 2.8-6 6-6s5.2 2 6 6"></path>',
+    briefcase: '<rect x="3" y="7" width="18" height="12" rx="2"></rect><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7M3 12h18M10 12v2h4v-2"></path>',
+    folder: '<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5v-11Z"></path>',
+    education: '<path d="m3 10 9-5 9 5-9 5-9-5Z"></path><path d="M7 12.2V17c2.8 2 7.2 2 10 0v-4.8M21 10v6"></path>',
+    spark: '<path d="m12 3 1.4 4.6L18 9l-4.6 1.4L12 15l-1.4-4.6L6 9l4.6-1.4L12 3Z"></path><path d="m19 15 .7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15Z"></path>',
+    phone: '<path d="M7.2 3.5 9 7.7 6.8 9c1.5 3 3.8 5.3 6.8 6.8l1.3-2.2 4.2 1.8v3c0 1-.8 1.8-1.8 1.8C9.8 19.7 4.3 14.2 3.8 6.7c0-1 .8-1.8 1.8-1.8h1.6v-1.4Z"></path>',
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path>',
+    link: '<path d="M10 13a4.5 4.5 0 0 0 6.4.1l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"></path><path d="M14 11a4.5 4.5 0 0 0-6.4-.1l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"></path>',
+    pin: '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle>',
+    role: '<circle cx="12" cy="12" r="8"></circle><path d="M8 12h8M12 8v8"></path>'
+  };
+  return `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.profile}</svg>`;
 }
 
 function socialLinks(profile, template) {
@@ -861,6 +949,112 @@ function paginateAquaLedger() {
   });
 }
 
+function renderSlateSidebar(data, labels) {
+  const locale = state.locale;
+  const sideLabels = locale === "zh"
+    ? { info: "个人信息", highlights: "个人亮点", other: "其它" }
+    : { info: "Personal Info", highlights: "Highlights", other: "Other" };
+  const summaryPoints = String(data.profile.summary || "")
+    .split(locale === "zh" ? /[。；]+/ : /(?<=[.!?])\s+/)
+    .map(item => item.trim())
+    .filter(Boolean);
+  const contactRows = [
+    ["role", data.profile.title],
+    ["phone", data.profile.phone],
+    ["mail", data.profile.email],
+    ["link", data.profile.website],
+    ["pin", data.profile.location]
+  ].filter(([, value]) => value).map(([icon, value]) => `<li>${slateIcon(icon)}<span>${escapeHtml(value)}</span></li>`).join("");
+  const socialRows = Object.entries(socialLabels).map(([platform, names]) => {
+    const item = data.profile.socials?.[platform];
+    const href = item?.enabled ? safeUrl(item.url) : "";
+    return href ? `<li>${slateIcon("link")}<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(names[locale] || names.en)} ${escapeHtml(socialHandle(item.url))}</a></li>` : "";
+  }).join("");
+  const skills = [
+    [labels.core, data.skills.core],
+    [labels.tools, data.skills.tools],
+    [labels.languages, data.skills.languages]
+  ].filter(([, value]) => value).map(([label, value]) => `<li><b>${escapeHtml(label)}:</b> ${escapeHtml(value)}</li>`).join("");
+  const sidebar = `<aside class="slate-sidebar">
+    ${avatarMarkup(data.profile, "slate-sidebar", "slate-photo")}
+    <h1 class="slate-name">${escapeHtml(data.profile.name)}</h1>
+    <section class="slate-side-section"><h2>${slateIcon("profile")}<span>${sideLabels.info}</span></h2><ul class="slate-contact-list">${contactRows}${socialRows}</ul></section>
+    <section class="slate-side-section"><h2>${slateIcon("spark")}<span>${sideLabels.highlights}</span></h2><ul class="slate-plus-list">${summaryPoints.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>
+    <section class="slate-side-section"><h2>${slateIcon("folder")}<span>${sideLabels.other}</span></h2><ul class="slate-other-list">${skills}</ul></section>
+  </aside>`;
+  const experienceEntries = (data.experience || []).map(item => {
+    const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
+    return `<article class="slate-entry" data-slate-entry="experience"><header><h3>${escapeHtml(item.company)}${item.role ? ` · ${escapeHtml(item.role)}` : ""}</h3><span>${escapeHtml(item.period)}${data.profile.location ? ` · ${escapeHtml(data.profile.location)}` : ""}</span></header>${bullets ? `<ul>${bullets}</ul>` : ""}</article>`;
+  }).join("");
+  const educationEntries = (data.education || []).map(item => `<article class="slate-education-entry" data-slate-entry="education"><header><h3>${escapeHtml(item.school)}</h3><span>${escapeHtml(item.period)}</span></header><p>${escapeHtml(item.degree)}</p></article>`).join("");
+  const projectEntries = (data.projects || []).map(item => {
+    const href = projectHref(item);
+    const title = href ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>` : escapeHtml(item.name);
+    const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
+    return `<article class="slate-entry slate-project-entry" data-slate-entry="project"><header><h3>${title}${item.role ? ` · ${escapeHtml(item.role)}` : ""}</h3><span>${escapeHtml(item.period)}</span></header>${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}${bullets ? `<ul>${bullets}</ul>` : ""}</article>`;
+  }).join("") || `<p class="slate-empty" data-slate-entry="project">${locale === "zh" ? "暂无项目经历" : "No selected projects yet."}</p>`;
+  const section = (label, icon, className, body) => `<section class="slate-main-section ${className}"><h2>${slateIcon(icon)}<span>${label}</span></h2><div class="slate-section-body">${body}</div></section>`;
+  return `<div class="slate-page slate-page-one" data-resume-page aria-label="${locale === "zh" ? "简历第 1 页" : "Resume page 1"}">${sidebar}<main class="slate-main">${section(labels.experience, "briefcase", "slate-experience", experienceEntries)}${section(labels.education, "education", "slate-education", educationEntries)}</main></div>
+    <div class="slate-page slate-page-two" data-resume-page aria-label="${locale === "zh" ? "简历第 2 页" : "Resume page 2"}">${sidebar}<main class="slate-main">${section(labels.projects, "folder", "slate-projects", projectEntries)}</main></div>`;
+}
+
+function paginateSlateSidebar() {
+  const firstPage = preview.querySelector(".slate-page-one");
+  const secondPage = preview.querySelector(".slate-page-two");
+  if (!firstPage || !secondPage) return;
+  const sidebar = firstPage.querySelector(".slate-sidebar").outerHTML;
+  const entries = {
+    experience: [...firstPage.querySelectorAll('[data-slate-entry="experience"]')],
+    education: [...firstPage.querySelectorAll('[data-slate-entry="education"]')],
+    project: [...secondPage.querySelectorAll('[data-slate-entry="project"]')]
+  };
+  const specs = {
+    experience: [state.locale === "zh" ? "工作经历" : "Experience", "briefcase", "slate-experience"],
+    education: [state.locale === "zh" ? "教育背景" : "Education", "education", "slate-education"],
+    project: [state.locale === "zh" ? "项目经历" : "Projects", "folder", "slate-projects"]
+  };
+  const firstMain = firstPage.querySelector(".slate-main");
+  firstMain.replaceChildren();
+  secondPage.remove();
+  const createPage = () => {
+    const page = document.createElement("div");
+    page.className = "slate-page slate-page-continuation";
+    page.dataset.resumePage = "";
+    page.innerHTML = `${sidebar}<main class="slate-main"></main>`;
+    preview.append(page);
+    return page;
+  };
+  const createSection = (page, type) => {
+    const [label, icon, className] = specs[type];
+    const section = document.createElement("section");
+    section.className = `slate-main-section ${className}`;
+    section.innerHTML = `<h2>${slateIcon(icon)}<span>${label}</span></h2><div class="slate-section-body"></div>`;
+    page.querySelector(".slate-main").append(section);
+    return section.querySelector(".slate-section-body");
+  };
+  const pack = (items, startPage, type) => {
+    let page = startPage;
+    let body = createSection(page, type);
+    for (const entry of items) {
+      body.append(entry);
+      const main = page.querySelector(".slate-main");
+      const onlyEntryOnPage = main.querySelectorAll(":scope > .slate-main-section").length === 1 && body.children.length === 1;
+      if (main.scrollHeight <= main.clientHeight + 1 || onlyEntryOnPage) continue;
+      entry.remove();
+      if (!body.children.length) body.closest(".slate-main-section")?.remove();
+      page = createPage();
+      body = createSection(page, type);
+      body.append(entry);
+    }
+    return page;
+  };
+  let currentPage = pack(entries.experience, firstPage, "experience");
+  currentPage = pack(entries.education, currentPage, "education");
+  currentPage = createPage();
+  pack(entries.project, currentPage, "project");
+  [...preview.querySelectorAll(":scope > .slate-page")].forEach((page, index) => page.setAttribute("aria-label", state.locale === "zh" ? `简历第 ${index + 1} 页` : `Resume page ${index + 1}`));
+}
+
 function renderAtelierSerif(data, labels) {
   return `<aside class="atelier-rail">${avatarMarkup(data.profile, "atelier-serif", "atelier-photo")}<div class="atelier-contact">${contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("")}</div>${renderSocialBlock(data.profile, "atelier-serif")}<section><h2>${labels.skills}</h2>${renderSkillGroups(data.skills, labels)}</section><section><h2>${labels.education}</h2>${renderEducation(data.education)}</section></aside>
     <main class="atelier-main"><header><p>SELECTED PROFILE / 2026</p><h1 class="resume-name">${escapeHtml(data.profile.name)}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p></header><p class="resume-summary">${escapeHtml(data.profile.summary)}</p><section><h2 class="resume-section-title">${labels.experience}</h2>${renderExperience(data.experience)}</section><section class="project-section"><h2 class="resume-section-title">${labels.projects}</h2>${renderProjects(data.projects, labels, "atelier")}</section></main>`;
@@ -927,6 +1121,7 @@ function renderPreview() {
     academic: renderAcademic,
     "early-career": renderEarlyCareer,
     "aqua-ledger": renderAquaLedger,
+    "slate-sidebar": renderSlateSidebar,
     "atelier-serif": renderAtelierSerif,
     cupertino: renderCupertino,
     "swiss-grid": renderSwissGrid
@@ -935,6 +1130,7 @@ function renderPreview() {
     ? (renderers[state.template] || renderEditorial)(state.data, labels)
     : renderLetter(state.data, state.template, state.documentType);
   if (state.documentType === "resume" && state.template === "aqua-ledger") paginateAquaLedger();
+  if (state.documentType === "resume" && state.template === "slate-sidebar") paginateSlateSidebar();
 
   updateCompletion();
   updateQuality();
@@ -1143,7 +1339,7 @@ function updateSummaryCount() {
 function updatePageEstimate() {
   const pageEstimate = document.getElementById("pageEstimate");
   const contentHeight = Math.max(preview.scrollHeight, preview.offsetHeight, 1123);
-  const fixedPages = preview.querySelectorAll(":scope > .aqua-page").length;
+  const fixedPages = preview.querySelectorAll(":scope > [data-resume-page], :scope > .aqua-page").length;
   const pages = fixedPages || Math.max(1, Math.ceil(contentHeight / 1123));
   const overflow = pages > 1 || contentHeight > 1123;
   pageEstimate.textContent = fixedPages ? `A4 · ${pages} 页` : (overflow ? `A4 · 约 ${pages} 页` : `A4 · ${pages} 页`);
@@ -1462,18 +1658,58 @@ document.getElementById("zoomIn").addEventListener("click", () => {
   setZoom(current + .05);
 });
 
+designRailToggle.addEventListener("click", () => setDesignRailOpen(!designRailOpen));
+designRailClose.addEventListener("click", () => setDesignRailOpen(false, { returnFocus: true }));
+
+editorRailResizer.addEventListener("pointerdown", event => {
+  if (!isDesktopWorkspace() || event.button !== 0) return;
+  activeResizePointerId = event.pointerId;
+  editorRailResizer.setPointerCapture?.(event.pointerId);
+  editorRailResizer.classList.add("is-dragging");
+  document.body.classList.add("is-resizing-rail");
+});
+
+window.addEventListener("pointermove", event => {
+  if (event.pointerId !== activeResizePointerId) return;
+  setEditorRailWidth(event.clientX);
+});
+
+function finishEditorRailResize(event) {
+  if (event.pointerId !== activeResizePointerId) return;
+  activeResizePointerId = null;
+  if (editorRailResizer.hasPointerCapture?.(event.pointerId)) editorRailResizer.releasePointerCapture(event.pointerId);
+  editorRailResizer.classList.remove("is-dragging");
+  document.body.classList.remove("is-resizing-rail");
+  setEditorRailWidth(editorRailWidth, { persist: true });
+}
+
+window.addEventListener("pointerup", finishEditorRailResize);
+window.addEventListener("pointercancel", finishEditorRailResize);
+editorRailResizer.addEventListener("dblclick", () => setEditorRailWidth(330, { persist: true }));
+editorRailResizer.addEventListener("keydown", event => {
+  const steps = { ArrowLeft: -16, ArrowRight: 16, Home: EDITOR_RAIL_MIN, End: editorRailMaximum() };
+  if (!(event.key in steps)) return;
+  event.preventDefault();
+  const next = event.key === "Home" || event.key === "End" ? steps[event.key] : editorRailWidth + steps[event.key];
+  setEditorRailWidth(next, { persist: true });
+});
+
 document.querySelector(".mobile-tabs").addEventListener("click", event => {
   const button = event.target.closest("[data-mobile-view]");
   if (!button) return;
   document.querySelectorAll("[data-mobile-view]").forEach(item => item.classList.toggle("active", item === button));
   document.querySelector(".workspace").dataset.currentView = button.dataset.mobileView;
+  syncWorkspaceAccessibility();
   if (button.dataset.mobileView === "preview") requestAnimationFrame(() => fitPreview(true));
 });
 
 window.addEventListener("resize", () => {
+  setEditorRailWidth(editorRailWidth);
+  syncWorkspaceAccessibility();
   if (!state.zoom) fitPreview();
 });
 
+setDesignRailOpen(false);
 renderRepeatEditors();
 updateControls();
 renderPreview();

@@ -399,7 +399,7 @@ Resume exception: resume templates use a quiet bottom rule instead of the brand 
 
 Resume identity and evidence options:
 
-- Personal photos are opt-in and market-sensitive. The web editor exposes a photo slot for Editorial, Technical, Creative, Early Career, Aqua Ledger, Atelier Serif, Cupertino, and McKinsey Grid. ATS Classic, Executive, Sales Impact, Operations Practical, and Academic stay photo-free. The ATS companion remains photo-free unless the target market explicitly requires a photo.
+- Personal photos are opt-in and market-sensitive. The web editor exposes a photo slot for Editorial, Technical, Creative, Early Career, Aqua Ledger, Slate Sidebar, Atelier Serif, Cupertino, and McKinsey Grid. ATS Classic, Executive, Sales Impact, Operations Practical, and Academic stay photo-free. The ATS companion remains photo-free unless the target market explicitly requires a photo.
 - Resume photo geometry follows each template: circular or square identity marks, upright editorial portraits, and full-height rails are all valid. Use `object-fit: cover` and `object-position: center 35%`. Empty slots use a text-free portrait-outline icon, never candidate initials or names. Store local editor uploads in the browser, never as a silent external upload.
 - Light resume paper may use the template default, pure white `#FFFFFF`, or ivory `#FFFCF4`. Dark mode always retains the template dark paper.
 - LinkedIn, X, and GitHub links are optional and must carry real `https://` hyperlinks. Technical, Creative, and Early Career may use compact platform icons with accessible labels; the remaining families use platform text plus handle.

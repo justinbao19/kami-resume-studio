@@ -2121,9 +2121,9 @@ def test_resume_workflow_new_families_and_letters() -> None:
     catalog = json.loads((REPO_ROOT / "references" / "resume-template-catalog.json").read_text(encoding="utf-8"))
     ids = {item["id"] for item in catalog["templates"]}
     mckinsey = next(item for item in catalog["templates"] if item["id"] == "swiss-grid")
-    check("resume catalog exposes 13 families and 26 variants",
-          catalog["template_count"] == 13 and catalog["variant_count"] == 26 and
-          {"aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"} <= ids)
+    check("resume catalog exposes 14 families and 28 variants",
+          catalog["template_count"] == 14 and catalog["variant_count"] == 28 and
+          {"aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"} <= ids)
     check("resume catalog exposes light paper tones",
           catalog.get("paper_tones") == ["auto", "white", "ivory"])
     check("legacy swiss-grid id presents the McKinsey consulting family",
@@ -2132,7 +2132,7 @@ def test_resume_workflow_new_families_and_letters() -> None:
           {"strategy", "consulting", "executive-communication"} <= set(mckinsey["role_families"]))
     with tempfile.TemporaryDirectory() as directory:
         output_dir = Path(directory)
-        for template in ("aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"):
+        for template in ("aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"):
             route_data = {
                 "primary": {"template": template, "theme": "light"},
                 "ats_companion": {"template": "ats-classic", "theme": "light"},

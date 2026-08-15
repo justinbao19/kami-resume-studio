@@ -44,6 +44,9 @@ ROLE_KEYWORDS: dict[str, set[str]] = {
     "brand": {"brand", "品牌", "内容", "content", "creative", "创意"},
     "sales": {"sales", "销售", "bd", "business development", "大客户", "签约"},
     "growth": {"growth", "增长", "转化", "投放", "留存", "acquisition"},
+    "marketing": {"marketing", "市场营销", "整合营销", "campaign", "go-to-market"},
+    "international": {"international", "global", "海外", "国际化", "出海", "跨境"},
+    "community": {"community", "社区", "社群", "creator", "生态运营"},
     "operations": {"operations", "运营", "流程", "交付", "项目管理", "program"},
     "supply-chain": {"supply chain", "供应链", "采购", "库存", "物流"},
     "manufacturing": {"manufacturing", "制造", "工厂", "生产", "质量"},
@@ -76,6 +79,9 @@ TEMPLATE_FAMILIES = {
     "media": "creative",
     "sales": "sales-impact",
     "growth": "sales-impact",
+    "marketing": "slate-sidebar",
+    "international": "slate-sidebar",
+    "community": "slate-sidebar",
     "business-development": "sales-impact",
     "partnerships": "sales-impact",
     "operations": "aqua-ledger",
@@ -98,7 +104,7 @@ TEMPLATE_FAMILIES = {
 
 THEME_DARK_FAMILIES = {"technical", "creative", "sales-impact", "early-career"}
 CONSERVATIVE_FAMILIES = {"ats-classic", "academic", "operations-practical", "executive"}
-PHOTO_TEMPLATES = {"editorial", "technical", "creative", "early-career", "aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"}
+PHOTO_TEMPLATES = {"editorial", "technical", "creative", "early-career", "aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"}
 ICON_SOCIAL_TEMPLATES = {"technical", "creative", "early-career"}
 SOCIAL_ICON_PATHS = {
     "linkedin": "<path d='M5.2 7.3A1.7 1.7 0 1 0 5.2 4a1.7 1.7 0 0 0 0 3.3ZM3.8 9h2.8v8H3.8V9Zm4.5 0h2.7v1.1c.6-.8 1.5-1.4 2.8-1.4 2.8 0 3.4 1.8 3.4 4.2V17h-2.8v-3.7c0-.9 0-2.1-1.3-2.1s-1.5 1-1.5 2V17H8.3V9Z'/>",
@@ -640,6 +646,7 @@ header {{ display:flex; gap:6mm; align-items:center; padding-bottom:7mm; border-
 .closing {{ padding-top:4mm; }} .closing span {{ font:8.5pt Arial,sans-serif; opacity:.75; }}
 footer {{ margin-top:auto; padding-top:5mm; border-top:.4pt solid var(--line); font:8pt Arial,sans-serif; opacity:.75; }}
 body.aqua-ledger .page {{ background:var(--paper); }}
+body.slate-sidebar .page {{ padding-left:72mm; background:linear-gradient(90deg,{hex_rgba(palette['ink'], .09)} 0 62mm,var(--paper) 62mm); font-family:"Helvetica Neue",Arial,sans-serif; }}
 body.atelier-serif .page {{ padding-left:65mm; background:linear-gradient(90deg,{hex_rgba(palette['ink'], .10)} 0 52mm,var(--paper) 52mm); }}
 body.cupertino {{ font-family:"Helvetica Neue",Arial,sans-serif; }}
 body.swiss-grid .page {{ background:linear-gradient(90deg,transparent 0 43mm,var(--line) 43mm 43.3mm,transparent 43.3mm); }}
@@ -673,6 +680,7 @@ h1 {{ margin:0 0 2mm; font-size:28pt; }} .title {{ margin:0; color:var(--accent)
 .resume-template.early-career .page {{ max-width: 178mm; }} .resume-template.early-career header {{ border-bottom: 0; padding-bottom: 3mm; }} .resume-template.early-career h1 {{ font-size: 32pt; }} .resume-template.early-career h2 {{ border-bottom: 0; }}
 .resume-template.ats-classic .page {{ max-width: 180mm; }} .resume-template.ats-classic header {{ text-align: center; }} .resume-template.ats-classic .contact {{ text-align: center; }}
 .resume-template.aqua-ledger {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.aqua-ledger .page {{ max-width:184mm; }} .resume-template.aqua-ledger header {{ min-height:56mm; margin:-14mm -14mm 18mm; padding:14mm 14mm 14mm 56mm; border:0; background:color-mix(in srgb, var(--ink) 5%, var(--paper)); position:relative; }} .resume-template.aqua-ledger .identity {{ align-items:flex-start; }} .resume-template.aqua-ledger .identity > div {{ display:flex; flex-direction:column; }} .resume-template.aqua-ledger .avatar, .resume-template.aqua-ledger .photo-placeholder {{ position:absolute; left:14mm; top:14mm; width:38mm; height:38mm; border-radius:.5mm; }} .resume-template.aqua-ledger h1 {{ margin-top:1.5mm; font-size:10pt; font-weight:600; letter-spacing:0; text-transform:none; }} .resume-template.aqua-ledger .title {{ order:-1; margin:0; color:var(--ink); font-size:24pt; font-weight:700; line-height:1.05; letter-spacing:-.02em; text-transform:uppercase; opacity:1; }} .resume-template.aqua-ledger .contact {{ position:absolute; left:56mm; right:14mm; bottom:14mm; margin:0; }} .resume-template.aqua-ledger section {{ display:grid; grid-template-columns:44mm 1fr; gap:6mm; padding:6mm 0; border-top:.4pt solid color-mix(in srgb, var(--ink) 12%, transparent); }} .resume-template.aqua-ledger section > :not(h2) {{ grid-column:2; }} .resume-template.aqua-ledger section h2 {{ margin:0; padding:0; border:0; color:var(--ink); letter-spacing:.08em; }}
+.resume-template.slate-sidebar {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.slate-sidebar .page {{ max-width:184mm; border-left:58mm solid var(--accent-soft); padding-left:10mm; }} .resume-template.slate-sidebar header {{ border-bottom:.4pt solid var(--accent); }} .resume-template.slate-sidebar h1 {{ font-family:"Songti SC",Georgia,serif; font-size:30pt; letter-spacing:0; }} .resume-template.slate-sidebar h2 {{ color:var(--ink); border-bottom:.4pt solid var(--accent); letter-spacing:0; }} .resume-template.slate-sidebar .avatar {{ width:36mm; height:42mm; border-radius:1.5mm; }}
 .resume-template.atelier-serif .page {{ max-width:184mm; border-left:46mm solid var(--accent-soft); padding-left:10mm; }} .resume-template.atelier-serif header {{ border-bottom:0; }} .resume-template.atelier-serif h1 {{ font-family:"Bodoni 72",Didot,Georgia,serif; font-size:38pt; font-weight:400; letter-spacing:-.04em; }} .resume-template.atelier-serif h2 {{ color:var(--ink); border-bottom:.4pt solid var(--accent); }}
 .resume-template.cupertino {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.cupertino .page {{ max-width:176mm; }} .resume-template.cupertino header {{ border-bottom:.4pt solid var(--accent); }} .resume-template.cupertino h1 {{ font-size:29pt; letter-spacing:-.04em; }} .resume-template.cupertino h2 {{ color:var(--ink); font-size:13pt; letter-spacing:-.02em; text-transform:none; }}
 .resume-template.swiss-grid {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.swiss-grid .page {{ max-width:184mm; border-left:.4pt solid var(--accent); }} .resume-template.swiss-grid header {{ display:grid; grid-template-columns:36mm minmax(0,1fr); padding-left:7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid h1 {{ font-size:32pt; line-height:1.02; letter-spacing:-.045em; }} .resume-template.swiss-grid section {{ display:grid; grid-template-columns:36mm minmax(0,1fr); gap:7mm; padding:5mm 0 5mm 7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid section h2 {{ margin:0; border:0; }}

@@ -2,7 +2,7 @@
 
 Kami Resume is an Agent-first bilingual resume generator and hands-on editor. It helps job seekers turn an old CV, career-platform profiles, project evidence, and a target job description into a credible, role-matched Chinese or English resume.
 
-The browser editor is available at `/editor.html`. It works without an account, saves personal content in the current browser, previews 13 resume families in light and dark themes, edits coordinated cover letters, and exports A4 PDF. The Agent workflow is defined in `SKILL.md` and runs locally in the user's workspace. A human and Agent-readable guide is available at `/resume-skill` and `/resume-skill.md`.
+The browser editor is available at `/editor.html`. It works without an account, saves personal content in the current browser, previews 14 resume families in light and dark themes, edits coordinated cover letters, and exports A4 PDF. The Agent workflow is defined in `SKILL.md` and runs locally in the user's workspace. A human and Agent-readable guide is available at `/resume-skill` and `/resume-skill.md`.
 
 ## Two ways to start
 
@@ -13,7 +13,7 @@ The browser editor is available at `/editor.html`. It works without an account, 
 
 The Agent normalizes sources into a traceable candidate dossier, detects timeline and title conflicts, and asks focused questions about the latest role that may be missing from the old resume. It verifies responsibilities, scope, methods, metrics, outcomes, and ownership before drafting.
 
-It then matches supported evidence to the target job, chooses the output language and one of 13 resume families, renders a primary version and coordinated cover letter, and creates a light ATS-safe companion when the main design is dark or expressive. It does not invent metrics or copy the job description as unsupported experience.
+It then matches supported evidence to the target job, chooses the output language and one of 14 resume families, renders a primary version and coordinated cover letter, and creates a light ATS-safe companion when the main design is dark or expressive. It does not invent metrics or copy the job description as unsupported experience.
 
 Run the deterministic workflow with:
 
@@ -24,7 +24,7 @@ python3 scripts/resume_workflow.py all candidate-dossier.json -o output/resume
 ## Editor capabilities
 
 - Chinese and English content and labels.
-- Thirteen template families with light and dark themes, for 26 variants.
+- Fourteen template families with light and dark themes, for 28 variants.
 - Coordinated cover letters across the template system; Atelier Serif also supports recommendation letters.
 - Optional photos for compatible templates; ATS companion output remains photo-free.
 - Project experience with role, period, link, context, and evidence-rich outcomes.
