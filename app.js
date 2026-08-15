@@ -80,11 +80,66 @@ const templateThemes = {
 };
 
 const photoSupportedTemplates = new Set(["editorial", "technical", "creative", "early-career", "aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"]);
-const iconSocialTemplates = new Set(["technical", "creative", "early-career"]);
-const socialLabels = {
-  linkedin: { zh: "LinkedIn", en: "LinkedIn" },
-  x: { zh: "X", en: "X" },
-  github: { zh: "GitHub", en: "GitHub" }
+const iconSocialTemplates = new Set(["technical", "creative", "early-career", "slate-sidebar"]);
+const sectionReorderTemplates = new Set(["slate-sidebar"]);
+const resumeSectionKeys = ["summary", "experience", "projects", "education", "skills"];
+const socialPlatforms = {
+  linkedin: {
+    labels: { zh: "LinkedIn", en: "LinkedIn" },
+    placeholder: "https://linkedin.com/in/username",
+    color: "#0a66c2",
+    viewBox: "0 0 64 64",
+    icon: '<path fill="currentColor" d="M55.92 4H8.08A4.08 4.08 0 0 0 4 8.08v47.84A4.08 4.08 0 0 0 8.08 60h47.84A4.08 4.08 0 0 0 60 55.92V8.08A4.08 4.08 0 0 0 55.92 4Z"/><path fill="#fff" d="M52 35.76V52h-8V37.81c0-4.31-2.73-6.11-5-6.11a5.82 5.82 0 0 0-6 6.21V52h-8V25h7.53v3.79h.11c.8-1.64 4.44-4.37 9.13-4.37S52 27.59 52 35.76ZM16 11.3A4.7 4.7 0 1 0 20.7 16a4.69 4.69 0 0 0-4.7-4.7ZM12 52h8V25h-8Z"/>'
+  },
+  github: {
+    labels: { zh: "GitHub", en: "GitHub" },
+    placeholder: "https://github.com/username",
+    color: "#24292f",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M12 .297C5.37.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577l-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.334-1.756-1.334-1.756-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22l-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z"/>'
+  },
+  x: {
+    labels: { zh: "X", en: "X" },
+    placeholder: "https://x.com/username",
+    color: "#111111",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993l-9.508-13.838Zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182l-6.327-9.05Z"/>'
+  },
+  behance: {
+    labels: { zh: "Behance", en: "Behance" },
+    placeholder: "https://behance.net/username",
+    color: "#1769ff",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M16.969 16.927a2.561 2.561 0 0 0 1.901.677 2.501 2.501 0 0 0 1.531-.475c.362-.235.636-.584.779-.99h2.585a5.091 5.091 0 0 1-1.9 2.896 5.292 5.292 0 0 1-3.091.88 5.839 5.839 0 0 1-2.284-.433 4.871 4.871 0 0 1-1.723-1.211 5.657 5.657 0 0 1-1.08-1.874 7.057 7.057 0 0 1-.383-2.393c-.005-.8.129-1.595.396-2.349a5.313 5.313 0 0 1 5.088-3.604 4.87 4.87 0 0 1 2.376.563c.661.362 1.231.87 1.668 1.485a6.2 6.2 0 0 1 .943 2.133c.194.821.263 1.666.205 2.508h-7.699c-.063.79.184 1.574.688 2.187ZM6.947 4.084c2.978 0 4.717 1.306 4.717 3.848 0 1.455-.671 2.537-2.009 3.248 1.798.579 2.697 1.889 2.697 3.931 0 3.007-2.079 4.511-5.197 4.511H0V4.084h6.947Zm-.235 12.9c1.604 0 2.407-.686 2.407-2.059 0-1.48-.78-2.22-2.338-2.22h-3.54v4.279h3.471Zm13.635-5.967c-.383-.413-.934-.619-1.654-.619-1.426 0-2.238.802-2.434 2.405h4.769c-.083-.754-.31-1.349-.681-1.786ZM6.534 10.369c1.322 0 1.983-.615 1.983-1.846 0-1.181-.74-1.771-2.219-1.771H3.241v3.631h3.293v-.014ZM21.62 5.122h-5.976v1.527h5.976V5.122Z"/>'
+  },
+  dribbble: {
+    labels: { zh: "Dribbble", en: "Dribbble" },
+    placeholder: "https://dribbble.com/username",
+    color: "#ea4c89",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12Zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308a10.25 10.25 0 0 0 4.395-6.87Zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4A10.2 10.2 0 0 0 12 22.266c1.42 0 2.77-.29 4-.814ZM4.385 18.87c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12-.26-.585-.54-1.167-.832-1.74-5.12 1.53-10.084 1.465-10.534 1.455l-.004.312c0 2.633.998 5.037 2.634 6.855Zm-2.42-8.955c.46.008 4.683.026 9.477-1.248-1.698-3.018-3.53-5.558-3.8-5.928-2.868 1.35-5.01 3.99-5.676 7.17ZM9.6 2.052c.282.38 2.145 2.914 3.822 6 3.645-1.365 5.19-3.44 5.373-3.702A10.2 10.2 0 0 0 12 1.764c-.825 0-1.63.1-2.4.285Zm10.335 3.483c-.218.29-1.935 2.493-5.724 4.04.24.49.47.985.68 1.486.08.18.15.36.22.53 3.41-.43 6.8.26 7.14.33a10.2 10.2 0 0 0-2.31-6.38Z"/>'
+  },
+  medium: {
+    labels: { zh: "Medium", en: "Medium" },
+    placeholder: "https://medium.com/@username",
+    color: "#111111",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M2.01 6.55a.65.65 0 0 0-.213-.548L.213 4.095V3.81h4.918l3.802 8.34 3.34-8.34h4.687v.285l-1.355 1.298a.397.397 0 0 0-.15.38v9.54a.397.397 0 0 0 .15.38l1.323 1.298v.285h-6.655v-.285l1.37-1.33c.134-.135.134-.175.134-.38V7.57L7.97 17.246h-.514L3.02 7.57v6.486c-.037.279.056.56.253.76l1.782 2.156v.285H0v-.285l1.782-2.156c.196-.2.284-.484.229-.76V6.55Zm16.878-2.74L24 3.81v.285l-1.25 1.195a.37.37 0 0 0-.142.348v9.832a.37.37 0 0 0 .142.348L24 17.013v.285h-5.112v-.285l1.294-1.226c.127-.127.127-.164.127-.348V5.67c0-.184 0-.221-.127-.348l-1.294-1.226V3.81Z"/>'
+  },
+  gitlab: {
+    labels: { zh: "GitLab", en: "GitLab" },
+    placeholder: "https://gitlab.com/username",
+    color: "#fc6d26",
+    viewBox: "0 0 24 24",
+    icon: '<path d="m23.6 9.593-.034-.086L20.3.981a.851.851 0 0 0-1.626.089l-2.206 6.748H7.538L5.332 1.07a.857.857 0 0 0-1.626-.09L.433 9.502l-.032.086a6.066 6.066 0 0 0 2.012 7.01l.041.03 9.548 7.222 9.576-7.244.013-.01A6.068 6.068 0 0 0 23.6 9.593Z"/>'
+  },
+  link: {
+    labels: { zh: "自定义链接", en: "Custom link" },
+    placeholder: "https://example.com",
+    color: "#4f5965",
+    viewBox: "0 0 24 24",
+    icon: '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M10 13a5 5 0 0 0 7.1.1l2-2A5 5 0 0 0 12 4l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/>'
+  }
 };
 
 const copy = {
@@ -282,6 +337,7 @@ const baseState = {
   accent: "auto",
   density: "balanced",
   zoom: null,
+  sectionOrder: [...resumeSectionKeys],
   data: { ...samples.zh, coverLetter: letterSamples.zh }
 };
 
@@ -313,6 +369,11 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function normalizeSectionOrder(value) {
+  const requested = Array.isArray(value) ? value.filter(key => resumeSectionKeys.includes(key)) : [];
+  return [...new Set([...requested, ...resumeSectionKeys])];
+}
+
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -341,6 +402,7 @@ function loadState() {
     if (!themes[restored.theme]) restored.theme = "light";
     if (!["auto", "white", "ivory"].includes(restored.paperTone)) restored.paperTone = "auto";
     if (!["resume", "cover-letter", "recommendation"].includes(restored.documentType)) restored.documentType = "resume";
+    restored.sectionOrder = normalizeSectionOrder(restored.sectionOrder);
     return restored;
   } catch (error) {
     return clone(baseState);
@@ -487,12 +549,8 @@ function socialHandle(value = "") {
 }
 
 function socialIcon(platform) {
-  const paths = {
-    linkedin: '<path d="M5.2 7.3A1.7 1.7 0 1 0 5.2 4a1.7 1.7 0 0 0 0 3.3ZM3.8 9h2.8v8H3.8V9Zm4.5 0h2.7v1.1c.6-.8 1.5-1.4 2.8-1.4 2.8 0 3.4 1.8 3.4 4.2V17h-2.8v-3.7c0-.9 0-2.1-1.3-2.1s-1.5 1-1.5 2V17H8.3V9Z"/>',
-    github: '<path d="M10 3.2a6.8 6.8 0 0 0-2.2 13.2c.3.1.4-.1.4-.3v-1.2c-1.7.4-2.1-.8-2.1-.8-.3-.7-.7-.9-.7-.9-.6-.4 0-.4 0-.4.7.1 1.1.7 1.1.7.6 1.1 1.6.8 2 .6.1-.4.2-.8.4-1-1.4-.2-2.8-.7-2.8-3.1 0-.7.2-1.2.6-1.7-.1-.2-.3-.8.1-1.7 0 0 .5-.2 1.8.6.5-.1 1-.2 1.5-.2s1 0 1.5.2c1.3-.9 1.8-.6 1.8-.6.4.9.2 1.5.1 1.7.4.5.6 1 .6 1.7 0 2.4-1.4 2.9-2.8 3.1.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3A6.8 6.8 0 0 0 10 3.2Z"/>',
-    x: '<path d="M4 4h3.3l2.4 3.2L12.8 4H16l-4.8 5.4L16.2 16h-3.3l-2.8-3.7L6.6 16H3.4l5-5.9L4 4Zm2.2 1.3 6.9 9.4h.9L7.1 5.3h-.9Z"/>'
-  };
-  return `<svg viewBox="0 0 20 20" aria-hidden="true">${paths[platform] || ""}</svg>`;
+  const spec = socialPlatforms[platform] || socialPlatforms.link;
+  return `<svg viewBox="${spec.viewBox}" aria-hidden="true">${spec.icon}</svg>`;
 }
 
 function slateIcon(name) {
@@ -513,8 +571,12 @@ function slateIcon(name) {
 
 function socialLinks(profile, template) {
   const socials = profile.socials || {};
-  const items = Object.entries(socialLabels)
-    .map(([platform, labels]) => ({ platform, label: labels[state.locale] || labels.en, item: socials[platform] }))
+  const items = Object.entries(socials)
+    .map(([key, item]) => {
+      const platform = socialPlatforms[key] ? key : (item?.platform || "link");
+      const labels = socialPlatforms[platform]?.labels || socialPlatforms.link.labels;
+      return { platform, label: item?.label || labels[state.locale] || labels.en, item };
+    })
     .filter(({ item }) => item?.enabled && safeUrl(item.url));
   if (!items.length) return "";
   const iconMode = iconSocialTemplates.has(template);
@@ -962,25 +1024,28 @@ function renderSlateSidebar(data, labels) {
     ["role", data.profile.title],
     ["phone", data.profile.phone],
     ["mail", data.profile.email],
-    ["link", data.profile.website],
     ["pin", data.profile.location]
   ].filter(([, value]) => value).map(([icon, value]) => `<li>${slateIcon(icon)}<span>${escapeHtml(value)}</span></li>`).join("");
-  const socialRows = Object.entries(socialLabels).map(([platform, names]) => {
-    const item = data.profile.socials?.[platform];
-    const href = item?.enabled ? safeUrl(item.url) : "";
-    return href ? `<li>${slateIcon("link")}<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(names[locale] || names.en)} ${escapeHtml(socialHandle(item.url))}</a></li>` : "";
-  }).join("");
+  const websiteHref = safeUrl(data.profile.website);
+  const websiteLink = websiteHref
+    ? `<a class="social-link social-link-icon" href="${escapeHtml(websiteHref)}" target="_blank" rel="noopener noreferrer" aria-label="${locale === "zh" ? "个人主页" : "Website"}" title="${locale === "zh" ? "个人主页" : "Website"}">${socialIcon("link")}</a>`
+    : "";
+  const personalLinks = `${websiteLink}${socialLinks(data.profile, "slate-sidebar")}`;
   const skills = [
     [labels.core, data.skills.core],
     [labels.tools, data.skills.tools],
     [labels.languages, data.skills.languages]
   ].filter(([, value]) => value).map(([label, value]) => `<li><b>${escapeHtml(label)}:</b> ${escapeHtml(value)}</li>`).join("");
+  const orderedSidebarSections = normalizeSectionOrder(state.sectionOrder).map(key => {
+    if (key === "summary") return `<section class="slate-side-section" data-resume-section="summary"><h2>${slateIcon("spark")}<span>${sideLabels.highlights}</span></h2><ul class="slate-plus-list">${summaryPoints.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>`;
+    if (key === "skills") return `<section class="slate-side-section" data-resume-section="skills"><h2>${slateIcon("folder")}<span>${sideLabels.other}</span></h2><ul class="slate-other-list">${skills}</ul></section>`;
+    return "";
+  }).join("");
   const sidebar = `<aside class="slate-sidebar">
     ${avatarMarkup(data.profile, "slate-sidebar", "slate-photo")}
     <h1 class="slate-name">${escapeHtml(data.profile.name)}</h1>
-    <section class="slate-side-section"><h2>${slateIcon("profile")}<span>${sideLabels.info}</span></h2><ul class="slate-contact-list">${contactRows}${socialRows}</ul></section>
-    <section class="slate-side-section"><h2>${slateIcon("spark")}<span>${sideLabels.highlights}</span></h2><ul class="slate-plus-list">${summaryPoints.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>
-    <section class="slate-side-section"><h2>${slateIcon("folder")}<span>${sideLabels.other}</span></h2><ul class="slate-other-list">${skills}</ul></section>
+    <section class="slate-side-section"><h2>${slateIcon("profile")}<span>${sideLabels.info}</span></h2><ul class="slate-contact-list">${contactRows}</ul>${personalLinks ? `<nav class="slate-social-links" aria-label="${locale === "zh" ? "个人链接" : "Personal links"}">${personalLinks}</nav>` : ""}</section>
+    ${orderedSidebarSections}
   </aside>`;
   const experienceEntries = (data.experience || []).map(item => {
     const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
@@ -991,8 +1056,8 @@ function renderSlateSidebar(data, labels) {
     const href = projectHref(item);
     const title = href ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>` : escapeHtml(item.name);
     const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
-    return `<article class="slate-entry slate-project-entry" data-slate-entry="project"><header><h3>${title}${item.role ? ` · ${escapeHtml(item.role)}` : ""}</h3><span>${escapeHtml(item.period)}</span></header>${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}${bullets ? `<ul>${bullets}</ul>` : ""}</article>`;
-  }).join("") || `<p class="slate-empty" data-slate-entry="project">${locale === "zh" ? "暂无项目经历" : "No selected projects yet."}</p>`;
+    return `<article class="slate-entry slate-project-entry" data-slate-entry="projects"><header><h3>${title}${item.role ? ` · ${escapeHtml(item.role)}` : ""}</h3><span>${escapeHtml(item.period)}</span></header>${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}${bullets ? `<ul>${bullets}</ul>` : ""}</article>`;
+  }).join("") || `<p class="slate-empty" data-slate-entry="projects">${locale === "zh" ? "暂无项目经历" : "No selected projects yet."}</p>`;
   const section = (label, icon, className, body) => `<section class="slate-main-section ${className}"><h2>${slateIcon(icon)}<span>${label}</span></h2><div class="slate-section-body">${body}</div></section>`;
   return `<div class="slate-page slate-page-one" data-resume-page aria-label="${locale === "zh" ? "简历第 1 页" : "Resume page 1"}">${sidebar}<main class="slate-main">${section(labels.experience, "briefcase", "slate-experience", experienceEntries)}${section(labels.education, "education", "slate-education", educationEntries)}</main></div>
     <div class="slate-page slate-page-two" data-resume-page aria-label="${locale === "zh" ? "简历第 2 页" : "Resume page 2"}">${sidebar}<main class="slate-main">${section(labels.projects, "folder", "slate-projects", projectEntries)}</main></div>`;
@@ -1006,12 +1071,12 @@ function paginateSlateSidebar() {
   const entries = {
     experience: [...firstPage.querySelectorAll('[data-slate-entry="experience"]')],
     education: [...firstPage.querySelectorAll('[data-slate-entry="education"]')],
-    project: [...secondPage.querySelectorAll('[data-slate-entry="project"]')]
+    projects: [...secondPage.querySelectorAll('[data-slate-entry="projects"]')]
   };
   const specs = {
     experience: [state.locale === "zh" ? "工作经历" : "Experience", "briefcase", "slate-experience"],
     education: [state.locale === "zh" ? "教育背景" : "Education", "education", "slate-education"],
-    project: [state.locale === "zh" ? "项目经历" : "Projects", "folder", "slate-projects"]
+    projects: [state.locale === "zh" ? "项目经历" : "Projects", "folder", "slate-projects"]
   };
   const firstMain = firstPage.querySelector(".slate-main");
   firstMain.replaceChildren();
@@ -1048,10 +1113,12 @@ function paginateSlateSidebar() {
     }
     return page;
   };
-  let currentPage = pack(entries.experience, firstPage, "experience");
-  currentPage = pack(entries.education, currentPage, "education");
-  currentPage = createPage();
-  pack(entries.project, currentPage, "project");
+  const orderedMainSections = normalizeSectionOrder(state.sectionOrder).filter(type => entries[type]);
+  let currentPage = firstPage;
+  orderedMainSections.forEach((type, index) => {
+    if (index === 1) currentPage = createPage();
+    currentPage = pack(entries[type], currentPage, type);
+  });
   [...preview.querySelectorAll(":scope > .slate-page")].forEach((page, index) => page.setAttribute("aria-label", state.locale === "zh" ? `简历第 ${index + 1} 页` : `Resume page ${index + 1}`));
 }
 
@@ -1138,6 +1205,32 @@ function renderPreview() {
   requestAnimationFrame(updatePageEstimate);
 }
 
+function renderSocialEditor() {
+  const list = document.getElementById("socialEditorList");
+  const select = document.getElementById("socialPlatformSelect");
+  if (!list || !select) return;
+  const socials = state.data.profile.socials || (state.data.profile.socials = {});
+  list.innerHTML = Object.entries(socials).map(([key, item]) => {
+    const platform = socialPlatforms[key] ? key : (item?.platform || "link");
+    const spec = socialPlatforms[platform] || socialPlatforms.link;
+    const label = item?.label || spec.labels[state.locale] || spec.labels.en;
+    const custom = !socialPlatforms[key];
+    const removable = !["linkedin", "x", "github"].includes(key);
+    return `<div class="social-editor-row" data-social-key="${escapeHtml(key)}">
+      <input type="checkbox" data-bind="profile.socials.${escapeHtml(key)}.enabled" aria-label="显示 ${escapeHtml(label)}">
+      <span class="social-editor-logo" style="--social-color:${spec.color}" aria-hidden="true">${socialIcon(platform)}</span>
+      ${custom
+        ? `<input class="social-label-input" type="text" data-bind="profile.socials.${escapeHtml(key)}.label" aria-label="链接名称" placeholder="个人链接">`
+        : `<b>${escapeHtml(label)}</b>`}
+      <input type="url" data-bind="profile.socials.${escapeHtml(key)}.url" aria-label="${escapeHtml(label)} 链接" placeholder="${escapeHtml(spec.placeholder)}">
+      ${removable ? `<button class="social-remove-button" type="button" data-remove-social="${escapeHtml(key)}" aria-label="移除 ${escapeHtml(label)}" title="移除 ${escapeHtml(label)}">×</button>` : ""}
+    </div>`;
+  }).join("");
+  const available = Object.entries(socialPlatforms)
+    .filter(([key]) => key === "link" || !socials[key]);
+  select.innerHTML = available.map(([key, spec]) => `<option value="${key}">${escapeHtml(spec.labels[state.locale] || spec.labels.en)}</option>`).join("");
+}
+
 function renderRepeatEditors() {
   const experienceEditor = document.getElementById("experienceEditor");
   const projectEditor = document.getElementById("projectEditor");
@@ -1186,6 +1279,7 @@ function renderRepeatEditors() {
       </div>
     </article>`).join("");
 
+  renderSocialEditor();
   syncInputs();
 }
 
@@ -1351,7 +1445,36 @@ function updatePageEstimate() {
   scaler.style.height = `${scaledHeight}px`;
 }
 
+function syncSectionTabs() {
+  const tabs = document.getElementById("sectionTabs");
+  const order = ["profile", ...normalizeSectionOrder(state.sectionOrder)];
+  order.forEach((section, index) => {
+    const button = tabs.querySelector(`[data-section="${section}"]`);
+    if (!button) return;
+    button.querySelector("span").textContent = String(index + 1).padStart(2, "0");
+    tabs.append(button);
+  });
+}
+
+function moveResumeSection(section, target, placeAfter = false) {
+  const order = normalizeSectionOrder(state.sectionOrder).filter(key => key !== section);
+  const targetIndex = order.indexOf(target);
+  if (!resumeSectionKeys.includes(section) || targetIndex < 0) return;
+  order.splice(targetIndex + (placeAfter ? 1 : 0), 0, section);
+  state.sectionOrder = order;
+  syncSectionTabs();
+  renderPreview();
+  saveState();
+  showToast(state.locale === "zh" ? "简历模块顺序已更新" : "Resume section order updated");
+}
+
 function updateControls() {
+  syncSectionTabs();
+  const sectionReorderEnabled = state.documentType === "resume" && sectionReorderTemplates.has(canonicalTemplate(state.template));
+  document.querySelectorAll('#sectionTabs [data-section]:not([data-section="profile"])').forEach(button => {
+    button.draggable = sectionReorderEnabled;
+    button.title = sectionReorderEnabled ? "拖动调整侧写模板模块顺序" : "";
+  });
   document.querySelectorAll("[data-template]").forEach(button => {
     button.classList.toggle("active", canonicalTemplate(button.dataset.template) === canonicalTemplate(state.template));
   });
@@ -1430,6 +1553,48 @@ document.getElementById("sectionTabs").addEventListener("click", event => {
   });
 });
 
+let draggedResumeSection = "";
+const sectionTabs = document.getElementById("sectionTabs");
+sectionTabs.addEventListener("dragstart", event => {
+  const button = event.target.closest('[data-section][draggable="true"]');
+  if (!button) return;
+  draggedResumeSection = button.dataset.section;
+  button.classList.add("is-dragging");
+  event.dataTransfer.effectAllowed = "move";
+  event.dataTransfer.setData("text/plain", draggedResumeSection);
+});
+sectionTabs.addEventListener("dragover", event => {
+  const target = event.target.closest('[data-section][draggable="true"]');
+  if (!target || !draggedResumeSection || target.dataset.section === draggedResumeSection) return;
+  event.preventDefault();
+  sectionTabs.querySelectorAll(".is-drop-before, .is-drop-after").forEach(item => item.classList.remove("is-drop-before", "is-drop-after"));
+  const after = event.clientX > target.getBoundingClientRect().left + target.offsetWidth / 2;
+  target.classList.add(after ? "is-drop-after" : "is-drop-before");
+});
+sectionTabs.addEventListener("drop", event => {
+  const target = event.target.closest('[data-section][draggable="true"]');
+  if (!target || !draggedResumeSection) return;
+  event.preventDefault();
+  const after = target.classList.contains("is-drop-after");
+  moveResumeSection(draggedResumeSection, target.dataset.section, after);
+});
+sectionTabs.addEventListener("dragend", () => {
+  draggedResumeSection = "";
+  sectionTabs.querySelectorAll(".is-dragging, .is-drop-before, .is-drop-after").forEach(item => item.classList.remove("is-dragging", "is-drop-before", "is-drop-after"));
+});
+sectionTabs.addEventListener("keydown", event => {
+  const button = event.target.closest('[data-section][draggable="true"]');
+  if (!button || !event.altKey || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+  const order = normalizeSectionOrder(state.sectionOrder);
+  const index = order.indexOf(button.dataset.section);
+  const nextIndex = index + (event.key === "ArrowLeft" ? -1 : 1);
+  if (nextIndex < 0 || nextIndex >= order.length) return;
+  event.preventDefault();
+  const target = order[nextIndex];
+  moveResumeSection(button.dataset.section, target, event.key === "ArrowRight");
+  sectionTabs.querySelector(`[data-section="${button.dataset.section}"]`)?.focus();
+});
+
 document.getElementById("documentTypeControl").addEventListener("click", event => {
   const button = event.target.closest("[data-document-type]");
   if (!button) return;
@@ -1451,6 +1616,34 @@ document.querySelector(".editor-rail").addEventListener("change", event => {
   const input = event.target.closest("[data-bind]");
   if (!input || input.type !== "checkbox") return;
   setPath(state.data, input.dataset.bind, input.checked);
+  syncInputs();
+  renderPreview();
+  saveState();
+});
+
+document.getElementById("addSocialLink").addEventListener("click", () => {
+  const select = document.getElementById("socialPlatformSelect");
+  const platform = select.value || "link";
+  const socials = state.data.profile.socials || (state.data.profile.socials = {});
+  const key = platform === "link" ? `custom${Date.now()}` : platform;
+  const spec = socialPlatforms[platform] || socialPlatforms.link;
+  socials[key] = {
+    enabled: true,
+    url: "",
+    ...(platform === "link" ? { platform: "link", label: spec.labels[state.locale] || spec.labels.en } : {})
+  };
+  renderSocialEditor();
+  syncInputs();
+  document.querySelector(`[data-bind="profile.socials.${key}.url"]`)?.focus();
+  renderPreview();
+  saveState();
+});
+
+document.getElementById("socialEditorList").addEventListener("click", event => {
+  const button = event.target.closest("[data-remove-social]");
+  if (!button) return;
+  delete state.data.profile.socials[button.dataset.removeSocial];
+  renderSocialEditor();
   syncInputs();
   renderPreview();
   saveState();

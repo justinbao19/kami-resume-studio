@@ -2068,6 +2068,7 @@ def test_resume_workflow_renders_projects_socials_and_photo_safely() -> None:
         "linkedin": {"enabled": True, "url": "https://linkedin.com/in/test"},
         "x": {"enabled": True, "url": "javascript:alert(1)"},
         "github": {"enabled": True, "url": "github.com/test"},
+        "behance": {"enabled": True, "url": "https://behance.net/test"},
     }
     dossier["projects"] = [{
         "name": "Launch Lab",
@@ -2092,9 +2093,12 @@ def test_resume_workflow_renders_projects_socials_and_photo_safely() -> None:
     check("resume workflow renders project evidence",
           "Launch Lab" in primary and "https://example.com/project" in primary)
     check("resume workflow renders enabled safe social links",
-          "https://linkedin.com/in/test" in primary and "https://github.com/test" in primary)
+          "https://linkedin.com/in/test" in primary and "https://github.com/test" in primary and
+          "https://behance.net/test" in primary)
     check("resume workflow uses platform icons for icon-mode templates",
-          primary.count("class='icon-social'") == 2 and primary.count("<svg viewBox='0 0 20 20'") == 2)
+          primary.count("class='icon-social'") == 3 and
+          primary.count("<svg viewBox='0 0 20 20'") == 2 and
+          primary.count("<svg viewBox='0 0 24 24'") == 1)
     check("resume workflow rejects unsafe social protocols",
           "javascript:" not in primary and "javascript:" not in ats)
     check("resume workflow preserves hardened link attributes",
@@ -2107,6 +2111,9 @@ def test_resume_workflow_new_families_and_letters() -> None:
     fixture = ROOT / "tests" / "fixtures" / "resume_case_1_resolved.json"
     dossier = json.loads(fixture.read_text(encoding="utf-8"))
     dossier["candidate"]["photo"] = "data:image/png;base64,aGVsbG8="
+    dossier["candidate"]["socials"] = {
+        "linkedin": {"enabled": True, "url": "https://linkedin.com/in/test"},
+    }
     dossier["cover_letter"] = {
         "company": "Northstar",
         "role": "AI Product Lead",
@@ -2145,6 +2152,9 @@ def test_resume_workflow_new_families_and_letters() -> None:
             letter_html = letter_path.read_text(encoding="utf-8")
             check(f"resume workflow renders {template}",
                   f"resume-template {template}" in resume_html and "<img class='avatar'" in resume_html)
+            if template == "slate-sidebar":
+                check("resume workflow renders Slate Sidebar social icons",
+                      "class='icon-social'" in resume_html and ">LinkedIn @" not in resume_html)
             check(f"resume workflow renders matching {template} letter",
                   f"class='{template} theme-light'" in letter_html and "Application for AI Product Lead" in letter_html)
 

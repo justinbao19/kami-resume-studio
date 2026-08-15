@@ -153,7 +153,7 @@
       "personality": ["polished", "direct", "international"],
       "layout": "portrait-sidebar",
       "photo": true,
-      "social_display": "text",
+      "social_display": "icons",
       "project_section": true,
       "letter_types": ["cover-letter"],
       "default_theme": "light",

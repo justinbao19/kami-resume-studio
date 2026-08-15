@@ -69,19 +69,19 @@
         <button type="button" class="active" data-section="profile">
           <span>01</span><b>基本信息</b><i data-section-status="profile"></i>
         </button>
-        <button type="button" data-section="summary">
+        <button type="button" data-section="summary" draggable="true" title="拖动调整简历模块顺序">
           <span>02</span><b>职业摘要</b><i data-section-status="summary"></i>
         </button>
-        <button type="button" data-section="experience">
+        <button type="button" data-section="experience" draggable="true" title="拖动调整简历模块顺序">
           <span>03</span><b>工作经历</b><i data-section-status="experience"></i>
         </button>
-        <button type="button" data-section="projects">
+        <button type="button" data-section="projects" draggable="true" title="拖动调整简历模块顺序">
           <span>04</span><b>项目经历</b><i data-section-status="projects"></i>
         </button>
-        <button type="button" data-section="education">
+        <button type="button" data-section="education" draggable="true" title="拖动调整简历模块顺序">
           <span>05</span><b>教育背景</b><i data-section-status="education"></i>
         </button>
-        <button type="button" data-section="skills">
+        <button type="button" data-section="skills" draggable="true" title="拖动调整简历模块顺序">
           <span>06</span><b>技能与工具</b><i data-section-status="skills"></i>
         </button>
       </nav>
@@ -134,13 +134,13 @@
           </div>
           <div class="social-editor-block">
             <div class="section-intro compact-intro">
-              <p>社媒链接</p>
-              <span>选择要展示的平台。导出后的图标或文字会保留可点击链接。</span>
+              <p>个人链接</p>
+              <span>添加常用平台或自定义链接，导出后仍可点击跳转。</span>
             </div>
-            <div class="social-editor-list">
-              <label class="social-editor-row"><input type="checkbox" data-bind="profile.socials.linkedin.enabled"><span class="social-editor-logo linkedin-mark">in</span><b>LinkedIn</b><input type="url" data-bind="profile.socials.linkedin.url" placeholder="https://linkedin.com/in/username"></label>
-              <label class="social-editor-row"><input type="checkbox" data-bind="profile.socials.x.enabled"><span class="social-editor-logo x-mark">X</span><b>X</b><input type="url" data-bind="profile.socials.x.url" placeholder="https://x.com/username"></label>
-              <label class="social-editor-row"><input type="checkbox" data-bind="profile.socials.github.enabled"><span class="social-editor-logo github-mark">◉</span><b>GitHub</b><input type="url" data-bind="profile.socials.github.url" placeholder="https://github.com/username"></label>
+            <div class="social-editor-list" id="socialEditorList"></div>
+            <div class="social-add-row">
+              <select id="socialPlatformSelect" aria-label="选择要新增的平台"></select>
+              <button id="addSocialLink" class="text-button" type="button">+ 新增链接</button>
             </div>
           </div>
         </section>
