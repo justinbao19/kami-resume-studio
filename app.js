@@ -1,4 +1,7 @@
 const STORAGE_KEY = "kami-resume-studio-v1";
+const LAYOUT_STORAGE_KEY = "kami-resume-studio-layout-v1";
+const EDITOR_RAIL_MIN = 280;
+const EDITOR_RAIL_MAX = 480;
 
 const accents = {
   ink: { color: "#1b365d", soft: "#e8edf3" },
@@ -55,8 +58,12 @@ const templateThemes = {
     dark: { accent: "#8bc5e5", paper: "#14232b", ink: "#ecf4f6", muted: "#b2c8d1", line: "#355260" }
   },
   "aqua-ledger": {
-    light: { accent: "#31a9c8", paper: "#f5fbfd", ink: "#162a31", muted: "#64777d", line: "#bfd8de" },
-    dark: { accent: "#7bd7ed", paper: "#11272f", ink: "#eefbfe", muted: "#a8c4cc", line: "#31515a" }
+    light: { accent: "#2f3336", paper: "#ffffff", ink: "#1c1c1c", muted: "#666666", line: "#e5e5e3" },
+    dark: { accent: "#d6d6d4", paper: "#1a1b1c", ink: "#f3f3f1", muted: "#a8a8a6", line: "#3a3b3c" }
+  },
+  "slate-sidebar": {
+    light: { accent: "#232935", paper: "#f6f3f2", ink: "#232935", muted: "#676d77", line: "#ebedf0", sidebar: "#ebedf0", surface: "#eff1f0" },
+    dark: { accent: "#eff1f0", paper: "#232935", ink: "#f6f3f2", muted: "#c7c9cd", line: "#4c5360", sidebar: "#1c222c", surface: "#303744" }
   },
   "atelier-serif": {
     light: { accent: "#5a5651", paper: "#f5f3f0", ink: "#262522", muted: "#74706a", line: "#d0cbc4" },
@@ -72,12 +79,67 @@ const templateThemes = {
   }
 };
 
-const photoSupportedTemplates = new Set(["editorial", "technical", "creative", "early-career", "aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"]);
-const iconSocialTemplates = new Set(["technical", "creative", "early-career", "aqua-ledger"]);
-const socialLabels = {
-  linkedin: { zh: "LinkedIn", en: "LinkedIn" },
-  x: { zh: "X", en: "X" },
-  github: { zh: "GitHub", en: "GitHub" }
+const photoSupportedTemplates = new Set(["editorial", "technical", "creative", "early-career", "aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"]);
+const iconSocialTemplates = new Set(["technical", "creative", "early-career", "slate-sidebar"]);
+const sectionReorderTemplates = new Set(["slate-sidebar"]);
+const resumeSectionKeys = ["summary", "experience", "projects", "education", "skills"];
+const socialPlatforms = {
+  linkedin: {
+    labels: { zh: "LinkedIn", en: "LinkedIn" },
+    placeholder: "https://linkedin.com/in/username",
+    color: "#0a66c2",
+    viewBox: "0 0 64 64",
+    icon: '<path fill="currentColor" d="M55.92 4H8.08A4.08 4.08 0 0 0 4 8.08v47.84A4.08 4.08 0 0 0 8.08 60h47.84A4.08 4.08 0 0 0 60 55.92V8.08A4.08 4.08 0 0 0 55.92 4Z"/><path fill="#fff" d="M52 35.76V52h-8V37.81c0-4.31-2.73-6.11-5-6.11a5.82 5.82 0 0 0-6 6.21V52h-8V25h7.53v3.79h.11c.8-1.64 4.44-4.37 9.13-4.37S52 27.59 52 35.76ZM16 11.3A4.7 4.7 0 1 0 20.7 16a4.69 4.69 0 0 0-4.7-4.7ZM12 52h8V25h-8Z"/>'
+  },
+  github: {
+    labels: { zh: "GitHub", en: "GitHub" },
+    placeholder: "https://github.com/username",
+    color: "#24292f",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M12 .297C5.37.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577l-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.334-1.756-1.334-1.756-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22l-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z"/>'
+  },
+  x: {
+    labels: { zh: "X", en: "X" },
+    placeholder: "https://x.com/username",
+    color: "#111111",
+    viewBox: "0 0 1200 1227",
+    icon: '<path d="M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.866l409.625-476.152 327.181 476.152H1200L714.137 519.284h.026ZM569.165 687.828l-47.468-67.894L144.011 79.694h162.604l304.797 435.991 47.468 67.894 396.2 566.721H892.476L569.165 687.854v-.026Z"/>'
+  },
+  behance: {
+    labels: { zh: "Behance", en: "Behance" },
+    placeholder: "https://behance.net/username",
+    color: "#1769ff",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M16.969 16.927a2.561 2.561 0 0 0 1.901.677 2.501 2.501 0 0 0 1.531-.475c.362-.235.636-.584.779-.99h2.585a5.091 5.091 0 0 1-1.9 2.896 5.292 5.292 0 0 1-3.091.88 5.839 5.839 0 0 1-2.284-.433 4.871 4.871 0 0 1-1.723-1.211 5.657 5.657 0 0 1-1.08-1.874 7.057 7.057 0 0 1-.383-2.393c-.005-.8.129-1.595.396-2.349a5.313 5.313 0 0 1 5.088-3.604 4.87 4.87 0 0 1 2.376.563c.661.362 1.231.87 1.668 1.485a6.2 6.2 0 0 1 .943 2.133c.194.821.263 1.666.205 2.508h-7.699c-.063.79.184 1.574.688 2.187ZM6.947 4.084c2.978 0 4.717 1.306 4.717 3.848 0 1.455-.671 2.537-2.009 3.248 1.798.579 2.697 1.889 2.697 3.931 0 3.007-2.079 4.511-5.197 4.511H0V4.084h6.947Zm-.235 12.9c1.604 0 2.407-.686 2.407-2.059 0-1.48-.78-2.22-2.338-2.22h-3.54v4.279h3.471Zm13.635-5.967c-.383-.413-.934-.619-1.654-.619-1.426 0-2.238.802-2.434 2.405h4.769c-.083-.754-.31-1.349-.681-1.786ZM6.534 10.369c1.322 0 1.983-.615 1.983-1.846 0-1.181-.74-1.771-2.219-1.771H3.241v3.631h3.293v-.014ZM21.62 5.122h-5.976v1.527h5.976V5.122Z"/>'
+  },
+  dribbble: {
+    labels: { zh: "Dribbble", en: "Dribbble" },
+    placeholder: "https://dribbble.com/username",
+    color: "#ea4c89",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12Zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308a10.25 10.25 0 0 0 4.395-6.87Zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4A10.2 10.2 0 0 0 12 22.266c1.42 0 2.77-.29 4-.814ZM4.385 18.87c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12-.26-.585-.54-1.167-.832-1.74-5.12 1.53-10.084 1.465-10.534 1.455l-.004.312c0 2.633.998 5.037 2.634 6.855Zm-2.42-8.955c.46.008 4.683.026 9.477-1.248-1.698-3.018-3.53-5.558-3.8-5.928-2.868 1.35-5.01 3.99-5.676 7.17ZM9.6 2.052c.282.38 2.145 2.914 3.822 6 3.645-1.365 5.19-3.44 5.373-3.702A10.2 10.2 0 0 0 12 1.764c-.825 0-1.63.1-2.4.285Zm10.335 3.483c-.218.29-1.935 2.493-5.724 4.04.24.49.47.985.68 1.486.08.18.15.36.22.53 3.41-.43 6.8.26 7.14.33a10.2 10.2 0 0 0-2.31-6.38Z"/>'
+  },
+  medium: {
+    labels: { zh: "Medium", en: "Medium" },
+    placeholder: "https://medium.com/@username",
+    color: "#111111",
+    viewBox: "0 0 24 24",
+    icon: '<path d="M2.01 6.55a.65.65 0 0 0-.213-.548L.213 4.095V3.81h4.918l3.802 8.34 3.34-8.34h4.687v.285l-1.355 1.298a.397.397 0 0 0-.15.38v9.54a.397.397 0 0 0 .15.38l1.323 1.298v.285h-6.655v-.285l1.37-1.33c.134-.135.134-.175.134-.38V7.57L7.97 17.246h-.514L3.02 7.57v6.486c-.037.279.056.56.253.76l1.782 2.156v.285H0v-.285l1.782-2.156c.196-.2.284-.484.229-.76V6.55Zm16.878-2.74L24 3.81v.285l-1.25 1.195a.37.37 0 0 0-.142.348v9.832a.37.37 0 0 0 .142.348L24 17.013v.285h-5.112v-.285l1.294-1.226c.127-.127.127-.164.127-.348V5.67c0-.184 0-.221-.127-.348l-1.294-1.226V3.81Z"/>'
+  },
+  gitlab: {
+    labels: { zh: "GitLab", en: "GitLab" },
+    placeholder: "https://gitlab.com/username",
+    color: "#fc6d26",
+    viewBox: "0 0 24 24",
+    icon: '<path d="m23.6 9.593-.034-.086L20.3.981a.851.851 0 0 0-1.626.089l-2.206 6.748H7.538L5.332 1.07a.857.857 0 0 0-1.626-.09L.433 9.502l-.032.086a6.066 6.066 0 0 0 2.012 7.01l.041.03 9.548 7.222 9.576-7.244.013-.01A6.068 6.068 0 0 0 23.6 9.593Z"/>'
+  },
+  link: {
+    labels: { zh: "自定义链接", en: "Custom link" },
+    placeholder: "https://example.com",
+    color: "#4f5965",
+    viewBox: "0 0 24 24",
+    icon: '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M10 13a5 5 0 0 0 7.1.1l2-2A5 5 0 0 0 12 4l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/>'
+  }
 };
 
 const copy = {
@@ -275,6 +337,7 @@ const baseState = {
   accent: "auto",
   density: "balanced",
   zoom: null,
+  sectionOrder: [...resumeSectionKeys],
   data: { ...samples.zh, coverLetter: letterSamples.zh }
 };
 
@@ -292,9 +355,25 @@ const qualityList = document.getElementById("qualityList");
 const qualityScore = document.getElementById("qualityScore");
 const saveStatus = document.getElementById("saveStatus");
 const documentNameInput = document.getElementById("documentName");
+const workspace = document.querySelector(".workspace");
+const editorRailResizer = document.getElementById("editorRailResizer");
+const designRail = document.getElementById("designRail");
+const designRailToggle = document.getElementById("designRailToggle");
+const designRailClose = document.getElementById("designRailClose");
+let editorRailWidth = loadEditorRailWidth();
+let designRailOpen = false;
+let layoutRaf = null;
+let designRailFrame = null;
+let designRailTransitionTimer = null;
+let activeResizePointerId = null;
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function normalizeSectionOrder(value) {
+  const requested = Array.isArray(value) ? value.filter(key => resumeSectionKeys.includes(key)) : [];
+  return [...new Set([...requested, ...resumeSectionKeys])];
 }
 
 function loadState() {
@@ -325,6 +404,7 @@ function loadState() {
     if (!themes[restored.theme]) restored.theme = "light";
     if (!["auto", "white", "ivory"].includes(restored.paperTone)) restored.paperTone = "auto";
     if (!["resume", "cover-letter", "recommendation"].includes(restored.documentType)) restored.documentType = "resume";
+    restored.sectionOrder = normalizeSectionOrder(restored.sectionOrder);
     return restored;
   } catch (error) {
     return clone(baseState);
@@ -338,6 +418,90 @@ function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     saveStatus.textContent = "已保存到本机";
   }, 260);
+}
+
+function loadEditorRailWidth() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LAYOUT_STORAGE_KEY));
+    return Number.isFinite(saved?.editorRailWidth) ? saved.editorRailWidth : 330;
+  } catch (error) {
+    return 330;
+  }
+}
+
+function isDesktopWorkspace() {
+  return window.matchMedia("(min-width: 961px)").matches;
+}
+
+function editorRailMaximum() {
+  if (!isDesktopWorkspace()) return EDITOR_RAIL_MAX;
+  const designWidth = designRailOpen ? (window.innerWidth <= 1180 ? 250 : 278) : 0;
+  const previewMinimum = designRailOpen && window.innerWidth <= 1180 ? 380 : 480;
+  return Math.max(EDITOR_RAIL_MIN, Math.min(EDITOR_RAIL_MAX, window.innerWidth - designWidth - previewMinimum - 8));
+}
+
+function scheduleWorkspaceRefresh() {
+  if (layoutRaf) return;
+  layoutRaf = requestAnimationFrame(() => {
+    layoutRaf = null;
+    if (!state.zoom) fitPreview(true);
+    else updatePageEstimate();
+  });
+}
+
+function setEditorRailWidth(value, { persist = false } = {}) {
+  const maximum = editorRailMaximum();
+  editorRailWidth = Math.max(EDITOR_RAIL_MIN, Math.min(maximum, Math.round(value)));
+  document.documentElement.style.setProperty("--editor-rail-width", `${editorRailWidth}px`);
+  editorRailResizer.setAttribute("aria-valuemax", String(maximum));
+  editorRailResizer.setAttribute("aria-valuenow", String(editorRailWidth));
+  if (persist) localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify({ editorRailWidth }));
+  scheduleWorkspaceRefresh();
+}
+
+function syncWorkspaceAccessibility() {
+  const designVisible = isDesktopWorkspace() ? designRailOpen : workspace.dataset.currentView === "design";
+  designRail.setAttribute("aria-hidden", String(!designVisible));
+  designRail.inert = !designVisible;
+}
+
+function setDesignRailOpen(open, { returnFocus = false } = {}) {
+  designRailOpen = Boolean(open);
+  clearTimeout(designRailTransitionTimer);
+  if (designRailFrame) cancelAnimationFrame(designRailFrame);
+  designRailFrame = null;
+
+  designRailToggle.setAttribute("aria-expanded", String(designRailOpen));
+  designRailToggle.setAttribute("aria-label", designRailOpen ? "收起模板设置" : "展开模板设置");
+  designRailToggle.title = designRailOpen ? "收起模板设置" : "展开模板设置";
+  syncWorkspaceAccessibility();
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (designRailOpen) {
+    workspace.classList.add("is-design-open");
+    if (reduceMotion) {
+      workspace.classList.add("is-design-active");
+    } else {
+      designRailFrame = requestAnimationFrame(() => {
+        designRailFrame = requestAnimationFrame(() => {
+          workspace.classList.add("is-design-active");
+          designRailFrame = null;
+        });
+      });
+    }
+    setEditorRailWidth(editorRailWidth);
+  } else {
+    workspace.classList.remove("is-design-active");
+    const finishClose = () => {
+      if (designRailOpen) return;
+      workspace.classList.remove("is-design-open");
+      setEditorRailWidth(editorRailWidth);
+    };
+    if (reduceMotion) finishClose();
+    else designRailTransitionTimer = setTimeout(finishClose, 240);
+  }
+
+  if (returnFocus) designRailToggle.focus();
 }
 
 function getPath(root, path) {
@@ -415,18 +579,34 @@ function socialHandle(value = "") {
 }
 
 function socialIcon(platform) {
+  const spec = socialPlatforms[platform] || socialPlatforms.link;
+  return `<svg viewBox="${spec.viewBox}" aria-hidden="true">${spec.icon}</svg>`;
+}
+
+function slateIcon(name) {
   const paths = {
-    linkedin: '<path d="M5.2 7.3A1.7 1.7 0 1 0 5.2 4a1.7 1.7 0 0 0 0 3.3ZM3.8 9h2.8v8H3.8V9Zm4.5 0h2.7v1.1c.6-.8 1.5-1.4 2.8-1.4 2.8 0 3.4 1.8 3.4 4.2V17h-2.8v-3.7c0-.9 0-2.1-1.3-2.1s-1.5 1-1.5 2V17H8.3V9Z"/>',
-    github: '<path d="M10 3.2a6.8 6.8 0 0 0-2.2 13.2c.3.1.4-.1.4-.3v-1.2c-1.7.4-2.1-.8-2.1-.8-.3-.7-.7-.9-.7-.9-.6-.4 0-.4 0-.4.7.1 1.1.7 1.1.7.6 1.1 1.6.8 2 .6.1-.4.2-.8.4-1-1.4-.2-2.8-.7-2.8-3.1 0-.7.2-1.2.6-1.7-.1-.2-.3-.8.1-1.7 0 0 .5-.2 1.8.6.5-.1 1-.2 1.5-.2s1 0 1.5.2c1.3-.9 1.8-.6 1.8-.6.4.9.2 1.5.1 1.7.4.5.6 1 .6 1.7 0 2.4-1.4 2.9-2.8 3.1.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3A6.8 6.8 0 0 0 10 3.2Z"/>',
-    x: '<path d="M4 4h3.3l2.4 3.2L12.8 4H16l-4.8 5.4L16.2 16h-3.3l-2.8-3.7L6.6 16H3.4l5-5.9L4 4Zm2.2 1.3 6.9 9.4h.9L7.1 5.3h-.9Z"/>'
+    profile: '<circle cx="12" cy="8" r="3"></circle><path d="M6 20c.8-4 2.8-6 6-6s5.2 2 6 6"></path>',
+    briefcase: '<rect x="3" y="7" width="18" height="12" rx="2"></rect><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7M3 12h18M10 12v2h4v-2"></path>',
+    folder: '<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5v-11Z"></path>',
+    education: '<path d="m3 10 9-5 9 5-9 5-9-5Z"></path><path d="M7 12.2V17c2.8 2 7.2 2 10 0v-4.8M21 10v6"></path>',
+    spark: '<path d="m12 3 1.4 4.6L18 9l-4.6 1.4L12 15l-1.4-4.6L6 9l4.6-1.4L12 3Z"></path><path d="m19 15 .7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15Z"></path>',
+    phone: '<path d="M7.2 3.5 9 7.7 6.8 9c1.5 3 3.8 5.3 6.8 6.8l1.3-2.2 4.2 1.8v3c0 1-.8 1.8-1.8 1.8C9.8 19.7 4.3 14.2 3.8 6.7c0-1 .8-1.8 1.8-1.8h1.6v-1.4Z"></path>',
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path>',
+    link: '<path d="M10 13a4.5 4.5 0 0 0 6.4.1l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"></path><path d="M14 11a4.5 4.5 0 0 0-6.4-.1l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"></path>',
+    pin: '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle>',
+    role: '<circle cx="12" cy="12" r="8"></circle><path d="M8 12h8M12 8v8"></path>'
   };
-  return `<svg viewBox="0 0 20 20" aria-hidden="true">${paths[platform] || ""}</svg>`;
+  return `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.profile}</svg>`;
 }
 
 function socialLinks(profile, template) {
   const socials = profile.socials || {};
-  const items = Object.entries(socialLabels)
-    .map(([platform, labels]) => ({ platform, label: labels[state.locale] || labels.en, item: socials[platform] }))
+  const items = Object.entries(socials)
+    .map(([key, item]) => {
+      const platform = socialPlatforms[key] ? key : (item?.platform || "link");
+      const labels = socialPlatforms[platform]?.labels || socialPlatforms.link.labels;
+      return { platform, label: item?.label || labels[state.locale] || labels.en, item };
+    })
     .filter(({ item }) => item?.enabled && safeUrl(item.url));
   if (!items.length) return "";
   const iconMode = iconSocialTemplates.has(template);
@@ -723,13 +903,253 @@ function renderEarlyCareer(data, labels) {
 }
 
 function renderAquaLedger(data, labels) {
-  const contacts = contactValues(data.profile).map(item => `<span>${escapeHtml(item)}</span>`).join("");
-  return `<header class="aqua-header"><div><p class="aqua-kicker">CURRICULUM VITAE</p><h1 class="resume-name">${escapeHtml(data.profile.name)}</h1><p class="resume-title">${escapeHtml(data.profile.title)}</p></div>${avatarMarkup(data.profile, "aqua-ledger", "aqua-photo")}</header>
-    <div class="aqua-contact">${contacts}${renderSocialBlock(data.profile, "aqua-ledger")}</div>
-    <section class="aqua-row aqua-summary"><h2>01 / ${labels.summary}</h2><p>${escapeHtml(data.profile.summary)}</p></section>
-    <section class="aqua-row"><h2>02 / ${labels.experience}</h2><div>${renderExperience(data.experience)}</div></section>
-    <section class="aqua-row"><h2>03 / ${labels.projects}</h2><div>${renderProjects(data.projects, labels, "aqua")}</div></section>
-    <section class="aqua-row aqua-bottom"><h2>04 / PROFILE</h2><div class="aqua-mini-grid"><div>${renderSkillGroups(data.skills, labels)}</div><div>${renderEducation(data.education)}</div></div></section>`;
+  const summaryLabel = state.locale === "zh" ? "个人简介" : "SUMMARY";
+  const experienceLabel = state.locale === "zh" ? "工作经历" : "EXPERIENCE";
+  const projectsLabel = state.locale === "zh" ? "项目经历" : "PROJECTS";
+  const profileLabel = state.locale === "zh" ? "教育背景" : "EDUCATION";
+  const contacts = [
+    data.profile.location ? `<span class="aqua-meta aqua-meta-location">${escapeHtml(data.profile.location)}</span>` : "",
+    data.profile.phone ? `<span class="aqua-meta aqua-meta-phone">${escapeHtml(data.profile.phone)}</span>` : "",
+    data.profile.email ? `<span class="aqua-meta aqua-meta-email">${escapeHtml(data.profile.email)}</span>` : "",
+    data.profile.website ? `<span class="aqua-meta aqua-meta-web">${escapeHtml(data.profile.website)}</span>` : ""
+  ].filter(Boolean).join("");
+  const experience = (data.experience || []).map((item, index) => {
+    const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
+    return `<div class="resume-entry aqua-entry">
+      <div class="aqua-entry-meta">
+        ${index === 0 ? `<h2>${experienceLabel}</h2>` : ""}
+        <h3><span class="aqua-company">${escapeHtml(item.company)}</span><span class="aqua-sep">|</span><span class="aqua-role">${escapeHtml(item.role)}</span></h3>
+        <p class="resume-period">${escapeHtml(item.period)}</p>
+      </div>
+      ${bullets ? `<ul>${bullets}</ul>` : `<div></div>`}
+    </div>`;
+  }).join("");
+  const projects = (data.projects || []).map((item, index) => {
+    const href = projectHref(item);
+    const title = href
+      ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>`
+      : escapeHtml(item.name);
+    const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
+    return `<div class="project-entry project-entry-aqua">
+      <div class="aqua-entry-meta">
+        ${index === 0 ? `<h2>${projectsLabel}</h2>` : ""}
+        <h3>${title}</h3>
+        <p class="resume-period">${escapeHtml(item.period)}</p>
+      </div>
+      <div class="aqua-project-copy">
+        ${item.role ? `<p class="entry-subtitle">${escapeHtml(item.role)}</p>` : ""}
+        ${item.description ? `<p class="project-description">${escapeHtml(item.description)}</p>` : ""}
+        ${bullets ? `<ul>${bullets}</ul>` : ""}
+      </div>
+    </div>`;
+  }).join("") || `<div class="project-entry project-entry-aqua"><div class="aqua-entry-meta"><h2>${projectsLabel}</h2></div><p class="empty-projects">${state.locale === "zh" ? "暂无项目经历" : "No selected projects yet."}</p></div>`;
+  return `<div class="aqua-page aqua-page-one" aria-label="${state.locale === "zh" ? "简历第 1 页" : "Resume page 1"}">
+      ${avatarMarkup(data.profile, "aqua-ledger", "aqua-photo")}<header class="aqua-header"><div class="aqua-identity"><h1 class="resume-title">${escapeHtml(data.profile.title)}</h1><p class="resume-name">${escapeHtml(data.profile.name)}</p><div class="aqua-contact">${contacts}${renderSocialBlock(data.profile, "aqua-ledger")}</div></div></header>
+      <section class="aqua-row aqua-summary"><h2>${summaryLabel}</h2><div><p>${escapeHtml(data.profile.summary)}</p></div></section>
+      <section class="aqua-ledger-section aqua-experience"><div class="aqua-section-list">${experience}</div></section>
+    </div>
+    <div class="aqua-page aqua-page-two" aria-label="${state.locale === "zh" ? "简历第 2 页" : "Resume page 2"}">
+      <section class="aqua-ledger-section aqua-projects"><div class="aqua-section-list">${projects}</div></section>
+      <section class="aqua-row aqua-bottom"><h2>${profileLabel}</h2><div class="aqua-mini-grid"><div>${renderSkillGroups(data.skills, labels)}</div><div>${renderEducation(data.education)}</div></div></section>
+    </div>`;
+}
+
+function paginateAquaLedger() {
+  const firstPage = preview.querySelector(".aqua-page-one");
+  const renderedSecondPage = preview.querySelector(".aqua-page-two");
+  if (!firstPage || !renderedSecondPage) return;
+
+  const experienceEntries = [...firstPage.querySelectorAll(".aqua-entry")];
+  const projectEntries = [...renderedSecondPage.querySelectorAll(".project-entry-aqua")];
+  const profileBlock = renderedSecondPage.querySelector(".aqua-bottom");
+  const experienceLabel = state.locale === "zh" ? "工作经历" : "EXPERIENCE";
+  const projectsLabel = state.locale === "zh" ? "项目经历" : "PROJECTS";
+  const firstExperienceSection = firstPage.querySelector(".aqua-experience");
+
+  firstExperienceSection.querySelector(".aqua-section-list").replaceChildren();
+  renderedSecondPage.remove();
+
+  const createPage = () => {
+    const page = document.createElement("div");
+    page.className = "aqua-page aqua-page-continuation";
+    preview.append(page);
+    return page;
+  };
+
+  const createSection = (page, sectionClass) => {
+    const section = document.createElement("section");
+    section.className = `aqua-ledger-section ${sectionClass}`;
+    const list = document.createElement("div");
+    list.className = "aqua-section-list";
+    section.append(list);
+    page.append(section);
+    return list;
+  };
+
+  const setEntryHeading = (entry, label, show) => {
+    const meta = entry.querySelector(".aqua-entry-meta");
+    meta.querySelector(":scope > h2")?.remove();
+    if (!show) return;
+    const heading = document.createElement("h2");
+    heading.textContent = label;
+    meta.prepend(heading);
+  };
+
+  const packEntries = (entries, page, list, sectionClass, label) => {
+    let currentPage = page;
+    let currentList = list;
+    for (const entry of entries) {
+      const startsPage = currentList.children.length === 0;
+      setEntryHeading(entry, label, startsPage);
+      currentList.append(entry);
+      if (currentPage.scrollHeight <= currentPage.clientHeight + 1 || (startsPage && currentPage !== firstPage)) continue;
+
+      entry.remove();
+      currentPage = createPage();
+      currentList = createSection(currentPage, sectionClass);
+      setEntryHeading(entry, label, true);
+      currentList.append(entry);
+    }
+    return currentPage;
+  };
+
+  let currentPage = packEntries(
+    experienceEntries,
+    firstPage,
+    firstExperienceSection.querySelector(".aqua-section-list"),
+    "aqua-experience",
+    experienceLabel
+  );
+
+  currentPage = createPage();
+  let projectList = createSection(currentPage, "aqua-projects");
+  currentPage = packEntries(projectEntries, currentPage, projectList, "aqua-projects", projectsLabel);
+
+  if (profileBlock) {
+    profileBlock.classList.toggle("is-page-start", currentPage.children.length === 0);
+    currentPage.append(profileBlock);
+    if (currentPage.scrollHeight > currentPage.clientHeight + 1 && currentPage.children.length > 1) {
+      profileBlock.remove();
+      currentPage = createPage();
+      profileBlock.classList.add("is-page-start");
+      currentPage.append(profileBlock);
+    }
+  }
+
+  [...preview.querySelectorAll(":scope > .aqua-page")].forEach((page, index) => {
+    page.setAttribute("aria-label", state.locale === "zh" ? `简历第 ${index + 1} 页` : `Resume page ${index + 1}`);
+  });
+}
+
+function renderSlateSidebar(data, labels) {
+  const locale = state.locale;
+  const sideLabels = locale === "zh"
+    ? { info: "个人信息", highlights: "个人亮点", other: "其它" }
+    : { info: "Personal Info", highlights: "Highlights", other: "Other" };
+  const summaryPoints = String(data.profile.summary || "")
+    .split(locale === "zh" ? /[。；]+/ : /(?<=[.!?])\s+/)
+    .map(item => item.trim())
+    .filter(Boolean);
+  const contactRows = [
+    ["role", data.profile.title],
+    ["phone", data.profile.phone],
+    ["mail", data.profile.email],
+    ["pin", data.profile.location]
+  ].filter(([, value]) => value).map(([icon, value]) => `<li>${slateIcon(icon)}<span>${escapeHtml(value)}</span></li>`).join("");
+  const websiteHref = safeUrl(data.profile.website);
+  const websiteLink = websiteHref
+    ? `<a class="social-link social-link-icon" href="${escapeHtml(websiteHref)}" target="_blank" rel="noopener noreferrer" aria-label="${locale === "zh" ? "个人主页" : "Website"}" title="${locale === "zh" ? "个人主页" : "Website"}">${socialIcon("link")}</a>`
+    : "";
+  const personalLinks = `${websiteLink}${socialLinks(data.profile, "slate-sidebar")}`;
+  const skills = [
+    [labels.core, data.skills.core],
+    [labels.tools, data.skills.tools],
+    [labels.languages, data.skills.languages]
+  ].filter(([, value]) => value).map(([label, value]) => `<li><b>${escapeHtml(label)}:</b> ${escapeHtml(value)}</li>`).join("");
+  const orderedSidebarSections = normalizeSectionOrder(state.sectionOrder).map(key => {
+    if (key === "summary") return `<section class="slate-side-section" data-resume-section="summary"><h2>${slateIcon("spark")}<span>${sideLabels.highlights}</span></h2><ul class="slate-plus-list">${summaryPoints.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>`;
+    if (key === "skills") return `<section class="slate-side-section" data-resume-section="skills"><h2>${slateIcon("folder")}<span>${sideLabels.other}</span></h2><ul class="slate-other-list">${skills}</ul></section>`;
+    return "";
+  }).join("");
+  const sidebar = `<aside class="slate-sidebar">
+    ${avatarMarkup(data.profile, "slate-sidebar", "slate-photo")}
+    <h1 class="slate-name">${escapeHtml(data.profile.name)}</h1>
+    <section class="slate-side-section"><h2>${slateIcon("profile")}<span>${sideLabels.info}</span></h2><ul class="slate-contact-list">${contactRows}</ul>${personalLinks ? `<nav class="slate-social-links" aria-label="${locale === "zh" ? "个人链接" : "Personal links"}">${personalLinks}</nav>` : ""}</section>
+    ${orderedSidebarSections}
+  </aside>`;
+  const experienceEntries = (data.experience || []).map(item => {
+    const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
+    return `<article class="slate-entry" data-slate-entry="experience"><header><h3>${escapeHtml(item.company)}${item.role ? ` · ${escapeHtml(item.role)}` : ""}</h3><span>${escapeHtml(item.period)}${data.profile.location ? ` · ${escapeHtml(data.profile.location)}` : ""}</span></header>${bullets ? `<ul>${bullets}</ul>` : ""}</article>`;
+  }).join("");
+  const educationEntries = (data.education || []).map(item => `<article class="slate-education-entry" data-slate-entry="education"><header><h3>${escapeHtml(item.school)}</h3><span>${escapeHtml(item.period)}</span></header><p>${escapeHtml(item.degree)}</p></article>`).join("");
+  const projectEntries = (data.projects || []).map(item => {
+    const href = projectHref(item);
+    const title = href ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>` : escapeHtml(item.name);
+    const bullets = splitHighlights(item.highlights).map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("");
+    return `<article class="slate-entry slate-project-entry" data-slate-entry="projects"><header><h3>${title}${item.role ? ` · ${escapeHtml(item.role)}` : ""}</h3><span>${escapeHtml(item.period)}</span></header>${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}${bullets ? `<ul>${bullets}</ul>` : ""}</article>`;
+  }).join("") || `<p class="slate-empty" data-slate-entry="projects">${locale === "zh" ? "暂无项目经历" : "No selected projects yet."}</p>`;
+  const section = (label, icon, className, body) => `<section class="slate-main-section ${className}"><h2>${slateIcon(icon)}<span>${label}</span></h2><div class="slate-section-body">${body}</div></section>`;
+  return `<div class="slate-page slate-page-one" data-resume-page aria-label="${locale === "zh" ? "简历第 1 页" : "Resume page 1"}">${sidebar}<main class="slate-main">${section(labels.experience, "briefcase", "slate-experience", experienceEntries)}${section(labels.education, "education", "slate-education", educationEntries)}</main></div>
+    <div class="slate-page slate-page-two" data-resume-page aria-label="${locale === "zh" ? "简历第 2 页" : "Resume page 2"}">${sidebar}<main class="slate-main">${section(labels.projects, "folder", "slate-projects", projectEntries)}</main></div>`;
+}
+
+function paginateSlateSidebar() {
+  const firstPage = preview.querySelector(".slate-page-one");
+  const secondPage = preview.querySelector(".slate-page-two");
+  if (!firstPage || !secondPage) return;
+  const sidebar = firstPage.querySelector(".slate-sidebar").outerHTML;
+  const entries = {
+    experience: [...firstPage.querySelectorAll('[data-slate-entry="experience"]')],
+    education: [...firstPage.querySelectorAll('[data-slate-entry="education"]')],
+    projects: [...secondPage.querySelectorAll('[data-slate-entry="projects"]')]
+  };
+  const specs = {
+    experience: [state.locale === "zh" ? "工作经历" : "Experience", "briefcase", "slate-experience"],
+    education: [state.locale === "zh" ? "教育背景" : "Education", "education", "slate-education"],
+    projects: [state.locale === "zh" ? "项目经历" : "Projects", "folder", "slate-projects"]
+  };
+  const firstMain = firstPage.querySelector(".slate-main");
+  firstMain.replaceChildren();
+  secondPage.remove();
+  const createPage = () => {
+    const page = document.createElement("div");
+    page.className = "slate-page slate-page-continuation";
+    page.dataset.resumePage = "";
+    page.innerHTML = `${sidebar}<main class="slate-main"></main>`;
+    preview.append(page);
+    return page;
+  };
+  const createSection = (page, type) => {
+    const [label, icon, className] = specs[type];
+    const section = document.createElement("section");
+    section.className = `slate-main-section ${className}`;
+    section.innerHTML = `<h2>${slateIcon(icon)}<span>${label}</span></h2><div class="slate-section-body"></div>`;
+    page.querySelector(".slate-main").append(section);
+    return section.querySelector(".slate-section-body");
+  };
+  const pack = (items, startPage, type) => {
+    let page = startPage;
+    let body = createSection(page, type);
+    for (const entry of items) {
+      body.append(entry);
+      const main = page.querySelector(".slate-main");
+      const onlyEntryOnPage = main.querySelectorAll(":scope > .slate-main-section").length === 1 && body.children.length === 1;
+      if (main.scrollHeight <= main.clientHeight + 1 || onlyEntryOnPage) continue;
+      entry.remove();
+      if (!body.children.length) body.closest(".slate-main-section")?.remove();
+      page = createPage();
+      body = createSection(page, type);
+      body.append(entry);
+    }
+    return page;
+  };
+  const orderedMainSections = normalizeSectionOrder(state.sectionOrder).filter(type => entries[type]);
+  let currentPage = firstPage;
+  orderedMainSections.forEach((type, index) => {
+    if (index === 1) currentPage = createPage();
+    currentPage = pack(entries[type], currentPage, type);
+  });
+  [...preview.querySelectorAll(":scope > .slate-page")].forEach((page, index) => page.setAttribute("aria-label", state.locale === "zh" ? `简历第 ${index + 1} 页` : `Resume page ${index + 1}`));
 }
 
 function renderAtelierSerif(data, labels) {
@@ -773,8 +1193,12 @@ function renderPreview() {
   state.template = canonicalTemplate(state.template);
   const templateTheme = templateThemes[state.template]?.[state.theme];
   const theme = { ...(templateTheme || themes[state.theme] || themes.light) };
-  if (state.theme === "light" && paperTones[state.paperTone]) theme.paper = paperTones[state.paperTone];
-  const accent = state.accent === "auto"
+  if (state.template !== "slate-sidebar" && state.theme === "light" && paperTones[state.paperTone]) {
+    theme.paper = paperTones[state.paperTone];
+  }
+  const accent = state.template === "slate-sidebar"
+    ? { color: theme.accent, soft: theme.surface || hexToRgba(theme.accent) }
+    : state.accent === "auto"
     ? { color: theme.accent || templateThemes.editorial.light.accent, soft: hexToRgba(theme.accent || templateThemes.editorial.light.accent) }
     : (accents[state.accent] || accents.ink);
   const labels = copy[state.locale] || copy.zh;
@@ -785,6 +1209,8 @@ function renderPreview() {
   preview.style.setProperty("--resume-ink", theme.ink);
   preview.style.setProperty("--resume-muted", theme.muted);
   preview.style.setProperty("--resume-line", theme.line);
+  preview.style.setProperty("--slate-sidebar-bg", theme.sidebar || "#ebedf0");
+  preview.style.setProperty("--slate-surface", theme.surface || theme.line);
   updatePhotoEditor();
 
   const renderers = {
@@ -798,6 +1224,7 @@ function renderPreview() {
     academic: renderAcademic,
     "early-career": renderEarlyCareer,
     "aqua-ledger": renderAquaLedger,
+    "slate-sidebar": renderSlateSidebar,
     "atelier-serif": renderAtelierSerif,
     cupertino: renderCupertino,
     "swiss-grid": renderSwissGrid
@@ -805,11 +1232,39 @@ function renderPreview() {
   preview.innerHTML = state.documentType === "resume"
     ? (renderers[state.template] || renderEditorial)(state.data, labels)
     : renderLetter(state.data, state.template, state.documentType);
+  if (state.documentType === "resume" && state.template === "aqua-ledger") paginateAquaLedger();
+  if (state.documentType === "resume" && state.template === "slate-sidebar") paginateSlateSidebar();
 
   updateCompletion();
   updateQuality();
   updateSummaryCount();
   requestAnimationFrame(updatePageEstimate);
+}
+
+function renderSocialEditor() {
+  const list = document.getElementById("socialEditorList");
+  const select = document.getElementById("socialPlatformSelect");
+  if (!list || !select) return;
+  const socials = state.data.profile.socials || (state.data.profile.socials = {});
+  list.innerHTML = Object.entries(socials).map(([key, item]) => {
+    const platform = socialPlatforms[key] ? key : (item?.platform || "link");
+    const spec = socialPlatforms[platform] || socialPlatforms.link;
+    const label = item?.label || spec.labels[state.locale] || spec.labels.en;
+    const custom = !socialPlatforms[key];
+    const removable = !["linkedin", "x", "github"].includes(key);
+    return `<div class="social-editor-row" data-social-key="${escapeHtml(key)}">
+      <input type="checkbox" data-bind="profile.socials.${escapeHtml(key)}.enabled" aria-label="显示 ${escapeHtml(label)}">
+      <span class="social-editor-logo" style="--social-color:${spec.color}" aria-hidden="true">${socialIcon(platform)}</span>
+      ${custom
+        ? `<input class="social-label-input" type="text" data-bind="profile.socials.${escapeHtml(key)}.label" aria-label="链接名称" placeholder="个人链接">`
+        : `<b>${escapeHtml(label)}</b>`}
+      <input type="url" data-bind="profile.socials.${escapeHtml(key)}.url" aria-label="${escapeHtml(label)} 链接" placeholder="${escapeHtml(spec.placeholder)}">
+      ${removable ? `<button class="social-remove-button" type="button" data-remove-social="${escapeHtml(key)}" aria-label="移除 ${escapeHtml(label)}" title="移除 ${escapeHtml(label)}">×</button>` : ""}
+    </div>`;
+  }).join("");
+  const available = Object.entries(socialPlatforms)
+    .filter(([key]) => key === "link" || !socials[key]);
+  select.innerHTML = available.map(([key, spec]) => `<option value="${key}">${escapeHtml(spec.labels[state.locale] || spec.labels.en)}</option>`).join("");
 }
 
 function renderRepeatEditors() {
@@ -860,6 +1315,7 @@ function renderRepeatEditors() {
       </div>
     </article>`).join("");
 
+  renderSocialEditor();
   syncInputs();
 }
 
@@ -1013,15 +1469,52 @@ function updateSummaryCount() {
 function updatePageEstimate() {
   const pageEstimate = document.getElementById("pageEstimate");
   const contentHeight = Math.max(preview.scrollHeight, preview.offsetHeight, 1123);
-  const pages = Math.max(1, Math.ceil(contentHeight / 1123));
-  const overflow = contentHeight > 1123;
-  pageEstimate.textContent = overflow ? `A4 · 约 ${pages} 页` : `A4 · ${pages} 页`;
+  const fixedPages = preview.querySelectorAll(":scope > [data-resume-page], :scope > .aqua-page").length;
+  const pages = fixedPages || Math.max(1, Math.ceil(contentHeight / 1123));
+  const overflow = pages > 1 || contentHeight > 1123;
+  pageEstimate.textContent = fixedPages ? `A4 · ${pages} 页` : (overflow ? `A4 · 约 ${pages} 页` : `A4 · ${pages} 页`);
   preview.classList.toggle("is-overflowing", overflow);
   const scale = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--preview-scale")) || 1;
-  document.getElementById("paperScaler").style.minHeight = `${contentHeight * scale}px`;
+  const scaler = document.getElementById("paperScaler");
+  const scaledHeight = contentHeight * scale;
+  scaler.style.minHeight = `${scaledHeight}px`;
+  scaler.style.height = `${scaledHeight}px`;
+}
+
+function syncSectionTabs() {
+  const tabs = document.getElementById("sectionTabs");
+  const order = ["profile", ...normalizeSectionOrder(state.sectionOrder)];
+  order.forEach((section, index) => {
+    const button = tabs.querySelector(`[data-section="${section}"]`);
+    if (!button) return;
+    button.querySelector("span").textContent = String(index + 1).padStart(2, "0");
+    tabs.append(button);
+  });
+}
+
+function moveResumeSection(section, target, placeAfter = false) {
+  const order = normalizeSectionOrder(state.sectionOrder).filter(key => key !== section);
+  const targetIndex = order.indexOf(target);
+  if (!resumeSectionKeys.includes(section) || targetIndex < 0) return;
+  order.splice(targetIndex + (placeAfter ? 1 : 0), 0, section);
+  state.sectionOrder = order;
+  syncSectionTabs();
+  renderPreview();
+  saveState();
+  showToast(state.locale === "zh" ? "简历模块顺序已更新" : "Resume section order updated");
 }
 
 function updateControls() {
+  syncSectionTabs();
+  const slatePaletteActive = canonicalTemplate(state.template) === "slate-sidebar";
+  document.getElementById("colorOptions").hidden = slatePaletteActive;
+  document.getElementById("slatePalette").hidden = !slatePaletteActive;
+  document.getElementById("accentPaletteHelp").textContent = slatePaletteActive ? "侧写专属" : "";
+  const sectionReorderEnabled = state.documentType === "resume" && sectionReorderTemplates.has(canonicalTemplate(state.template));
+  document.querySelectorAll('#sectionTabs [data-section]:not([data-section="profile"])').forEach(button => {
+    button.draggable = sectionReorderEnabled;
+    button.title = sectionReorderEnabled ? "拖动调整侧写模板模块顺序" : "";
+  });
   document.querySelectorAll("[data-template]").forEach(button => {
     button.classList.toggle("active", canonicalTemplate(button.dataset.template) === canonicalTemplate(state.template));
   });
@@ -1038,11 +1531,18 @@ function updateControls() {
     button.classList.toggle("active", button.dataset.theme === state.theme);
   });
   document.querySelectorAll("[data-paper-tone]").forEach(button => {
-    button.classList.toggle("active", button.dataset.paperTone === state.paperTone);
-    button.disabled = state.theme === "dark";
+    const activePaperTone = slatePaletteActive ? "auto" : state.paperTone;
+    button.classList.toggle("active", button.dataset.paperTone === activePaperTone);
+    button.disabled = state.theme === "dark" || slatePaletteActive;
   });
   const paperToneHelp = document.getElementById("paperToneHelp");
-  if (paperToneHelp) paperToneHelp.textContent = state.theme === "dark" ? "深色模式使用模板纸面" : "浅色模式可选";
+  if (paperToneHelp) {
+    paperToneHelp.textContent = slatePaletteActive
+      ? "侧写使用专属纸色"
+      : state.theme === "dark"
+      ? "深色模式使用模板纸面"
+      : "浅色模式可选";
+  }
   document.querySelectorAll("[data-document-type]").forEach(button => {
     button.classList.toggle("active", button.dataset.documentType === state.documentType);
   });
@@ -1100,6 +1600,48 @@ document.getElementById("sectionTabs").addEventListener("click", event => {
   });
 });
 
+let draggedResumeSection = "";
+const sectionTabs = document.getElementById("sectionTabs");
+sectionTabs.addEventListener("dragstart", event => {
+  const button = event.target.closest('[data-section][draggable="true"]');
+  if (!button) return;
+  draggedResumeSection = button.dataset.section;
+  button.classList.add("is-dragging");
+  event.dataTransfer.effectAllowed = "move";
+  event.dataTransfer.setData("text/plain", draggedResumeSection);
+});
+sectionTabs.addEventListener("dragover", event => {
+  const target = event.target.closest('[data-section][draggable="true"]');
+  if (!target || !draggedResumeSection || target.dataset.section === draggedResumeSection) return;
+  event.preventDefault();
+  sectionTabs.querySelectorAll(".is-drop-before, .is-drop-after").forEach(item => item.classList.remove("is-drop-before", "is-drop-after"));
+  const after = event.clientX > target.getBoundingClientRect().left + target.offsetWidth / 2;
+  target.classList.add(after ? "is-drop-after" : "is-drop-before");
+});
+sectionTabs.addEventListener("drop", event => {
+  const target = event.target.closest('[data-section][draggable="true"]');
+  if (!target || !draggedResumeSection) return;
+  event.preventDefault();
+  const after = target.classList.contains("is-drop-after");
+  moveResumeSection(draggedResumeSection, target.dataset.section, after);
+});
+sectionTabs.addEventListener("dragend", () => {
+  draggedResumeSection = "";
+  sectionTabs.querySelectorAll(".is-dragging, .is-drop-before, .is-drop-after").forEach(item => item.classList.remove("is-dragging", "is-drop-before", "is-drop-after"));
+});
+sectionTabs.addEventListener("keydown", event => {
+  const button = event.target.closest('[data-section][draggable="true"]');
+  if (!button || !event.altKey || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+  const order = normalizeSectionOrder(state.sectionOrder);
+  const index = order.indexOf(button.dataset.section);
+  const nextIndex = index + (event.key === "ArrowLeft" ? -1 : 1);
+  if (nextIndex < 0 || nextIndex >= order.length) return;
+  event.preventDefault();
+  const target = order[nextIndex];
+  moveResumeSection(button.dataset.section, target, event.key === "ArrowRight");
+  sectionTabs.querySelector(`[data-section="${button.dataset.section}"]`)?.focus();
+});
+
 document.getElementById("documentTypeControl").addEventListener("click", event => {
   const button = event.target.closest("[data-document-type]");
   if (!button) return;
@@ -1121,6 +1663,34 @@ document.querySelector(".editor-rail").addEventListener("change", event => {
   const input = event.target.closest("[data-bind]");
   if (!input || input.type !== "checkbox") return;
   setPath(state.data, input.dataset.bind, input.checked);
+  syncInputs();
+  renderPreview();
+  saveState();
+});
+
+document.getElementById("addSocialLink").addEventListener("click", () => {
+  const select = document.getElementById("socialPlatformSelect");
+  const platform = select.value || "link";
+  const socials = state.data.profile.socials || (state.data.profile.socials = {});
+  const key = platform === "link" ? `custom${Date.now()}` : platform;
+  const spec = socialPlatforms[platform] || socialPlatforms.link;
+  socials[key] = {
+    enabled: true,
+    url: "",
+    ...(platform === "link" ? { platform: "link", label: spec.labels[state.locale] || spec.labels.en } : {})
+  };
+  renderSocialEditor();
+  syncInputs();
+  document.querySelector(`[data-bind="profile.socials.${key}.url"]`)?.focus();
+  renderPreview();
+  saveState();
+});
+
+document.getElementById("socialEditorList").addEventListener("click", event => {
+  const button = event.target.closest("[data-remove-social]");
+  if (!button) return;
+  delete state.data.profile.socials[button.dataset.removeSocial];
+  renderSocialEditor();
   syncInputs();
   renderPreview();
   saveState();
@@ -1254,7 +1824,7 @@ document.getElementById("paperToneControl").addEventListener("click", event => {
 
 document.getElementById("colorOptions").addEventListener("click", event => {
   const button = event.target.closest("[data-accent]");
-  if (!button) return;
+  if (!button || canonicalTemplate(state.template) === "slate-sidebar") return;
   state.accent = button.dataset.accent;
   rerender();
 });
@@ -1290,11 +1860,13 @@ documentNameInput.addEventListener("input", event => {
 
 document.getElementById("resetButton").addEventListener("click", event => {
   if (!resetArmed) {
+    const resetButton = event.currentTarget;
     resetArmed = true;
-    event.currentTarget.lastChild.textContent = " 再次点击确认";
+    resetButton.lastChild.textContent = " 再次点击确认";
     setTimeout(() => {
       resetArmed = false;
-      event.currentTarget.lastChild.textContent = " 重置示例";
+      const currentResetButton = document.getElementById("resetButton");
+      if (currentResetButton?.lastChild) currentResetButton.lastChild.textContent = " 重置示例";
     }, 15000);
     return;
   }
@@ -1326,18 +1898,58 @@ document.getElementById("zoomIn").addEventListener("click", () => {
   setZoom(current + .05);
 });
 
+designRailToggle.addEventListener("click", () => setDesignRailOpen(!designRailOpen));
+designRailClose.addEventListener("click", () => setDesignRailOpen(false, { returnFocus: true }));
+
+editorRailResizer.addEventListener("pointerdown", event => {
+  if (!isDesktopWorkspace() || event.button !== 0) return;
+  activeResizePointerId = event.pointerId;
+  editorRailResizer.setPointerCapture?.(event.pointerId);
+  editorRailResizer.classList.add("is-dragging");
+  document.body.classList.add("is-resizing-rail");
+});
+
+window.addEventListener("pointermove", event => {
+  if (event.pointerId !== activeResizePointerId) return;
+  setEditorRailWidth(event.clientX);
+});
+
+function finishEditorRailResize(event) {
+  if (event.pointerId !== activeResizePointerId) return;
+  activeResizePointerId = null;
+  if (editorRailResizer.hasPointerCapture?.(event.pointerId)) editorRailResizer.releasePointerCapture(event.pointerId);
+  editorRailResizer.classList.remove("is-dragging");
+  document.body.classList.remove("is-resizing-rail");
+  setEditorRailWidth(editorRailWidth, { persist: true });
+}
+
+window.addEventListener("pointerup", finishEditorRailResize);
+window.addEventListener("pointercancel", finishEditorRailResize);
+editorRailResizer.addEventListener("dblclick", () => setEditorRailWidth(330, { persist: true }));
+editorRailResizer.addEventListener("keydown", event => {
+  const steps = { ArrowLeft: -16, ArrowRight: 16, Home: EDITOR_RAIL_MIN, End: editorRailMaximum() };
+  if (!(event.key in steps)) return;
+  event.preventDefault();
+  const next = event.key === "Home" || event.key === "End" ? steps[event.key] : editorRailWidth + steps[event.key];
+  setEditorRailWidth(next, { persist: true });
+});
+
 document.querySelector(".mobile-tabs").addEventListener("click", event => {
   const button = event.target.closest("[data-mobile-view]");
   if (!button) return;
   document.querySelectorAll("[data-mobile-view]").forEach(item => item.classList.toggle("active", item === button));
   document.querySelector(".workspace").dataset.currentView = button.dataset.mobileView;
+  syncWorkspaceAccessibility();
   if (button.dataset.mobileView === "preview") requestAnimationFrame(() => fitPreview(true));
 });
 
 window.addEventListener("resize", () => {
+  setEditorRailWidth(editorRailWidth);
+  syncWorkspaceAccessibility();
   if (!state.zoom) fitPreview();
 });
 
+setDesignRailOpen(false);
 renderRepeatEditors();
 updateControls();
 renderPreview();

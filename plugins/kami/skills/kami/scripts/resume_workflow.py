@@ -44,6 +44,9 @@ ROLE_KEYWORDS: dict[str, set[str]] = {
     "brand": {"brand", "品牌", "内容", "content", "creative", "创意"},
     "sales": {"sales", "销售", "bd", "business development", "大客户", "签约"},
     "growth": {"growth", "增长", "转化", "投放", "留存", "acquisition"},
+    "marketing": {"marketing", "市场营销", "整合营销", "campaign", "go-to-market"},
+    "international": {"international", "global", "海外", "国际化", "出海", "跨境"},
+    "community": {"community", "社区", "社群", "creator", "生态运营"},
     "operations": {"operations", "运营", "流程", "交付", "项目管理", "program"},
     "supply-chain": {"supply chain", "供应链", "采购", "库存", "物流"},
     "manufacturing": {"manufacturing", "制造", "工厂", "生产", "质量"},
@@ -76,6 +79,9 @@ TEMPLATE_FAMILIES = {
     "media": "creative",
     "sales": "sales-impact",
     "growth": "sales-impact",
+    "marketing": "slate-sidebar",
+    "international": "slate-sidebar",
+    "community": "slate-sidebar",
     "business-development": "sales-impact",
     "partnerships": "sales-impact",
     "operations": "aqua-ledger",
@@ -98,12 +104,25 @@ TEMPLATE_FAMILIES = {
 
 THEME_DARK_FAMILIES = {"technical", "creative", "sales-impact", "early-career"}
 CONSERVATIVE_FAMILIES = {"ats-classic", "academic", "operations-practical", "executive"}
-PHOTO_TEMPLATES = {"editorial", "technical", "creative", "early-career", "aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"}
-ICON_SOCIAL_TEMPLATES = {"technical", "creative", "early-career", "aqua-ledger"}
+PHOTO_TEMPLATES = {"editorial", "technical", "creative", "early-career", "aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"}
+ICON_SOCIAL_TEMPLATES = {"technical", "creative", "early-career", "slate-sidebar"}
 SOCIAL_ICON_PATHS = {
     "linkedin": "<path d='M5.2 7.3A1.7 1.7 0 1 0 5.2 4a1.7 1.7 0 0 0 0 3.3ZM3.8 9h2.8v8H3.8V9Zm4.5 0h2.7v1.1c.6-.8 1.5-1.4 2.8-1.4 2.8 0 3.4 1.8 3.4 4.2V17h-2.8v-3.7c0-.9 0-2.1-1.3-2.1s-1.5 1-1.5 2V17H8.3V9Z'/>",
     "github": "<path d='M10 3.2a6.8 6.8 0 0 0-2.2 13.2c.3.1.4-.1.4-.3v-1.2c-1.7.4-2.1-.8-2.1-.8-.3-.7-.7-.9-.7-.9-.6-.4 0-.4 0-.4.7.1 1.1.7 1.1.7.6 1.1 1.6.8 2 .6.1-.4.2-.8.4-1-1.4-.2-2.8-.7-2.8-3.1 0-.7.2-1.2.6-1.7-.1-.2-.3-.8.1-1.7 0 0 .5-.2 1.8.6.5-.1 1-.2 1.5-.2s1 0 1.5.2c1.3-.9 1.8-.6 1.8-.6.4.9.2 1.5.1 1.7.4.5.6 1 .6 1.7 0 2.4-1.4 2.9-2.8 3.1.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3A6.8 6.8 0 0 0 10 3.2Z'/>",
-    "x": "<path d='M4 4h3.3l2.4 3.2L12.8 4H16l-4.8 5.4L16.2 16h-3.3l-2.8-3.7L6.6 16H3.4l5-5.9L4 4Zm2.2 1.3 6.9 9.4h.9L7.1 5.3h-.9Z'/>",
+    "x": "<path d='M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.866l409.625-476.152 327.181 476.152H1200L714.137 519.284h.026ZM569.165 687.828l-47.468-67.894L144.011 79.694h162.604l304.797 435.991 47.468 67.894 396.2 566.721H892.476L569.165 687.854v-.026Z'/>",
+    "behance": "<path d='M7 4c3 0 4.7 1.3 4.7 3.9 0 1.4-.7 2.5-2 3.2 1.8.6 2.7 1.9 2.7 4 0 3-2.1 4.5-5.2 4.5H0V4h7Zm-.3 13c1.6 0 2.4-.7 2.4-2.1 0-1.5-.8-2.2-2.3-2.2H3.2V17h3.5Zm13.7-6c-.4-.4-1-.6-1.7-.6-1.4 0-2.2.8-2.4 2.4H21c-.1-.8-.3-1.4-.6-1.8Zm1.2-5.9h-6v1.5h6V5.1Z'/>",
+    "dribbble": "<path d='M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24Zm8 5.5a10.2 10.2 0 0 1 2.3 6.4c-.4-.1-3.8-.8-7.2-.3l-.9-2c3.8-1.6 5.5-3.8 5.8-4.1ZM12 1.8c2.6 0 5 .9 6.8 2.6-.2.2-1.8 2.3-5.4 3.7a47 47 0 0 0-3.8-6c.8-.2 1.6-.3 2.4-.3ZM7.6 2.7c.3.4 2.1 2.9 3.8 6-4.8 1.3-9 1.2-9.5 1.2a10.3 10.3 0 0 1 5.7-7.2ZM1.8 12v-.3c.4 0 5.4.1 10.5-1.4l.8 1.7-.4.1c-5.3 1.7-8.1 6.4-8.3 6.8A10.2 10.2 0 0 1 1.8 12ZM12 22.2c-2.4 0-4.6-.8-6.3-2.1.2-.4 2.3-4.4 8-6.4h.1c1.4 3.8 2 6.9 2.2 7.8-1.2.5-2.6.7-4 .7Zm5.7-1.7c-.1-.6-.6-3.6-2-7.3 3.2-.5 6 .3 6.4.4a10.3 10.3 0 0 1-4.4 6.9Z'/>",
+    "medium": "<path d='M2 6.6a.7.7 0 0 0-.2-.6L.2 4.1v-.3h4.9L8.9 12l3.4-8.2H17v.3l-1.4 1.3a.4.4 0 0 0-.1.4v9.5a.4.4 0 0 0 .1.4l1.3 1.3v.3h-6.6V17l1.4-1.3c.1-.1.1-.2.1-.4V7.6L8 17.3h-.5L3 7.6v6.5c0 .3.1.6.3.8L5.1 17v.3H0V17l1.8-2.1c.2-.2.3-.5.2-.8V6.6Zm16.9-2.8H24v.3l-1.3 1.2a.4.4 0 0 0-.1.3v9.8c0 .2 0 .3.1.4L24 17v.3h-5.1V17l1.3-1.2c.1-.1.1-.2.1-.4V5.7c0-.2 0-.3-.1-.4l-1.3-1.2v-.3Z'/>",
+    "gitlab": "<path d='m23.6 9.6-3.3-8.6a.9.9 0 0 0-1.6.1l-2.2 6.7h-9L5.3 1.1A.9.9 0 0 0 3.7 1L.4 9.5a6.1 6.1 0 0 0 2 7.1l9.6 7.2 9.6-7.2a6.1 6.1 0 0 0 2-7Z'/>",
+    "link": "<path fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' d='M10 13a5 5 0 0 0 7.1.1l2-2A5 5 0 0 0 12 4l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1'/>",
+}
+SOCIAL_PLATFORM_LABELS = {
+    "linkedin": "LinkedIn", "github": "GitHub", "x": "X", "behance": "Behance",
+    "dribbble": "Dribbble", "medium": "Medium", "gitlab": "GitLab", "link": "Link",
+}
+SOCIAL_ICON_VIEWBOXES = {
+    key: "0 0 1200 1227" if key == "x" else "0 0 20 20" if key in {"linkedin", "github"} else "0 0 24 24"
+    for key in SOCIAL_ICON_PATHS
 }
 PAPER_TONES = {"white": "#FFFFFF", "ivory": "#FFFCF4"}
 
@@ -570,22 +589,25 @@ def render(
     if spec is None:
         spec = next(item for item in catalog["templates"] if item["id"] == "editorial")
     palette = dict(spec[theme])
-    if theme == "light" and paper_tone in PAPER_TONES:
+    if template != "slate-sidebar" and theme == "light" and paper_tone in PAPER_TONES:
         palette["paper"] = PAPER_TONES[paper_tone]
-    accent_soft = hex_rgba(palette["accent"], 0.14)
+    accent_soft = palette.get("surface", hex_rgba(palette["accent"], 0.14))
+    sidebar = palette.get("sidebar", accent_soft)
     title = text_of(candidate.get("headline")) or text_of(target_job(dossier).get("title"))
     socials = candidate.get("socials", {}) if isinstance(candidate.get("socials"), dict) else {}
     social_links = []
-    for platform, label in (("linkedin", "LinkedIn"), ("x", "X"), ("github", "GitHub")):
-        item = socials.get(platform, {})
+    for key, item in socials.items():
         if isinstance(item, str):
             item = {"enabled": True, "url": item}
+        platform = key if key in SOCIAL_PLATFORM_LABELS else text_of(item.get("platform") if isinstance(item, dict) else "") or "link"
+        platform = platform if platform in SOCIAL_ICON_PATHS else "link"
+        label = text_of(item.get("label") if isinstance(item, dict) else "") or SOCIAL_PLATFORM_LABELS[platform]
         href = safe_href(item.get("url")) if isinstance(item, dict) and item.get("enabled") else ""
         if href:
             handle = urlparse(href).path.rstrip("/").split("/")[-1] or urlparse(href).netloc
             if template in ICON_SOCIAL_TEMPLATES:
                 icon = SOCIAL_ICON_PATHS[platform]
-                content = f"<svg viewBox='0 0 20 20' aria-hidden='true'>{icon}</svg>"
+                content = f"<svg viewBox='{SOCIAL_ICON_VIEWBOXES[platform]}' aria-hidden='true'>{icon}</svg>"
                 class_name = "icon-social"
             else:
                 content = html.escape(f"{label} @{handle.lstrip('@')}")
@@ -629,7 +651,7 @@ def render(
 <title>{html.escape(heading)} - {html.escape(text_of(candidate.get('name')))}</title>
 <style>
 @page {{ size:A4; margin:0; }}
-:root {{ --paper:{palette['paper']}; --ink:{palette['ink']}; --accent:{palette['accent']}; --line:{hex_rgba(palette['accent'], .25)}; }}
+:root {{ --paper:{palette['paper']}; --ink:{palette['ink']}; --accent:{palette['accent']}; --surface:{accent_soft}; --sidebar:{sidebar}; --line:{hex_rgba(palette['accent'], .25)}; }}
 * {{ box-sizing:border-box; }} body {{ margin:0; background:var(--paper); color:var(--ink); font-family:Charter,Georgia,serif; }}
 .page {{ min-height:297mm; padding:18mm; display:flex; flex-direction:column; }}
 header {{ display:flex; gap:6mm; align-items:center; padding-bottom:7mm; border-bottom:.4pt solid var(--line); }}
@@ -639,7 +661,9 @@ header {{ display:flex; gap:6mm; align-items:center; padding-bottom:7mm; border-
 .letter-body {{ max-width:155mm; padding-top:12mm; font-size:11pt; line-height:1.75; }} .letter-body p {{ margin:0 0 6mm; }}
 .closing {{ padding-top:4mm; }} .closing span {{ font:8.5pt Arial,sans-serif; opacity:.75; }}
 footer {{ margin-top:auto; padding-top:5mm; border-top:.4pt solid var(--line); font:8pt Arial,sans-serif; opacity:.75; }}
-body.aqua-ledger .page {{ background:linear-gradient(145deg,var(--paper),{hex_rgba(palette['accent'], .12)}); }}
+body.aqua-ledger .page {{ background:var(--paper); }}
+body.slate-sidebar .page {{ padding-left:72mm; background:linear-gradient(90deg,var(--sidebar) 0 62mm,var(--paper) 62mm); font-family:"Helvetica Neue",Arial,sans-serif; }}
+body.slate-sidebar .photo-placeholder {{ background:var(--surface); }}
 body.atelier-serif .page {{ padding-left:65mm; background:linear-gradient(90deg,{hex_rgba(palette['ink'], .10)} 0 52mm,var(--paper) 52mm); }}
 body.cupertino {{ font-family:"Helvetica Neue",Arial,sans-serif; }}
 body.swiss-grid .page {{ background:linear-gradient(90deg,transparent 0 43mm,var(--line) 43mm 43.3mm,transparent 43.3mm); }}
@@ -658,7 +682,7 @@ body.swiss-grid .page {{ background:linear-gradient(90deg,transparent 0 43mm,var
 <title>{html.escape(text_of(candidate.get('name')))} - {html.escape(title)}</title>
 <style>
 @page {{ size: A4; margin: 14mm; }}
-:root {{ --paper: {palette['paper']}; --ink: {palette['ink']}; --accent: {palette['accent']}; --accent-soft: {accent_soft}; }}
+:root {{ --paper: {palette['paper']}; --ink: {palette['ink']}; --accent: {palette['accent']}; --accent-soft: {accent_soft}; --sidebar: {sidebar}; }}
 * {{ box-sizing: border-box; }} body {{ margin:0; background:var(--paper); color:var(--ink); font-family: Charter, Georgia, serif; line-height:1.5; }}
 .page {{ max-width: 180mm; margin:auto; }} header {{ border-bottom:1px solid var(--accent); padding-bottom:8mm; margin-bottom:7mm; }}
 h1 {{ margin:0 0 2mm; font-size:28pt; }} .title {{ margin:0; color:var(--accent); font:600 10pt Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; }}
@@ -672,7 +696,8 @@ h1 {{ margin:0 0 2mm; font-size:28pt; }} .title {{ margin:0; color:var(--accent)
 .resume-template.academic .page {{ max-width: 182mm; }} .resume-template.academic header {{ text-align: center; }} .resume-template.academic .contact {{ text-align: center; }} .resume-template.academic h2 {{ letter-spacing: .05em; }}
 .resume-template.early-career .page {{ max-width: 178mm; }} .resume-template.early-career header {{ border-bottom: 0; padding-bottom: 3mm; }} .resume-template.early-career h1 {{ font-size: 32pt; }} .resume-template.early-career h2 {{ border-bottom: 0; }}
 .resume-template.ats-classic .page {{ max-width: 180mm; }} .resume-template.ats-classic header {{ text-align: center; }} .resume-template.ats-classic .contact {{ text-align: center; }}
-.resume-template.aqua-ledger {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.aqua-ledger .page {{ max-width:184mm; }} .resume-template.aqua-ledger header {{ margin:-14mm -14mm 7mm; padding:14mm; background:linear-gradient(125deg,var(--accent-soft),var(--paper)); border:0; }} .resume-template.aqua-ledger h1 {{ font-size:24pt; }} .resume-template.aqua-ledger .title {{ font-size:18pt; }} .resume-template.aqua-ledger section {{ display:grid; grid-template-columns:36mm 1fr; gap:7mm; padding:5mm 0; border-bottom:.4pt solid var(--accent); }} .resume-template.aqua-ledger section h2 {{ margin:0; border:0; }}
+.resume-template.aqua-ledger {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.aqua-ledger .page {{ max-width:184mm; }} .resume-template.aqua-ledger header {{ min-height:56mm; margin:-14mm -14mm 18mm; padding:14mm 14mm 14mm 56mm; border:0; background:color-mix(in srgb, var(--ink) 5%, var(--paper)); position:relative; }} .resume-template.aqua-ledger .identity {{ align-items:flex-start; }} .resume-template.aqua-ledger .identity > div {{ display:flex; flex-direction:column; }} .resume-template.aqua-ledger .avatar, .resume-template.aqua-ledger .photo-placeholder {{ position:absolute; left:14mm; top:14mm; width:38mm; height:38mm; border-radius:.5mm; }} .resume-template.aqua-ledger h1 {{ margin-top:1.5mm; font-size:10pt; font-weight:600; letter-spacing:0; text-transform:none; }} .resume-template.aqua-ledger .title {{ order:-1; margin:0; color:var(--ink); font-size:24pt; font-weight:700; line-height:1.05; letter-spacing:-.02em; text-transform:uppercase; opacity:1; }} .resume-template.aqua-ledger .contact {{ position:absolute; left:56mm; right:14mm; bottom:14mm; margin:0; }} .resume-template.aqua-ledger section {{ display:grid; grid-template-columns:44mm 1fr; gap:6mm; padding:6mm 0; border-top:.4pt solid color-mix(in srgb, var(--ink) 12%, transparent); }} .resume-template.aqua-ledger section > :not(h2) {{ grid-column:2; }} .resume-template.aqua-ledger section h2 {{ margin:0; padding:0; border:0; color:var(--ink); letter-spacing:.08em; }}
+.resume-template.slate-sidebar {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.slate-sidebar .page {{ max-width:184mm; border-left:58mm solid var(--sidebar); padding-left:10mm; }} .resume-template.slate-sidebar header {{ border-bottom:.4pt solid var(--accent); }} .resume-template.slate-sidebar h1 {{ font-family:"Songti SC",Georgia,serif; font-size:30pt; letter-spacing:0; }} .resume-template.slate-sidebar h2 {{ color:var(--ink); border-bottom:.4pt solid var(--accent); letter-spacing:0; }} .resume-template.slate-sidebar .avatar {{ width:36mm; height:42mm; border-radius:1.5mm; }}
 .resume-template.atelier-serif .page {{ max-width:184mm; border-left:46mm solid var(--accent-soft); padding-left:10mm; }} .resume-template.atelier-serif header {{ border-bottom:0; }} .resume-template.atelier-serif h1 {{ font-family:"Bodoni 72",Didot,Georgia,serif; font-size:38pt; font-weight:400; letter-spacing:-.04em; }} .resume-template.atelier-serif h2 {{ color:var(--ink); border-bottom:.4pt solid var(--accent); }}
 .resume-template.cupertino {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.cupertino .page {{ max-width:176mm; }} .resume-template.cupertino header {{ border-bottom:.4pt solid var(--accent); }} .resume-template.cupertino h1 {{ font-size:29pt; letter-spacing:-.04em; }} .resume-template.cupertino h2 {{ color:var(--ink); font-size:13pt; letter-spacing:-.02em; text-transform:none; }}
 .resume-template.swiss-grid {{ font-family:"Helvetica Neue",Arial,sans-serif; }} .resume-template.swiss-grid .page {{ max-width:184mm; border-left:.4pt solid var(--accent); }} .resume-template.swiss-grid header {{ display:grid; grid-template-columns:36mm minmax(0,1fr); padding-left:7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid h1 {{ font-size:32pt; line-height:1.02; letter-spacing:-.045em; }} .resume-template.swiss-grid section {{ display:grid; grid-template-columns:36mm minmax(0,1fr); gap:7mm; padding:5mm 0 5mm 7mm; border-bottom:.4pt solid var(--accent); }} .resume-template.swiss-grid section h2 {{ margin:0; border:0; }}

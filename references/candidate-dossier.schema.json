@@ -21,8 +21,13 @@
           "properties": {
             "linkedin": {"$ref": "#/$defs/social_link"},
             "x": {"$ref": "#/$defs/social_link"},
-            "github": {"$ref": "#/$defs/social_link"}
-          }
+            "github": {"$ref": "#/$defs/social_link"},
+            "behance": {"$ref": "#/$defs/social_link"},
+            "dribbble": {"$ref": "#/$defs/social_link"},
+            "medium": {"$ref": "#/$defs/social_link"},
+            "gitlab": {"$ref": "#/$defs/social_link"}
+          },
+          "additionalProperties": {"$ref": "#/$defs/social_link"}
         },
         "languages": {"type": "array", "items": {"type": "string"}},
         "preferences": {
@@ -82,7 +87,9 @@
       "type": "object",
       "properties": {
         "enabled": {"type": "boolean"},
-        "url": {"type": "string", "format": "uri"}
+        "url": {"type": "string", "format": "uri"},
+        "platform": {"type": "string"},
+        "label": {"type": "string"}
       }
     }
   }

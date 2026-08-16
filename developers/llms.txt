@@ -22,7 +22,7 @@ Reach for Kami when a user wants a finished document whose appearance matters: r
 ## Resume Skill
 - Guide: https://kami-resume-studio.vercel.app/resume-skill and https://kami-resume-studio.vercel.app/resume-skill.md
 - Workflow: authorized source intake, source-linked dossier, latest-role questions, target-job matching, template routing, rendering, verification
-- Templates: 13 resume families, 26 light/dark variants
+- Templates: 14 resume families, 28 light/dark variants
 - Bundle: primary resume, ATS companion when required, coordinated cover letter, optional recommendation letter
 - Deterministic entry: `python3 scripts/resume_workflow.py all candidate-dossier.json -o output/resume`
 

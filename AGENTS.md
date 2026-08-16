@@ -7,7 +7,7 @@ adapted from the open-source [tw93/Kami](https://github.com/tw93/Kami) project. 
 not merely a renamed copy of Kami. It now has four connected product surfaces:
 
 1. A Chinese and English public landing site.
-2. A zero-build browser resume editor with 9 resume families and 18 light/dark
+2. A zero-build browser resume editor with 14 resume families and 28 light/dark
    variants.
 3. An Agent Skill that collects career evidence, interviews the user for missing
    recent work, matches a target job, routes a template, and generates ATS-safe
@@ -222,7 +222,7 @@ CSS or layout change.
 
 ## Resume Template System
 
-The current product contract is **9 template families x 2 themes = 18 variants**:
+The current product contract is **14 template families x 2 themes = 28 variants**:
 
 | ID | Name | Primary roles | Photo | Social display |
 | --- | --- | --- | --- | --- |
@@ -235,6 +235,11 @@ The current product contract is **9 template families x 2 themes = 18 variants**
 | `operations-practical` | 实干线 / Operations Practical | operations, supply chain, service | no | text |
 | `academic` | 学研录 / Academic | research, education, policy, health | no | text |
 | `early-career` | 初航 / Early Career | students, graduates, internships | yes | icons |
+| `aqua-ledger` | 冰川履历 / Aqua Ledger | operations, program, service | yes | text |
+| `slate-sidebar` | 侧写 / Slate Sidebar | international operations, community, expansion | yes | text |
+| `atelier-serif` | 灰廊雅集 / Atelier Serif | executives, brand, editorial | yes | text |
+| `cupertino` | 库比蒂诺 / Cupertino | product, software, AI | yes | text |
+| `swiss-grid` | 麦肯锡网格 / McKinsey Grid | strategy, consulting, transformation | yes | text |
 
 `references/resume-template-catalog.json` is the machine-readable capability and
 Agent-routing catalog. The browser does not import it at runtime, so editor capability

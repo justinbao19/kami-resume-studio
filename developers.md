@@ -45,7 +45,7 @@ The server card, including protocol version and tool list, is published at </.we
 
 ## Resume Skill
 
-The resume workflow is a specialized layer above the document engine. It collects authorized old resumes and career profiles, builds a source-linked candidate dossier, asks focused questions for missing latest-role evidence, matches the target job, and routes one of 13 resume families with light and dark themes.
+The resume workflow is a specialized layer above the document engine. It collects authorized old resumes and career profiles, builds a source-linked candidate dossier, asks focused questions for missing latest-role evidence, matches the target job, and routes one of 14 resume families with light and dark themes.
 
 The default bundle includes a primary resume, a light ATS Classic companion when the main design is dark or expressive, and a coordinated cover letter. Atelier Serif also supports recommendation-letter mode. Read the [human guide](https://kami-resume-studio.vercel.app/resume-skill) or [Markdown guide](https://kami-resume-studio.vercel.app/resume-skill.md).
 

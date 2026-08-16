@@ -2067,7 +2067,9 @@ def test_resume_workflow_renders_projects_socials_and_photo_safely() -> None:
     dossier["candidate"]["socials"] = {
         "linkedin": {"enabled": True, "url": "https://linkedin.com/in/test"},
         "x": {"enabled": True, "url": "javascript:alert(1)"},
+        "x_secondary": {"enabled": True, "platform": "x", "url": "https://x.com/test"},
         "github": {"enabled": True, "url": "github.com/test"},
+        "behance": {"enabled": True, "url": "https://behance.net/test"},
     }
     dossier["projects"] = [{
         "name": "Launch Lab",
@@ -2092,9 +2094,17 @@ def test_resume_workflow_renders_projects_socials_and_photo_safely() -> None:
     check("resume workflow renders project evidence",
           "Launch Lab" in primary and "https://example.com/project" in primary)
     check("resume workflow renders enabled safe social links",
-          "https://linkedin.com/in/test" in primary and "https://github.com/test" in primary)
+          "https://linkedin.com/in/test" in primary and "https://github.com/test" in primary and
+          "https://behance.net/test" in primary)
     check("resume workflow uses platform icons for icon-mode templates",
-          primary.count("class='icon-social'") == 2 and primary.count("<svg viewBox='0 0 20 20'") == 2)
+          primary.count("class='icon-social'") == 4 and
+          primary.count("<svg viewBox='0 0 20 20'") == 2 and
+          primary.count("<svg viewBox='0 0 24 24'") == 1 and
+          primary.count("<svg viewBox='0 0 1200 1227'") == 1)
+    official_x_path = "M714.163 519.284 1160.89 0h-105.86L667.137 450.887"
+    browser_source = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    check("browser and Agent output use the official X logo geometry",
+          official_x_path in browser_source and official_x_path in primary)
     check("resume workflow rejects unsafe social protocols",
           "javascript:" not in primary and "javascript:" not in ats)
     check("resume workflow preserves hardened link attributes",
@@ -2107,6 +2117,9 @@ def test_resume_workflow_new_families_and_letters() -> None:
     fixture = ROOT / "tests" / "fixtures" / "resume_case_1_resolved.json"
     dossier = json.loads(fixture.read_text(encoding="utf-8"))
     dossier["candidate"]["photo"] = "data:image/png;base64,aGVsbG8="
+    dossier["candidate"]["socials"] = {
+        "linkedin": {"enabled": True, "url": "https://linkedin.com/in/test"},
+    }
     dossier["cover_letter"] = {
         "company": "Northstar",
         "role": "AI Product Lead",
@@ -2121,18 +2134,24 @@ def test_resume_workflow_new_families_and_letters() -> None:
     catalog = json.loads((REPO_ROOT / "references" / "resume-template-catalog.json").read_text(encoding="utf-8"))
     ids = {item["id"] for item in catalog["templates"]}
     mckinsey = next(item for item in catalog["templates"] if item["id"] == "swiss-grid")
-    check("resume catalog exposes 13 families and 26 variants",
-          catalog["template_count"] == 13 and catalog["variant_count"] == 26 and
-          {"aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"} <= ids)
+    slate = next(item for item in catalog["templates"] if item["id"] == "slate-sidebar")
+    check("resume catalog exposes 14 families and 28 variants",
+          catalog["template_count"] == 14 and catalog["variant_count"] == 28 and
+          {"aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"} <= ids)
     check("resume catalog exposes light paper tones",
           catalog.get("paper_tones") == ["auto", "white", "ivory"])
     check("legacy swiss-grid id presents the McKinsey consulting family",
           mckinsey["name_zh"] == "麦肯锡网格" and
           mckinsey["name_en"] == "McKinsey Grid" and
           {"strategy", "consulting", "executive-communication"} <= set(mckinsey["role_families"]))
+    check("Slate Sidebar catalog keeps its dedicated light palette",
+          slate["light"] == {
+              "accent": "#232935", "paper": "#F6F3F2", "ink": "#232935",
+              "sidebar": "#EBEDF0", "surface": "#EFF1F0",
+          })
     with tempfile.TemporaryDirectory() as directory:
         output_dir = Path(directory)
-        for template in ("aqua-ledger", "atelier-serif", "cupertino", "swiss-grid"):
+        for template in ("aqua-ledger", "slate-sidebar", "atelier-serif", "cupertino", "swiss-grid"):
             route_data = {
                 "primary": {"template": template, "theme": "light"},
                 "ats_companion": {"template": "ats-classic", "theme": "light"},
@@ -2145,6 +2164,12 @@ def test_resume_workflow_new_families_and_letters() -> None:
             letter_html = letter_path.read_text(encoding="utf-8")
             check(f"resume workflow renders {template}",
                   f"resume-template {template}" in resume_html and "<img class='avatar'" in resume_html)
+            if template == "slate-sidebar":
+                check("resume workflow renders Slate Sidebar social icons",
+                      "class='icon-social'" in resume_html and ">LinkedIn @" not in resume_html)
+                check("resume workflow renders Slate Sidebar dedicated palette",
+                      all(color in resume_html for color in ("#EBEDF0", "#F6F3F2", "#EFF1F0", "#232935")) and
+                      all(color in letter_html for color in ("#EBEDF0", "#F6F3F2", "#EFF1F0", "#232935")))
             check(f"resume workflow renders matching {template} letter",
                   f"class='{template} theme-light'" in letter_html and "Application for AI Product Lead" in letter_html)
 

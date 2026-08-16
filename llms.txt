@@ -41,11 +41,11 @@ How an agent should call Kami: install the skill, fill the matching content sche
 - Privacy rule: keep career material local unless the user explicitly authorizes a specific external action; never request passwords, cookies, tokens, or one-time codes
 
 ## Resume Templates
-- 13 resume families and 26 light/dark variants
+- 14 resume families and 28 light/dark variants
 - Light-mode paper options: template default, pure white, or ivory
 - Existing families: Editorial, ATS Classic, Technical, Executive, Creative, Sales Impact, Operations Practical, Academic, Early Career
-- Reference-led families: Aqua Ledger, Atelier Serif, Cupertino, McKinsey Grid
-- All families support project experience. Aqua Ledger, Atelier Serif, Cupertino, and McKinsey Grid support photos and coordinated cover-letter layouts. Empty photo states use a portrait icon rather than initials. Atelier Serif also supports recommendation-letter mode.
+- Reference-led families: Aqua Ledger, Slate Sidebar, Atelier Serif, Cupertino, McKinsey Grid
+- All families support project experience. Aqua Ledger, Slate Sidebar, Atelier Serif, Cupertino, and McKinsey Grid support photos and coordinated cover-letter layouts. Empty photo states use a portrait icon rather than initials. Atelier Serif also supports recommendation-letter mode.
 
 ## Key Pages
 - [English showcase](https://kami-resume-studio.vercel.app): Design system overview with live demos

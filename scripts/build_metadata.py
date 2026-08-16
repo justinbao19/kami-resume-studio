@@ -63,7 +63,7 @@ AUTHOR = {
 CODEX_DESCRIPTION = (
     "Agent-first career intelligence and document typesetting skill for Codex: "
     "analyze authorized resumes and career profiles, interview for missing evidence, "
-    "match target jobs, route 13 resume families with light/dark themes, and render "
+    "match target jobs, route 14 resume families with light/dark themes, and render "
     "ATS-safe polished resumes alongside Kami documents."
 )
 CLAUDE_MARKETPLACE_DESCRIPTION = "Agent-first resume intelligence and document typesetting skill for Claude Code."
@@ -167,7 +167,7 @@ def build_codex_plugin(version: str, brand_color: str) -> dict:
                 "Chinese career-platform profiles, and target job descriptions "
                 "into a traceable candidate dossier. It interviews for missing "
                 "latest-role evidence, matches the target role, chooses one of "
-                "13 resume families with light/dark themes, renders an expressive "
+                "14 resume families with light/dark themes, renders an expressive "
                 "primary resume plus an ATS-safe companion when needed, and still "
                 "supports Kami one-pagers, reports, letters, portfolios, slides, "
                 "and landing pages."

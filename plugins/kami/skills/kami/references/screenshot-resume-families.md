@@ -1,6 +1,6 @@
 # Screenshot-derived resume families
 
-This reference is the visual contract for the four resume families added from the user grouped screenshots. It records layout behavior only. Do not copy names, portraits, employers, or other identifying content from the references.
+This reference is the visual contract for the five resume families added from user-provided visual references. It records layout behavior only. Do not copy names, portraits, employers, or other identifying content from the references.
 
 ## Shared rules
 
@@ -39,6 +39,23 @@ This reference is the visual contract for the four resume families added from th
 - Photo: large portrait, grayscale by default.
 - Socials: text labels and handles.
 - Letter: cover letter and recommendation letter use the same side rail.
+
+## Slate Sidebar
+
+- Source group: two-page A4 PDF supplied as a private visual reference.
+- Intent: international operations, community, customer success, and market expansion.
+- Grid: 36.6 percent repeated sidebar and 63.4 percent main column on every A4 page.
+- Header: large upright portrait at the top of the sidebar, followed by a bold Songti name and compact personal-information rows.
+- Main column: icon-led section titles with one fine bottom rule; company and role align left while period and location align right in muted italic text.
+- Typography: Songti SC, STSong, or Noto Serif SC for the name; Avenir Next, Helvetica Neue, PingFang SC, or Noto Sans SC for evidence text.
+- Light palette: sidebar `#EBEDF0`, paper `#FFFFFF`, ink `#252B34`, muted `#737983`, rule `#D9DDE2`.
+- Dark palette: sidebar `#22272F`, paper `#171A1F`, ink `#F1F3F5`, muted `#AEB4BD`, rule `#3B414A`.
+- Icons: thin open-source-style outline icons. Do not use emoji, platform logos as decoration, or a runtime icon dependency.
+- Photo: upright rectangle with a restrained 6 pixel radius and `object-fit: cover`.
+- Sidebar: repeat personal information, summary highlights, and grouped skills on every page.
+- Pagination: keep each page at A4 height, keep entries intact, place projects on a new page, and add continuation pages without lengthening an existing sheet.
+- Socials: text labels and handles in the personal-information list.
+- Letter: repeat the pale gray identity rail with a single white body column.
 
 ## Cupertino
 

@@ -1,6 +1,6 @@
 ---
 name: kami
-description: 'Agent-first resume intelligence and document generation. Use when the user wants a resume, CV, cover letter, recommendation letter, job-targeted application, career profile, resume rewrite, LinkedIn/BOSS 直聘/猎聘/58 同城 profile analysis, old PDF resume analysis, latest-role interview, ATS resume, project portfolio evidence, optional photo or LinkedIn/X/GitHub links, or a polished PDF resume. Collect authorized career sources, build a traceable candidate dossier, ask evidence-focused questions for missing work, match the target role, choose from 13 resume families and light/dark themes, and render a primary resume, ATS-safe companion, and matching letter. Also supports Kami professional documents and landing pages.'
+description: 'Agent-first resume intelligence and document generation. Use when the user wants a resume, CV, cover letter, recommendation letter, job-targeted application, career profile, resume rewrite, LinkedIn/BOSS 直聘/猎聘/58 同城 profile analysis, old PDF resume analysis, latest-role interview, ATS resume, project portfolio evidence, optional photo or LinkedIn/X/GitHub links, or a polished PDF resume. Collect authorized career sources, build a traceable candidate dossier, ask evidence-focused questions for missing work, match the target role, choose from 14 resume families and light/dark themes, and render a primary resume, ATS-safe companion, and matching letter. Also supports Kami professional documents and landing pages.'
 ---
 
 # Kami Resume and Documents
@@ -16,9 +16,9 @@ Read these references progressively:
 - `references/resume-workflow.md`: state machine, evidence ledger, stop conditions, output bundle.
 - `references/source-intake.md`: PDF and career-platform collection, browser authorization, privacy boundaries.
 - `references/interview-playbook.md`: latest-role reconstruction, metric recovery, ownership calibration.
-- `references/template-routing.md`: 13 template families, light/dark routing, ATS companion and letter rules.
-- `references/resume-template-catalog.json`: machine-readable 13 x 2 template catalog.
-- `references/screenshot-resume-families.md`: precise visual contract for the four screenshot-derived families.
+- `references/template-routing.md`: 14 template families, light/dark routing, ATS companion and letter rules.
+- `references/resume-template-catalog.json`: machine-readable 14 x 2 template catalog.
+- `references/screenshot-resume-families.md`: precise visual contract for the five reference-derived families.
 - `references/candidate-dossier.schema.json`: dossier shape.
 - `references/resume-writing.md`: bullet quality, ownership, metrics, density, and recruiter pass.
 
@@ -45,7 +45,7 @@ Read these references progressively:
    python3 scripts/resume_workflow.py route candidate-dossier.json analysis.json -o route.json
    ```
 
-   Choose one primary template and theme automatically. Do not make the user manually compare all 26 variants unless requested. If the primary is dark, creative, split-column, or otherwise expressive, also produce `ats-classic/light`.
+   Choose one primary template and theme automatically. Do not make the user manually compare all 28 variants unless requested. If the primary is dark, creative, split-column, or otherwise expressive, also produce `ats-classic/light`.
 10. Render the output bundle:
 
    ```bash
@@ -81,7 +81,7 @@ For one-pagers, long documents, letters, portfolios, slides, equity reports, cha
 
 ## Visual system
 
-Kami defaults to warm paper, restrained typography, and one deliberate accent. Resume families may use different colors and layouts, but must remain readable, printable, and recruiter-scannable. The catalog contains 13 families with 2 themes each: Editorial, ATS Classic, Technical, Executive, Creative, Sales Impact, Operations Practical, Academic, Early Career, Aqua Ledger, Atelier Serif, Cupertino, and McKinsey Grid. Light-mode output may keep the template paper or use pure white or ivory; dark mode keeps the template dark paper.
+Kami defaults to warm paper, restrained typography, and one deliberate accent. Resume families may use different colors and layouts, but must remain readable, printable, and recruiter-scannable. The catalog contains 14 families with 2 themes each: Editorial, ATS Classic, Technical, Executive, Creative, Sales Impact, Operations Practical, Academic, Early Career, Aqua Ledger, Slate Sidebar, Atelier Serif, Cupertino, and McKinsey Grid. Light-mode output may keep the template paper or use pure white or ivory; dark mode keeps the template dark paper.
 
 ## Update and packaging
 
