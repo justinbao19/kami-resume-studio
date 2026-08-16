@@ -2067,6 +2067,7 @@ def test_resume_workflow_renders_projects_socials_and_photo_safely() -> None:
     dossier["candidate"]["socials"] = {
         "linkedin": {"enabled": True, "url": "https://linkedin.com/in/test"},
         "x": {"enabled": True, "url": "javascript:alert(1)"},
+        "x_secondary": {"enabled": True, "platform": "x", "url": "https://x.com/test"},
         "github": {"enabled": True, "url": "github.com/test"},
         "behance": {"enabled": True, "url": "https://behance.net/test"},
     }
@@ -2096,9 +2097,14 @@ def test_resume_workflow_renders_projects_socials_and_photo_safely() -> None:
           "https://linkedin.com/in/test" in primary and "https://github.com/test" in primary and
           "https://behance.net/test" in primary)
     check("resume workflow uses platform icons for icon-mode templates",
-          primary.count("class='icon-social'") == 3 and
+          primary.count("class='icon-social'") == 4 and
           primary.count("<svg viewBox='0 0 20 20'") == 2 and
-          primary.count("<svg viewBox='0 0 24 24'") == 1)
+          primary.count("<svg viewBox='0 0 24 24'") == 1 and
+          primary.count("<svg viewBox='0 0 1200 1227'") == 1)
+    official_x_path = "M714.163 519.284 1160.89 0h-105.86L667.137 450.887"
+    browser_source = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    check("browser and Agent output use the official X logo geometry",
+          official_x_path in browser_source and official_x_path in primary)
     check("resume workflow rejects unsafe social protocols",
           "javascript:" not in primary and "javascript:" not in ats)
     check("resume workflow preserves hardened link attributes",

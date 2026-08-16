@@ -102,8 +102,8 @@ const socialPlatforms = {
     labels: { zh: "X", en: "X" },
     placeholder: "https://x.com/username",
     color: "#111111",
-    viewBox: "0 0 24 24",
-    icon: '<path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993l-9.508-13.838Zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182l-6.327-9.05Z"/>'
+    viewBox: "0 0 1200 1227",
+    icon: '<path d="M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.866l409.625-476.152 327.181 476.152H1200L714.137 519.284h.026ZM569.165 687.828l-47.468-67.894L144.011 79.694h162.604l304.797 435.991 47.468 67.894 396.2 566.721H892.476L569.165 687.854v-.026Z"/>'
   },
   behance: {
     labels: { zh: "Behance", en: "Behance" },
@@ -363,6 +363,8 @@ const designRailClose = document.getElementById("designRailClose");
 let editorRailWidth = loadEditorRailWidth();
 let designRailOpen = false;
 let layoutRaf = null;
+let designRailFrame = null;
+let designRailTransitionTimer = null;
 let activeResizePointerId = null;
 
 function clone(value) {
@@ -465,12 +467,40 @@ function syncWorkspaceAccessibility() {
 
 function setDesignRailOpen(open, { returnFocus = false } = {}) {
   designRailOpen = Boolean(open);
-  workspace.classList.toggle("is-design-open", designRailOpen);
+  clearTimeout(designRailTransitionTimer);
+  if (designRailFrame) cancelAnimationFrame(designRailFrame);
+  designRailFrame = null;
+
   designRailToggle.setAttribute("aria-expanded", String(designRailOpen));
   designRailToggle.setAttribute("aria-label", designRailOpen ? "收起模板设置" : "展开模板设置");
   designRailToggle.title = designRailOpen ? "收起模板设置" : "展开模板设置";
-  setEditorRailWidth(editorRailWidth);
   syncWorkspaceAccessibility();
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (designRailOpen) {
+    workspace.classList.add("is-design-open");
+    if (reduceMotion) {
+      workspace.classList.add("is-design-active");
+    } else {
+      designRailFrame = requestAnimationFrame(() => {
+        designRailFrame = requestAnimationFrame(() => {
+          workspace.classList.add("is-design-active");
+          designRailFrame = null;
+        });
+      });
+    }
+    setEditorRailWidth(editorRailWidth);
+  } else {
+    workspace.classList.remove("is-design-active");
+    const finishClose = () => {
+      if (designRailOpen) return;
+      workspace.classList.remove("is-design-open");
+      setEditorRailWidth(editorRailWidth);
+    };
+    if (reduceMotion) finishClose();
+    else designRailTransitionTimer = setTimeout(finishClose, 240);
+  }
+
   if (returnFocus) designRailToggle.focus();
 }
 
